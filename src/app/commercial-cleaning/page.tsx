@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import PhotoPlaceholder from "@/components/PhotoPlaceholder";
+import BuildingScene from "@/components/illustrations/BuildingScene";
+import ServiceIcon from "@/components/illustrations/ServiceIcon";
 import FAQAccordion from "@/components/FAQAccordion";
 import QuoteForm from "@/components/QuoteForm";
 import Link from "next/link";
@@ -46,17 +47,19 @@ export default function CommercialCleaningPage() {
   return (
     <>
       {/* Hero */}
-      <section className="border-b border-border-subtle bg-muted-bg">
+      <section className="relative overflow-hidden border-b border-border-subtle bg-muted-bg">
+        <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-brand-light/20" />
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:py-20">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
+          <div className="relative">
+            <ServiceIcon type="commercial" className="h-14 w-14" />
+            <h1 className="mt-5 text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
               {service.heroHeadline}
             </h1>
             <p className="mt-4 text-lg text-foreground/70">{service.heroSubhead}</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="#quote"
-                className="rounded-full bg-brand px-8 py-3.5 text-center text-sm font-semibold text-white hover:bg-brand-dark"
+                className="rounded-full bg-brand px-8 py-3.5 text-center text-sm font-semibold text-white shadow-lg shadow-brand/25 transition-colors hover:bg-brand-dark"
               >
                 Request a Commercial Quote
               </Link>
@@ -64,24 +67,25 @@ export default function CommercialCleaningPage() {
                 href={whatsappHref("Hi Cleano, I'd like a quote for commercial cleaning")}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-brand px-8 py-3.5 text-center text-sm font-semibold text-brand-dark"
+                className="rounded-full border border-brand/40 bg-white px-8 py-3.5 text-center text-sm font-semibold text-brand-dark transition-colors hover:border-brand"
               >
                 WhatsApp Us
               </a>
             </div>
           </div>
-          <PhotoPlaceholder label="Commercial site cleaning" aspect="aspect-[4/3]" />
+          <BuildingScene className="mx-auto w-full max-w-md" />
         </div>
       </section>
 
       {/* Who we work with */}
-      <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
-        <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Who We Work With</h2>
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+        <p className="text-sm font-semibold uppercase tracking-wide text-brand">Clients</p>
+        <h2 className="mt-2 text-2xl font-bold text-foreground sm:text-3xl">Who We Work With</h2>
         <ul className="mt-6 flex flex-wrap gap-3">
           {whoWeWorkWith.map((item) => (
             <li
               key={item}
-              className="rounded-full border border-border-subtle px-4 py-2 text-sm font-medium text-foreground/80"
+              className="rounded-full border border-border-subtle bg-white px-4 py-2 text-sm font-medium text-foreground/80"
             >
               {item}
             </li>
@@ -90,7 +94,7 @@ export default function CommercialCleaningPage() {
       </section>
 
       {/* Services */}
-      <section className="bg-muted-bg py-14">
+      <section className="bg-muted-bg py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Services</h2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -98,7 +102,7 @@ export default function CommercialCleaningPage() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="rounded-xl border border-border-subtle bg-background px-5 py-4 text-sm font-semibold text-foreground hover:border-brand"
+                className="rounded-xl border border-border-subtle bg-white px-5 py-4 text-sm font-semibold text-foreground shadow-sm transition-colors hover:border-brand"
               >
                 {item.label}
               </Link>
@@ -108,7 +112,7 @@ export default function CommercialCleaningPage() {
       </section>
 
       {/* Why Cleano */}
-      <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Why Cleano for Commercial Work?</h2>
         <ul className="mt-6 grid gap-3 sm:grid-cols-2">
           {whyCleano.map((item) => (
@@ -121,7 +125,7 @@ export default function CommercialCleaningPage() {
       </section>
 
       {/* FAQs */}
-      <section className="bg-muted-bg py-14">
+      <section className="bg-muted-bg py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
             Frequently Asked Questions
@@ -149,17 +153,20 @@ export default function CommercialCleaningPage() {
 
 function CheckIcon() {
   return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      className="mt-0.5 shrink-0 text-brand"
-      aria-hidden="true"
-    >
-      <path d="M5 13l4 4L19 7" />
-    </svg>
+    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand-dark">
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M5 13l4 4L19 7" />
+      </svg>
+    </span>
   );
 }

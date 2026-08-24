@@ -1,4 +1,4 @@
-import PhotoPlaceholder from "./PhotoPlaceholder";
+import ReportScene from "./illustrations/ReportScene";
 
 const points = [
   "Uniformed team",
@@ -14,14 +14,14 @@ const points = [
 // introduced and it's echoed on every service page's "What's Included".
 export default function CleanoStandard() {
   return (
-    <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-      <div className="grid items-center gap-10 lg:grid-cols-2">
+    <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+      <div className="grid items-center gap-12 lg:grid-cols-2">
         <div>
           <p className="text-sm font-semibold uppercase tracking-wide text-brand">The Cleano Standard</p>
           <h2 className="mt-2 text-3xl font-bold text-foreground sm:text-4xl">
             Professional cleaning. Properly documented.
           </h2>
-          <ul className="mt-6 space-y-3">
+          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
             {points.map((point) => (
               <li key={point} className="flex items-start gap-3 text-foreground/80">
                 <CheckIcon />
@@ -30,7 +30,7 @@ export default function CleanoStandard() {
             ))}
           </ul>
         </div>
-        <PhotoPlaceholder label="Cleano Photo Report example" aspect="aspect-[4/3]" />
+        <ReportScene className="mx-auto w-full max-w-sm" />
       </div>
     </section>
   );
@@ -38,17 +38,20 @@ export default function CleanoStandard() {
 
 function CheckIcon() {
   return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      className="mt-0.5 shrink-0 text-brand"
-      aria-hidden="true"
-    >
-      <path d="M5 13l4 4L19 7" />
-    </svg>
+    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand-dark">
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M5 13l4 4L19 7" />
+      </svg>
+    </span>
   );
 }
