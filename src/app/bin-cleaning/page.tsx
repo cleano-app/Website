@@ -16,6 +16,7 @@ export default function BinCleaningPage() {
       realPhotos={[
         { before: "/photos/bin-before.jpg", after: "/photos/bin-after.jpg" },
         { before: "/photos/bin2-before.jpg", after: "/photos/bin2-after.jpg" },
+        { before: "/photos/bin3-before.jpg", after: "/photos/bin3-after.jpg" },
       ]}
     />
   );
