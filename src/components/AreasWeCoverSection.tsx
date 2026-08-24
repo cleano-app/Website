@@ -4,7 +4,7 @@ import { priorityAreas, regionName } from "@/lib/content/areas";
 export default function AreasWeCoverSection() {
   return (
     <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-dark to-brand px-6 py-14 text-center text-white sm:px-12">
+      <div className="bg-grain relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-dark to-brand px-6 py-14 text-center text-white sm:px-12">
         <div className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-white/5" />
 

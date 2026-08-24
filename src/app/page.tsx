@@ -1,5 +1,4 @@
-import Link from "next/link";
-import HeroScene from "@/components/illustrations/HeroScene";
+import Hero from "@/components/Hero";
 import TrustStrip from "@/components/TrustStrip";
 import Certifications from "@/components/Certifications";
 import ServicesGrid from "@/components/ServicesGrid";
@@ -9,47 +8,13 @@ import HowItWorks from "@/components/HowItWorks";
 import ResidentialCommercialSplit from "@/components/ResidentialCommercialSplit";
 import Reviews from "@/components/Reviews";
 import FinalCTA from "@/components/FinalCTA";
-import { whatsappHref } from "@/lib/siteConfig";
+import FadeIn from "@/components/motion/FadeIn";
+import { StaggerGrid, StaggerItem } from "@/components/motion/StaggerGrid";
 
 export default function HomePage() {
   return (
     <>
-      {/* Hero */}
-      <section className="relative overflow-hidden border-b border-border-subtle bg-muted-bg">
-        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-24">
-          <div>
-            <p className="inline-flex items-center gap-2 rounded-full bg-brand/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-brand-dark uppercase">
-              Exterior Cleaning Company · London &amp; Surrounding Areas
-            </p>
-            <h1 className="mt-5 text-4xl font-bold leading-tight text-foreground sm:text-5xl lg:text-6xl">
-              Clean places. <span className="text-brand-dark">Better spaces.</span>
-            </h1>
-            <p className="mt-5 max-w-lg text-lg text-foreground/70">
-              Cleano is an exterior cleaning company serving homes and businesses across London
-              and the surrounding areas — gutters, windows, driveways, bins and scheduled
-              commercial care.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/quote"
-                className="rounded-full bg-brand px-8 py-3.5 text-center text-sm font-semibold text-white shadow-lg shadow-brand/25 transition-colors hover:bg-brand-dark"
-              >
-                Get a Free Quote
-              </Link>
-              <a
-                href={whatsappHref("Hi Cleano, I'd like a quote for...")}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full border border-brand/40 bg-white px-8 py-3.5 text-center text-sm font-semibold text-brand-dark transition-colors hover:border-brand"
-              >
-                WhatsApp Us
-              </a>
-            </div>
-          </div>
-          <HeroScene className="mx-auto w-full max-w-md" />
-        </div>
-      </section>
-
+      <Hero />
       <TrustStrip />
       <Certifications />
       <ServicesGrid />
@@ -57,20 +22,28 @@ export default function HomePage() {
       {/* Before & after */}
       <section className="bg-muted-bg py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <p className="text-center text-sm font-semibold uppercase tracking-wide text-brand">
-            Real Results
-          </p>
-          <h2 className="mt-2 text-center text-3xl font-bold text-foreground sm:text-4xl">
-            See the Difference
-          </h2>
-          <p className="mx-auto mt-2 max-w-md text-center text-sm text-foreground/60">
-            Drag the slider on three of Cleano&apos;s strongest jobs, before and after.
-          </p>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <BeforeAfterSlider label="Gutter clearing" icon="gutter" />
-            <BeforeAfterSlider label="Pressure-washed driveway" icon="pressure" />
-            <BeforeAfterSlider label="Bin deep clean" icon="bin" />
-          </div>
+          <FadeIn className="text-center">
+            <p className="text-sm font-semibold uppercase tracking-wide text-brand">
+              Real Results
+            </p>
+            <h2 className="mt-2 text-3xl font-bold text-foreground sm:text-4xl">
+              See the Difference
+            </h2>
+            <p className="mx-auto mt-2 max-w-md text-sm text-foreground/60">
+              Drag the slider on three of Cleano&apos;s strongest jobs, before and after.
+            </p>
+          </FadeIn>
+          <StaggerGrid className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <StaggerItem>
+              <BeforeAfterSlider label="Gutter clearing" icon="gutter" />
+            </StaggerItem>
+            <StaggerItem>
+              <BeforeAfterSlider label="Pressure-washed driveway" icon="pressure" />
+            </StaggerItem>
+            <StaggerItem>
+              <BeforeAfterSlider label="Bin deep clean" icon="bin" />
+            </StaggerItem>
+          </StaggerGrid>
         </div>
       </section>
 

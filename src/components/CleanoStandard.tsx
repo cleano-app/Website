@@ -1,4 +1,5 @@
 import ReportScene from "./illustrations/ReportScene";
+import FadeIn from "./motion/FadeIn";
 
 const points = [
   "Uniformed team",
@@ -17,7 +18,7 @@ export default function CleanoStandard() {
   return (
     <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
       <div className="grid items-center gap-12 lg:grid-cols-2">
-        <div>
+        <FadeIn>
           <p className="text-sm font-semibold uppercase tracking-wide text-brand">The Cleano Standard</p>
           <h2 className="mt-2 text-3xl font-bold text-foreground sm:text-4xl">
             Professional cleaning. Properly documented.
@@ -34,8 +35,10 @@ export default function CleanoStandard() {
               </li>
             ))}
           </ul>
-        </div>
-        <ReportScene className="mx-auto w-full max-w-sm" />
+        </FadeIn>
+        <FadeIn delay={0.15}>
+          <ReportScene className="mx-auto w-full max-w-sm" />
+        </FadeIn>
       </div>
     </section>
   );
