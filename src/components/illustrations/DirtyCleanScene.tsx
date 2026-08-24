@@ -1,7 +1,7 @@
 // Small "surface" illustrations used by BeforeAfterSlider - a schematic
 // dirty vs. clean rendering per service type (texture + colour), since no
 // real photography or image-generation is available in this environment.
-type SceneType = "gutter" | "bin" | "window" | "pressure" | "commercial";
+type SceneType = "gutter" | "bin" | "window" | "pressure" | "commercial" | "graffiti";
 type SceneState = "before" | "after";
 
 export default function DirtyCleanScene({
@@ -134,6 +134,37 @@ function renderScene(type: SceneType, dirty: boolean) {
             ))
           )}
           {!dirty && <path d="M60 118l80-90" stroke="white" strokeWidth="6" opacity="0.5" strokeLinecap="round" />}
+        </>
+      );
+    case "graffiti":
+      return (
+        <>
+          {/* brick wall */}
+          {[0, 1, 2, 3, 4].map((row) =>
+            Array.from({ length: row % 2 === 0 ? 6 : 5 }).map((_, col) => (
+              <rect
+                key={`${row}-${col}`}
+                x={row % 2 === 0 ? col * 34 : 17 + col * 34}
+                y={20 + row * 22}
+                width="32"
+                height="20"
+                fill="none"
+                stroke={line}
+                strokeWidth="1.25"
+                opacity="0.5"
+              />
+            ))
+          )}
+          {dirty ? (
+            <>
+              <path d="M35 45c10-15 25-10 20 5s-25 5-15-10" stroke="#c2554a" strokeWidth="3.5" fill="none" opacity="0.8" strokeLinecap="round" />
+              <path d="M95 60c20-8 35 5 50-3" stroke="#4a7fc2" strokeWidth="4" fill="none" opacity="0.75" strokeLinecap="round" />
+              <path d="M60 95c8 12 25 12 35-2" stroke="#c2a34a" strokeWidth="3.5" fill="none" opacity="0.75" strokeLinecap="round" />
+              <path d="M130 100l20 20M150 100l-20 20" stroke="#4a7fc2" strokeWidth="3" opacity="0.6" strokeLinecap="round" />
+            </>
+          ) : (
+            <path d="M25 125L175 25" stroke="white" strokeWidth="8" opacity="0.5" strokeLinecap="round" />
+          )}
         </>
       );
   }

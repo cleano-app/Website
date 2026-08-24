@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import PhotoPlaceholder from "@/components/PhotoPlaceholder";
+import FloatingButterflies from "@/components/motion/FloatingButterflies";
 
 export const metadata: Metadata = {
   title: "About Cleano",
@@ -9,8 +10,15 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <section className="border-b border-border-subtle bg-muted-bg">
-        <div className="mx-auto max-w-4xl px-4 py-14 text-center sm:px-6 lg:py-20">
+      <section className="bg-grain relative overflow-hidden border-b border-border-subtle bg-gradient-to-br from-muted-bg via-muted-bg to-brand-light/15">
+        <div className="pointer-events-none absolute -top-20 -right-20 h-64 w-64 rounded-full bg-brand-light/25 blur-3xl" />
+        <FloatingButterflies
+          flock={[
+            { top: "16%", left: "10%", size: 20, duration: 9, delay: 0.2, xDrift: [0, 12, -6, 0], yDrift: [0, -12, 6, 0], rotate: [-8, 10, -4, -8], opacity: 0.5 },
+            { top: "70%", left: "88%", size: 16, duration: 10, delay: 1, xDrift: [0, -8, 6, 0], yDrift: [0, 8, -6, 0], rotate: [8, -10, 6, 8], opacity: 0.4 },
+          ]}
+        />
+        <div className="relative mx-auto max-w-4xl px-4 py-14 text-center sm:px-6 lg:py-20">
           <h1 className="text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
             About Cleano
           </h1>
@@ -22,9 +30,9 @@ export default function AboutPage() {
         <p className="mt-4 text-foreground/70">
           Cleano is a professional exterior cleaning company serving homes and businesses across
           London and the surrounding areas - gutter cleaning, window cleaning, pressure washing,
-          bin cleaning and scheduled commercial cleaning. We built Cleano around one idea:
-          cleaning should be done properly, by a professional team, with the equipment to do it
-          right.
+          bin cleaning, graffiti removal and scheduled commercial cleaning. We built Cleano
+          around one idea: cleaning should be done properly, by a professional team, with the
+          equipment to do it right.
         </p>
       </section>
 

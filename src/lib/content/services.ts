@@ -150,9 +150,9 @@ export const services: Service[] = [
     shortName: "Windows",
     cardBlurb: "Streak-free glass, frames and sills - one-off or regular.",
     heroHeadline: "Clean windows. Professional finish.",
-    heroSubhead: "Reliable window cleaning for homes and businesses.",
+    heroSubhead: "Reliable exterior window cleaning for homes and businesses.",
     included: [
-      "Glass, inside and out where accessible",
+      "Exterior glass cleaning",
       "Frames and sills",
       "Streak-free finish",
       "Professional water-fed pole equipment where appropriate",
@@ -181,7 +181,7 @@ export const services: Service[] = [
       },
       {
         q: "Do you clean the inside of windows too?",
-        a: "Our standard service covers the outside; interior cleaning can be arranged for accessible properties on request.",
+        a: "No - we clean the outside of windows only, for both homes and commercial buildings. This lets us work safely and efficiently from the ground or with water-fed poles, without needing access inside the property.",
       },
       {
         q: "What equipment do you use?",
@@ -306,6 +306,61 @@ export const services: Service[] = [
       {
         q: "How do we get started?",
         a: "Request a commercial quote with your site details and we'll come back with a proposed scope and schedule.",
+      },
+    ],
+  },
+  {
+    slug: "graffiti-removal",
+    name: "Graffiti Removal",
+    shortName: "Graffiti",
+    cardBlurb: "Fast, careful removal from walls, shutters and signage.",
+    heroHeadline: "Professional Graffiti Removal",
+    heroSubhead:
+      "Fast, careful graffiti removal for homes, shops and commercial buildings.",
+    included: [
+      "Assessment of surface and paint type before we start",
+      "Professional graffiti removal treatment",
+      "Careful technique to avoid damaging the surface underneath",
+      "Removal from brick, render, metal shutters and signage",
+      "Before and after photos",
+      "Cleano Photo Report emailed to you",
+    ],
+    why: [
+      {
+        title: "The longer it stays, the worse it gets",
+        body: "Graffiti left up tends to attract more of it - fast removal is the best way to stop repeat tagging.",
+      },
+      {
+        title: "Kerb appeal",
+        body: "A tagged wall or shutter is one of the fastest ways to make a home or business look neglected.",
+      },
+      {
+        title: "Lease and compliance requirements",
+        body: "Landlords, managing agents and businesses are often required to remove graffiti quickly under lease or council terms.",
+      },
+    ],
+    pricingFrom: "£75",
+    pricingNote: "Based on surface area, surface type and paint - send a photo for a fast quote.",
+    faqs: [
+      {
+        q: "How quickly can you remove graffiti?",
+        a: "We treat graffiti removal as urgent where possible and aim to get to most jobs within a few days of enquiry.",
+      },
+      {
+        q: "Will removal damage the surface underneath?",
+        a: "We assess the surface and paint type first and choose a technique suited to it, to minimise any risk to brick, render, metal or signage underneath.",
+      },
+      {
+        q: "What surfaces can you treat?",
+        a: "Brick, render, metal shutters, signage and most common exterior surfaces - let us know what's affected when you request a quote.",
+      },
+      {
+        q: "Can I get a quote from a photo?",
+        a: "Yes - a photo of the affected area is usually enough for us to give you a fast, accurate quote.",
+      },
+      {
+        q: "Do you offer this for commercial properties?",
+        a: "Yes, including shopfronts, shutters and managed buildings - see our Commercial Cleaning page.",
       },
     ],
   },

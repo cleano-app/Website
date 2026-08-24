@@ -3,27 +3,35 @@ import { services } from "@/lib/content/services";
 import ServiceIcon from "./illustrations/ServiceIcon";
 import FadeIn from "./motion/FadeIn";
 import { StaggerGrid, StaggerItem } from "./motion/StaggerGrid";
+import FloatingButterflies from "./motion/FloatingButterflies";
 
-const iconBySlug: Record<string, "gutter" | "bin" | "window" | "pressure" | "commercial"> = {
+const sectionButterflies = [
+  { top: "4%", left: "3%", size: 18, duration: 9, delay: 0.2, xDrift: [0, 10, -6, 0], yDrift: [0, -10, 6, 0], rotate: [-8, 10, -4, -8], opacity: 0.4 },
+  { top: "8%", left: "94%", size: 16, duration: 10, delay: 1.1, xDrift: [0, -8, 6, 0], yDrift: [0, 8, -6, 0], rotate: [8, -10, 6, 8], opacity: 0.35 },
+];
+
+const iconBySlug: Record<string, "gutter" | "bin" | "window" | "pressure" | "commercial" | "graffiti"> = {
   "gutter-cleaning": "gutter",
   "bin-cleaning": "bin",
   "window-cleaning": "window",
   "pressure-washing": "pressure",
   "commercial-cleaning": "commercial",
+  "graffiti-removal": "graffiti",
 };
 
 // A little scrapbook-style twist per card instead of a rigid grid - each
 // card sits at a slight alternating tilt and straightens up on hover/tap.
-const tilt = ["-rotate-2", "rotate-2", "rotate-1", "-rotate-1", "rotate-2"];
+const tilt = ["-rotate-2", "rotate-2", "rotate-1", "-rotate-1", "rotate-2", "-rotate-1"];
 
 export default function ServicesGrid() {
   return (
-    <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+    <section className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <FloatingButterflies flock={sectionButterflies} />
       <FadeIn className="text-center">
         <p className="text-sm font-semibold uppercase tracking-wide text-brand">What We Do</p>
         <h2 className="mt-2 text-3xl font-bold text-foreground sm:text-4xl">Our Services</h2>
       </FadeIn>
-      <StaggerGrid className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+      <StaggerGrid className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
         {services.map((service, i) => (
           <StaggerItem key={service.slug}>
             <Link

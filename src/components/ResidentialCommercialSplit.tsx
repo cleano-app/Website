@@ -2,6 +2,11 @@ import Link from "next/link";
 import HeroScene from "./illustrations/HeroScene";
 import BuildingScene from "./illustrations/BuildingScene";
 import { StaggerGrid, StaggerItem } from "./motion/StaggerGrid";
+import FloatingButterflies from "./motion/FloatingButterflies";
+
+const panelButterflies = [
+  { top: "10%", left: "8%", size: 16, duration: 8, delay: 0.2, xDrift: [0, 8, -5, 0], yDrift: [0, -8, 5, 0], rotate: [-8, 10, -4, -8], opacity: 0.5 },
+];
 
 export default function ResidentialCommercialSplit() {
   return (
@@ -9,7 +14,8 @@ export default function ResidentialCommercialSplit() {
       <StaggerGrid className="grid gap-6 md:grid-cols-2">
         <StaggerItem>
           <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border-subtle bg-white transition-shadow hover:shadow-lg">
-            <div className="flex items-center justify-center bg-muted-bg px-8 py-10">
+            <div className="relative flex items-center justify-center bg-muted-bg px-8 py-10">
+              <FloatingButterflies flock={panelButterflies} />
               <HeroScene className="w-full max-w-[280px] transition-transform duration-300 group-hover:scale-105" />
             </div>
             <div className="flex flex-1 flex-col p-6">
@@ -27,7 +33,8 @@ export default function ResidentialCommercialSplit() {
 
         <StaggerItem>
           <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border-subtle bg-white transition-shadow hover:shadow-lg">
-            <div className="flex items-center justify-center bg-muted-bg px-8 py-10">
+            <div className="relative flex items-center justify-center bg-muted-bg px-8 py-10">
+              <FloatingButterflies flock={panelButterflies} />
               <BuildingScene className="w-full max-w-[280px] transition-transform duration-300 group-hover:scale-105" />
             </div>
             <div className="flex flex-1 flex-col p-6">

@@ -1,5 +1,6 @@
 import ReportScene from "./illustrations/ReportScene";
 import FadeIn from "./motion/FadeIn";
+import FloatingButterflies from "./motion/FloatingButterflies";
 
 // Generic, applies to every service (gutters, bins, windows, pressure
 // washing, commercial) - keep this list free of anything service-specific
@@ -19,7 +20,12 @@ const points = [
 // introduced and it's echoed on every service page's "What's Included".
 export default function CleanoStandard() {
   return (
-    <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+    <section className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6">
+      <FloatingButterflies
+        flock={[
+          { top: "6%", left: "92%", size: 18, duration: 10, delay: 0.4, xDrift: [0, -10, 6, 0], yDrift: [0, 10, -6, 0], rotate: [8, -10, 6, 8], opacity: 0.4 },
+        ]}
+      />
       <div className="grid items-center gap-12 lg:grid-cols-2">
         <FadeIn>
           <p className="text-sm font-semibold uppercase tracking-wide text-brand">The Cleano Standard</p>

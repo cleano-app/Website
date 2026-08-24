@@ -1,5 +1,6 @@
 import FadeIn from "./motion/FadeIn";
 import { StaggerGrid, StaggerItem } from "./motion/StaggerGrid";
+import FloatingButterflies from "./motion/FloatingButterflies";
 
 // PLACEHOLDER CONTENT: no real reviews were supplied. Replace every entry
 // below with genuine Google/customer reviews before launch - do not publish
@@ -25,7 +26,13 @@ const sampleReviews = [
 
 export default function Reviews() {
   return (
-    <section className="bg-muted-bg py-20">
+    <section className="relative overflow-hidden bg-muted-bg py-20">
+      <FloatingButterflies
+        flock={[
+          { top: "8%", left: "4%", size: 18, duration: 9, delay: 0.3, xDrift: [0, 10, -6, 0], yDrift: [0, -10, 6, 0], rotate: [-8, 10, -4, -8], opacity: 0.4 },
+          { top: "10%", left: "90%", size: 16, duration: 10, delay: 1.2, xDrift: [0, -8, 6, 0], yDrift: [0, 8, -6, 0], rotate: [8, -10, 6, 8], opacity: 0.35 },
+        ]}
+      />
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <FadeIn className="text-center">
           <p className="text-sm font-semibold uppercase tracking-wide text-brand">Trusted Locally</p>

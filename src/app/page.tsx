@@ -33,7 +33,11 @@ export default function HomePage() {
           </FadeIn>
           <StaggerGrid className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <StaggerItem>
-              <BeforeAfterSlider label="Gutter clearing" icon="gutter" />
+              <BeforeAfterSlider
+                label="Gutter clearing"
+                icon="gutter"
+                photos={{ before: "/photos/gutter-before.jpg", after: "/photos/gutter-after.jpg" }}
+              />
             </StaggerItem>
             <StaggerItem>
               <BeforeAfterSlider label="Pressure-washed driveway" icon="pressure" />

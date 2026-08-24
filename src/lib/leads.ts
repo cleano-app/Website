@@ -4,6 +4,7 @@ export const LEAD_SERVICES = [
   "window_cleaning",
   "pressure_washing",
   "commercial_cleaning",
+  "graffiti_removal",
   "other",
 ] as const;
 
@@ -15,6 +16,7 @@ export const LEAD_SERVICE_LABELS: Record<LeadService, string> = {
   window_cleaning: "Window Cleaning",
   pressure_washing: "Pressure Washing",
   commercial_cleaning: "Commercial",
+  graffiti_removal: "Graffiti Removal",
   other: "Other",
 };
 

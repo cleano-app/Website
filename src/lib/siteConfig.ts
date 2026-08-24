@@ -6,7 +6,7 @@ export const siteConfig = {
   name: "Cleano",
   tagline: "Clean places. Better spaces.",
   description:
-    "Cleano is an exterior cleaning company serving homes and businesses across London and the surrounding areas: gutter cleaning, window cleaning, pressure washing, bin cleaning and commercial cleaning.",
+    "Cleano is an exterior cleaning company serving homes and businesses across London and the surrounding areas: gutter cleaning, window cleaning, pressure washing, bin cleaning, graffiti removal and commercial cleaning.",
   url: process.env.NEXT_PUBLIC_APP_URL || "https://cleano.services",
   opsAppUrl: process.env.NEXT_PUBLIC_OPS_APP_URL || "https://ops.cleano.services",
 
@@ -38,7 +38,7 @@ export const mainNav: { label: string; href: string }[] = [
   { label: "Bin Cleaning", href: "/bin-cleaning" },
   { label: "Window Cleaning", href: "/window-cleaning" },
   { label: "Pressure Washing", href: "/pressure-washing" },
+  { label: "Graffiti Removal", href: "/graffiti-removal" },
   { label: "Commercial", href: "/commercial-cleaning" },
-  { label: "Areas We Cover", href: "/areas-we-cover" },
   { label: "About", href: "/about" },
 ];

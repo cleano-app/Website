@@ -14,6 +14,7 @@ export default function GutterCleaningPage() {
     <ServicePageLayout
       service={service}
       secondaryCta={{ label: "Managing a Portfolio?", href: "/gutter-cleaning/portfolio" }}
+      realPhotos={{ before: "/photos/gutter-before.jpg", after: "/photos/gutter-after.jpg" }}
     />
   );
 }

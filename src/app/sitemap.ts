@@ -3,7 +3,7 @@ import { services } from "@/lib/content/services";
 import { siteConfig } from "@/lib/siteConfig";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/areas-we-cover", "/about", "/quote", "/gutter-cleaning/portfolio"];
+  const staticRoutes = ["", "/about", "/quote", "/gutter-cleaning/portfolio"];
   const serviceRoutes = services.map((s) => `/${s.slug}`);
 
   return [...staticRoutes, ...serviceRoutes].map((path) => ({

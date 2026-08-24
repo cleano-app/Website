@@ -1,20 +1,24 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Image from "next/image";
 import DirtyCleanScene from "./illustrations/DirtyCleanScene";
 
-type ServiceIconType = "gutter" | "bin" | "window" | "pressure" | "commercial";
+type ServiceIconType = "gutter" | "bin" | "window" | "pressure" | "commercial" | "graffiti";
 
-// A dependency-free before/after slider. The two panels are illustrated
-// scenes (dirty vs. clean) rather than real photos - no image-gen or open
-// internet access is available in this environment. Swap `beforeSrc`/
-// `afterSrc` for real photo URLs once real job photography is available.
+// A dependency-free before/after slider. By default the two panels are
+// illustrated scenes (dirty vs. clean) - no image-gen or open internet
+// access is available in this environment. Pass `photos` with real
+// before/after image paths (as real job photography becomes available)
+// to show actual photos instead of the illustration.
 export default function BeforeAfterSlider({
   label,
   icon,
+  photos,
 }: {
   label: string;
   icon: ServiceIconType;
+  photos?: { before: string; after: string };
 }) {
   const [position, setPosition] = useState(50);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -43,7 +47,17 @@ export default function BeforeAfterSlider({
       >
         {/* After layer (full size, underneath) */}
         <div className="absolute inset-0">
-          <DirtyCleanScene type={icon} state="after" className="h-full w-full" />
+          {photos ? (
+            <Image
+              src={photos.after}
+              alt={`${label} - after`}
+              fill
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+              className="object-cover"
+            />
+          ) : (
+            <DirtyCleanScene type={icon} state="after" className="h-full w-full" />
+          )}
           <span className="absolute right-3 top-3 rounded-full bg-brand px-3 py-1 text-[11px] font-semibold text-white shadow-sm">
             After
           </span>
@@ -56,7 +70,17 @@ export default function BeforeAfterSlider({
           className="absolute inset-0 overflow-hidden"
           style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
         >
-          <DirtyCleanScene type={icon} state="before" className="h-full w-full" />
+          {photos ? (
+            <Image
+              src={photos.before}
+              alt={`${label} - before`}
+              fill
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+              className="object-cover"
+            />
+          ) : (
+            <DirtyCleanScene type={icon} state="before" className="h-full w-full" />
+          )}
           <span className="absolute left-3 top-3 rounded-full bg-stone-600 px-3 py-1 text-[11px] font-semibold text-white shadow-sm">
             Before
           </span>

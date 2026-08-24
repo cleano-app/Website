@@ -3,6 +3,7 @@ import BuildingScene from "@/components/illustrations/BuildingScene";
 import ServiceIcon from "@/components/illustrations/ServiceIcon";
 import FAQAccordion from "@/components/FAQAccordion";
 import QuoteForm from "@/components/QuoteForm";
+import FloatingButterflies from "@/components/motion/FloatingButterflies";
 import Link from "next/link";
 import { getServiceBySlug } from "@/lib/content/services";
 import { whatsappHref } from "@/lib/siteConfig";
@@ -31,6 +32,7 @@ const commercialServices = [
   { label: "Bin Cleaning", href: "/bin-cleaning" },
   { label: "Window Cleaning", href: "/window-cleaning" },
   { label: "Pressure Washing", href: "/pressure-washing" },
+  { label: "Graffiti Removal", href: "/graffiti-removal" },
   { label: "Scheduled Maintenance", href: "/quote" },
 ];
 
@@ -48,8 +50,14 @@ export default function CommercialCleaningPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-border-subtle bg-muted-bg">
-        <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-brand-light/20" />
+      <section className="bg-grain relative overflow-hidden border-b border-border-subtle bg-gradient-to-br from-muted-bg via-muted-bg to-brand-light/15">
+        <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-brand-light/30 blur-3xl" />
+        <FloatingButterflies
+          flock={[
+            { top: "14%", left: "6%", size: 20, duration: 9, delay: 0, xDrift: [0, 12, -6, 0], yDrift: [0, -12, 6, 0], rotate: [-8, 10, -4, -8], opacity: 0.55 },
+            { top: "70%", left: "42%", size: 16, duration: 11, delay: 1.4, xDrift: [0, -10, 8, 0], yDrift: [0, 10, -8, 0], rotate: [8, -10, 6, 8], opacity: 0.4 },
+          ]}
+        />
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:py-20">
           <div className="relative">
             <ServiceIcon type="commercial" className="h-14 w-14" />
