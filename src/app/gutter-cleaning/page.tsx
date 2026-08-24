@@ -17,6 +17,7 @@ export default function GutterCleaningPage() {
       realPhotos={[
         { before: "/photos/gutter-before.jpg", after: "/photos/gutter-after.jpg" },
         { before: "/photos/gutter2-before.jpg", after: "/photos/gutter2-after.jpg" },
+        { before: "/photos/gutter3-before.jpg", after: "/photos/gutter3-after.jpg" },
       ]}
     />
   );
