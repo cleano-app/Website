@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import ServicePageLayout from "@/components/ServicePageLayout";
-import PortfolioBanner from "@/components/PortfolioBanner";
 import { getServiceBySlug } from "@/lib/content/services";
 
 const service = getServiceBySlug("gutter-cleaning")!;
@@ -11,5 +10,10 @@ export const metadata: Metadata = {
 };
 
 export default function GutterCleaningPage() {
-  return <ServicePageLayout service={service} afterHero={<PortfolioBanner />} />;
+  return (
+    <ServicePageLayout
+      service={service}
+      secondaryCta={{ label: "Managing a Portfolio?", href: "/gutter-cleaning/portfolio" }}
+    />
+  );
 }

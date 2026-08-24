@@ -1,6 +1,5 @@
 import Hero from "@/components/Hero";
 import TrustStrip from "@/components/TrustStrip";
-import Certifications from "@/components/Certifications";
 import ServicesGrid from "@/components/ServicesGrid";
 import BeforeAfterSlider from "@/components/BeforeAfterSlider";
 import CleanoStandard from "@/components/CleanoStandard";
@@ -16,7 +15,6 @@ export default function HomePage() {
     <>
       <Hero />
       <TrustStrip />
-      <Certifications />
       <ServicesGrid />
 
       {/* Before & after */}

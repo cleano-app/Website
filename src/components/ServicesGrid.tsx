@@ -12,6 +12,10 @@ const iconBySlug: Record<string, "gutter" | "bin" | "window" | "pressure" | "com
   "commercial-cleaning": "commercial",
 };
 
+// A little scrapbook-style twist per card instead of a rigid grid - each
+// card sits at a slight alternating tilt and straightens up on hover/tap.
+const tilt = ["-rotate-2", "rotate-2", "rotate-1", "-rotate-1", "rotate-2"];
+
 export default function ServicesGrid() {
   return (
     <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
@@ -20,16 +24,13 @@ export default function ServicesGrid() {
         <h2 className="mt-2 text-3xl font-bold text-foreground sm:text-4xl">Our Services</h2>
       </FadeIn>
       <StaggerGrid className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-        {services.map((service) => (
+        {services.map((service, i) => (
           <StaggerItem key={service.slug}>
             <Link
               href={`/${service.slug}`}
-              className="group flex h-full flex-col items-center gap-3 rounded-2xl border border-border-subtle bg-white px-4 py-7 text-center transition-all hover:-translate-y-1 hover:border-brand/40 hover:shadow-lg"
+              className={`group flex h-full flex-col items-center gap-3 rounded-2xl border border-border-subtle bg-white px-4 py-7 text-center shadow-sm transition-all duration-300 ${tilt[i % tilt.length]} hover:-translate-y-1 hover:rotate-0 hover:border-brand/40 hover:shadow-lg active:rotate-0`}
             >
-              <ServiceIcon
-                type={iconBySlug[service.slug]}
-                className="h-20 w-20 transition-transform duration-300 ease-out group-hover:-rotate-6 group-hover:scale-110 [&_svg]:h-10 [&_svg]:w-10"
-              />
+              <ServiceIcon type={iconBySlug[service.slug]} idle className="h-20 w-20 [&_svg]:h-10 [&_svg]:w-10" />
               <h3 className="text-base font-semibold text-foreground">{service.name}</h3>
             </Link>
           </StaggerItem>

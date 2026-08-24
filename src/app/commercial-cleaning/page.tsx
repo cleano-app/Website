@@ -57,10 +57,10 @@ export default function CommercialCleaningPage() {
               {service.heroHeadline}
             </h1>
             <p className="mt-4 text-lg text-foreground/70">{service.heroSubhead}</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-6 flex flex-wrap gap-2">
               <Link
                 href="#quote"
-                className="rounded-full bg-brand px-8 py-3.5 text-center text-sm font-semibold text-white shadow-lg shadow-brand/25 transition-colors hover:bg-brand-dark"
+                className="rounded-full bg-brand px-4 py-2 text-center text-xs font-semibold text-white shadow-sm shadow-brand/25 transition-colors hover:bg-brand-dark sm:text-sm"
               >
                 Request a Commercial Quote
               </Link>
@@ -68,7 +68,7 @@ export default function CommercialCleaningPage() {
                 href={whatsappHref("Hi Cleano, I'd like a quote for commercial cleaning")}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-brand/40 bg-white px-8 py-3.5 text-center text-sm font-semibold text-brand-dark transition-colors hover:border-brand"
+                className="rounded-full border border-brand/40 bg-white px-4 py-2 text-center text-xs font-semibold text-brand-dark transition-colors hover:border-brand sm:text-sm"
               >
                 WhatsApp Us
               </a>

@@ -89,7 +89,8 @@ export const services: Service[] = [
       "Full bin washing, inside and outside",
       "Dirt and residue removal",
       "Deodorising and sanitising where applicable",
-      "Professional bin-cleaning equipment",
+      "High-end professional equipment for a fast, thorough clean",
+      "Domestic and commercial bins",
       "Lids and handles included",
     ],
     serviceOptions: [
@@ -98,9 +99,9 @@ export const services: Service[] = [
         description: "For bins that need a proper deep clean right now.",
       },
       {
-        title: "Regular Cleaning",
+        title: "4-Weekly Subscription",
         description:
-          "Scheduled recurring cleaning to keep bins hygienic throughout the year.",
+          "Scheduled cleaning every 4 weeks, available in specific areas, from £6.90 + VAT per bin.",
       },
     ],
     why: [
@@ -117,20 +118,21 @@ export const services: Service[] = [
         body: "Clean bins look better outside a home or business, and matter more than most people realise for commercial premises.",
       },
     ],
-    pricingFrom: "£8",
-    pricingNote: "Per bin, per clean - discounted on a regular schedule.",
+    pricingFrom: "£6.90",
+    pricingNote:
+      "+ VAT per bin on our 4-weekly subscription, available in specific areas. One-off cleans quoted separately.",
     faqs: [
       {
         q: "How often should bins be cleaned?",
-        a: "Most households go for once a month; commercial bins used more heavily are often better on a fortnightly schedule.",
+        a: "Most households go for our 4-weekly subscription; commercial bins used more heavily are often better on a fortnightly schedule.",
       },
       {
         q: "Do you clean wheelie bins and communal bins?",
         a: "Yes - we clean individual household wheelie bins as well as communal and commercial bins for blocks, offices and other premises.",
       },
       {
-        q: "What's the difference between one-off and regular cleaning?",
-        a: "One-off is a single deep clean; regular cleaning puts your bins on a repeat schedule (e.g. monthly) so you never have to think about it.",
+        q: "What's the difference between one-off and the 4-weekly subscription?",
+        a: "One-off is a single deep clean; the 4-weekly subscription puts your bins on a repeat schedule from £6.90 + VAT per bin, available in specific areas, so you never have to think about it.",
       },
       {
         q: "Do you sanitise the bins, or just rinse them?",

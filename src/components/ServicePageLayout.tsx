@@ -7,6 +7,7 @@ import FAQAccordion from "./FAQAccordion";
 import QuoteForm from "./QuoteForm";
 import FadeIn from "./motion/FadeIn";
 import { StaggerGrid, StaggerItem } from "./motion/StaggerGrid";
+import FloatingButterflies from "./motion/FloatingButterflies";
 import { whatsappHref } from "@/lib/siteConfig";
 
 type IconType = "gutter" | "bin" | "window" | "pressure" | "commercial";
@@ -22,10 +23,14 @@ const iconBySlug: Record<string, IconType> = {
 export default function ServicePageLayout({
   service,
   afterHero,
+  secondaryCta,
 }: {
   service: Service;
   /** Optional extra content rendered right after the hero, before "What's Included". */
   afterHero?: ReactNode;
+  /** Overrides the hero's second button (defaults to WhatsApp) - e.g. a
+   * separate path for portfolio/commercial customers vs. regular ones. */
+  secondaryCta?: { label: string; href: string };
 }) {
   const leadService = service.slug.replace(/-/g, "_") as
     | "gutter_cleaning"
@@ -38,34 +43,49 @@ export default function ServicePageLayout({
   return (
     <>
       {/* Hero */}
-      <section className="bg-grain relative overflow-hidden border-b border-border-subtle bg-gradient-to-br from-muted-bg via-muted-bg to-brand-light/10">
-        <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-brand-light/20 blur-3xl" />
+      <section className="bg-grain relative overflow-hidden border-b border-border-subtle bg-gradient-to-br from-muted-bg via-muted-bg to-brand-light/15">
+        <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-brand-light/30 blur-3xl" />
+        <FloatingButterflies
+          flock={[
+            { top: "14%", left: "6%", size: 20, duration: 9, delay: 0, xDrift: [0, 12, -6, 0], yDrift: [0, -12, 6, 0], rotate: [-8, 10, -4, -8], opacity: 0.55 },
+            { top: "70%", left: "42%", size: 16, duration: 11, delay: 1.4, xDrift: [0, -10, 8, 0], yDrift: [0, 10, -8, 0], rotate: [8, -10, 6, 8], opacity: 0.4 },
+          ]}
+        />
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:py-20">
           <FadeIn className="relative">
-            <ServiceIcon type={icon} className="h-14 w-14" />
+            <ServiceIcon type={icon} idle className="h-14 w-14" />
             <h1 className="mt-5 text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
               {service.heroHeadline}
             </h1>
             <p className="mt-4 text-lg text-foreground/70">{service.heroSubhead}</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-6 flex flex-wrap gap-2">
               <Link
                 href="#quote"
-                className="rounded-full bg-brand px-8 py-3.5 text-center text-sm font-semibold text-white shadow-lg shadow-brand/25 transition-all hover:-translate-y-0.5 hover:bg-brand-dark hover:shadow-xl"
+                className="rounded-full bg-brand px-4 py-2 text-center text-xs font-semibold text-white shadow-sm shadow-brand/25 transition-all hover:-translate-y-0.5 hover:bg-brand-dark hover:shadow-md sm:text-sm"
               >
                 Get a Free Quote
               </Link>
-              <a
-                href={whatsappHref(`Hi Cleano, I'd like a quote for ${service.name}`)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full border border-brand/40 bg-white px-8 py-3.5 text-center text-sm font-semibold text-brand-dark transition-all hover:-translate-y-0.5 hover:border-brand hover:shadow-md"
-              >
-                WhatsApp Us
-              </a>
+              {secondaryCta ? (
+                <Link
+                  href={secondaryCta.href}
+                  className="rounded-full border border-brand/40 bg-white px-4 py-2 text-center text-xs font-semibold text-brand-dark transition-all hover:-translate-y-0.5 hover:border-brand hover:shadow-sm sm:text-sm"
+                >
+                  {secondaryCta.label}
+                </Link>
+              ) : (
+                <a
+                  href={whatsappHref(`Hi Cleano, I'd like a quote for ${service.name}`)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full border border-brand/40 bg-white px-4 py-2 text-center text-xs font-semibold text-brand-dark transition-all hover:-translate-y-0.5 hover:border-brand hover:shadow-sm sm:text-sm"
+                >
+                  WhatsApp Us
+                </a>
+              )}
             </div>
           </FadeIn>
           <FadeIn delay={0.15} className="relative flex items-center justify-center rounded-2xl bg-white/60 p-10">
-            <ServiceIcon type={icon} className="h-40 w-40 [&_svg]:h-20 [&_svg]:w-20" />
+            <ServiceIcon type={icon} idle className="h-40 w-40 [&_svg]:h-20 [&_svg]:w-20" />
           </FadeIn>
         </div>
       </section>

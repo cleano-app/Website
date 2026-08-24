@@ -45,10 +45,10 @@ export default function AreasWeCoverPage() {
           usually able to help just outside our priority areas too.
         </p>
 
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-6 flex flex-wrap gap-2">
           <Link
             href="/quote"
-            className="rounded-full bg-brand px-8 py-3.5 text-center text-sm font-semibold text-white hover:bg-brand-dark"
+            className="rounded-full bg-brand px-4 py-2 text-center text-xs font-semibold text-white hover:bg-brand-dark sm:text-sm"
           >
             Get a Free Quote
           </Link>
@@ -56,7 +56,7 @@ export default function AreasWeCoverPage() {
             href={whatsappHref("Hi Cleano, is my postcode covered?")}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full border border-brand px-8 py-3.5 text-center text-sm font-semibold text-brand-dark"
+            className="rounded-full border border-brand px-4 py-2 text-center text-xs font-semibold text-brand-dark sm:text-sm"
           >
             WhatsApp Us
           </a>

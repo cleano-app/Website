@@ -1,13 +1,16 @@
 import ReportScene from "./illustrations/ReportScene";
 import FadeIn from "./motion/FadeIn";
 
+// Generic, applies to every service (gutters, bins, windows, pressure
+// washing, commercial) - keep this list free of anything service-specific
+// like drone photography, which only applies to roof/gutter work and
+// belongs on the gutter-cleaning and portfolio pages instead.
 const points = [
   "Uniformed team",
   "Professional equipment",
   "Fully insured",
   "Clear communication",
   "Before and after photos",
-  "Drone photos for roofs and gutters",
   "Photo report when the job is complete",
 ];
 
@@ -24,8 +27,8 @@ export default function CleanoStandard() {
             Professional cleaning. Properly documented.
           </h2>
           <p className="mt-3 text-foreground/70">
-            Every job ends with a Cleano Photo Report — including drone photography for roofs
-            and gutters where ground-level shots can&apos;t show the full picture.
+            Every job ends with a Cleano Photo Report — before-and-after photos you can rely on,
+            sent straight to your email.
           </p>
           <ul className="mt-6 grid gap-3 sm:grid-cols-2">
             {points.map((point) => (

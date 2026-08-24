@@ -1,6 +1,13 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 // Hand-built line-art icons for each service, used instead of stock/AI
 // photography (no image-gen or open internet access in this environment).
-// Each renders inside a soft gradient badge in brand colors.
+// Each renders inside a bolder gradient badge, tinted differently per
+// service for variety, with a slow continuous "breathing" idle animation
+// and a real wake-up wiggle on hover AND tap - CSS :hover barely fires on
+// touchscreens, so whileTap is what makes this feel alive on mobile.
 
 type ServiceIconType =
   | "gutter"
@@ -52,17 +59,36 @@ const paths: Record<ServiceIconType, React.ReactNode> = {
   ),
 };
 
+// Distinct gradient tint per service - all in the brand green family, but
+// varied enough that the five badges read as colourful rather than
+// identical pale boxes.
+const tintByType: Record<ServiceIconType, string> = {
+  gutter: "from-brand-light/50 to-brand/25",
+  bin: "from-brand/45 to-brand-dark/25",
+  window: "from-brand-light/55 via-brand/30 to-brand-light/20",
+  pressure: "from-brand/50 to-brand-dark/35",
+  commercial: "from-brand-dark/25 via-brand/35 to-brand-light/40",
+};
+
 export default function ServiceIcon({
   type,
   className = "",
+  idle = false,
 }: {
   type: ServiceIconType;
   className?: string;
+  /** Continuous slow bob, independent of hover - use sparingly (hero/large icons). */
+  idle?: boolean;
 }) {
   const gradId = `service-icon-grad-${type}`;
+
   return (
-    <div
-      className={`flex items-center justify-center rounded-2xl bg-gradient-to-br from-brand-light/25 to-brand/15 ${className}`}
+    <motion.div
+      animate={idle ? { y: [0, -6, 0], rotate: [0, 2, -2, 0] } : undefined}
+      transition={idle ? { duration: 5, repeat: Infinity, ease: "easeInOut" } : undefined}
+      whileHover={{ scale: 1.15, rotate: -10, transition: { duration: 0.3, ease: "easeOut" } }}
+      whileTap={{ scale: 1.28, rotate: 14, transition: { type: "spring", stiffness: 400, damping: 8 } }}
+      className={`flex items-center justify-center rounded-2xl bg-gradient-to-br ${tintByType[type]} ${className}`}
     >
       <svg
         width="32"
@@ -83,6 +109,6 @@ export default function ServiceIcon({
         </defs>
         {paths[type]}
       </svg>
-    </div>
+    </motion.div>
   );
 }

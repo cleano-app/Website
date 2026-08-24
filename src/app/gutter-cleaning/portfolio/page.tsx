@@ -4,6 +4,7 @@ import ServiceIcon from "@/components/illustrations/ServiceIcon";
 import ReportScene from "@/components/illustrations/ReportScene";
 import FadeIn from "@/components/motion/FadeIn";
 import { StaggerGrid, StaggerItem } from "@/components/motion/StaggerGrid";
+import FloatingButterflies from "@/components/motion/FloatingButterflies";
 import { mailtoHref, telHref, whatsappHref, siteConfig } from "@/lib/siteConfig";
 
 export const metadata: Metadata = {
@@ -16,18 +17,22 @@ const steps = [
   {
     title: "You send us the portfolio",
     body: "One-off inspection or ongoing programme. We build the schedule and work through it systematically.",
+    icon: "list" as const,
   },
   {
     title: "Drone inspection",
     body: "Trained operator, high-resolution photographs of gutters, outlets and downpipes at every property.",
+    icon: "drone" as const,
   },
   {
     title: "No cleaning needed → free report",
     body: "Gutters clear? We don't clean them. You get the photographic inspection report free of charge as proof the property was checked.",
+    icon: "reportCheck" as const,
   },
   {
     title: "Cleaning needed → agreed price",
     body: "Before photos → clean → after photos → full report. Competitive fixed pricing agreed in advance.",
+    icon: "priceTag" as const,
   },
 ];
 
@@ -46,22 +51,27 @@ const benefits = [
   {
     title: "Pay only when needed",
     body: "No automatic cleaning of gutters that are already clear.",
+    icon: "wallet" as const,
   },
   {
     title: "Free reports",
     body: "Where no cleaning is required, the report costs nothing.",
+    icon: "document" as const,
   },
   {
     title: "Photographic evidence",
     body: "Defensible record of condition found and work completed.",
+    icon: "camera" as const,
   },
   {
     title: "Early warning",
     body: "Roof-level issues spotted before they become claims.",
+    icon: "bell" as const,
   },
   {
     title: "One contractor",
     body: "Whole portfolio managed as a single programme.",
+    icon: "handshake" as const,
   },
 ];
 
@@ -74,11 +84,12 @@ export default function PortfolioGutterCarePage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-grain relative overflow-hidden border-b border-border-subtle bg-gradient-to-br from-muted-bg via-muted-bg to-brand-light/10">
-        <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-brand-light/20 blur-3xl" />
+      <section className="bg-grain relative overflow-hidden border-b border-border-subtle bg-gradient-to-br from-muted-bg via-muted-bg to-brand-light/15">
+        <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-brand-light/30 blur-3xl" />
+        <FloatingButterflies />
         <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:py-20">
           <FadeIn>
-            <ServiceIcon type="gutter" className="mx-auto h-14 w-14" />
+            <ServiceIcon type="gutter" idle className="mx-auto h-14 w-14" />
             <p className="mt-5 inline-flex items-center gap-2 rounded-full bg-brand/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-brand-dark uppercase">
               For Landlords, Property Managers &amp; Portfolios
             </p>
@@ -89,28 +100,21 @@ export default function PortfolioGutterCarePage() {
               We drone-inspect every gutter across your portfolio, report on every property with
               photographic evidence, and only clean where the inspection shows it&apos;s required.
             </p>
-            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-              <a
-                href={enquiryMailto}
-                className="rounded-full bg-brand px-8 py-3.5 text-center text-sm font-semibold text-white shadow-lg shadow-brand/25 transition-all hover:-translate-y-0.5 hover:bg-brand-dark hover:shadow-xl"
-              >
-                Email Us Your Portfolio
-              </a>
-              <a
-                href={whatsappHref("Hi Cleano, I'd like to discuss the Portfolio Gutter Care Scheme for our properties")}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full border border-brand/40 bg-white px-8 py-3.5 text-center text-sm font-semibold text-brand-dark transition-all hover:-translate-y-0.5 hover:border-brand hover:shadow-md"
-              >
-                WhatsApp Us
-              </a>
-            </div>
+            <a
+              href="#the-problem"
+              className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-brand-dark hover:underline"
+            >
+              See how it works
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+                <path d="M12 5v14M5 12l7 7 7-7" />
+              </svg>
+            </a>
           </FadeIn>
         </div>
       </section>
 
       {/* The problem */}
-      <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
+      <section id="the-problem" className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
         <FadeIn>
           <p className="text-sm font-semibold uppercase tracking-wide text-brand">The Problem</p>
           <p className="mt-3 text-lg text-foreground/80">
@@ -139,12 +143,15 @@ export default function PortfolioGutterCarePage() {
           <p className="text-sm font-semibold uppercase tracking-wide text-brand">How It Works</p>
           <h2 className="mt-2 text-3xl font-bold text-foreground sm:text-4xl">The Programme</h2>
         </FadeIn>
-        <StaggerGrid className="mt-10 grid gap-6 sm:grid-cols-2">
+        <StaggerGrid className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
           {steps.map((step, i) => (
             <StaggerItem key={step.title}>
               <div className="flex h-full gap-4 rounded-2xl border border-border-subtle bg-white p-6 shadow-sm">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-light to-brand text-base font-bold text-white shadow-md shadow-brand/20">
-                  {i + 1}
+                <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-light/30 to-brand/20 text-brand-dark">
+                  <StepIcon type={step.icon} />
+                  <span className="absolute -bottom-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-dark text-[11px] font-bold text-white ring-2 ring-white">
+                    {i + 1}
+                  </span>
                 </span>
                 <div>
                   <h3 className="font-semibold text-foreground">{step.title}</h3>
@@ -201,8 +208,12 @@ export default function PortfolioGutterCarePage() {
             {flagged.map((item) => (
               <li
                 key={item}
-                className="rounded-full border border-border-subtle bg-white px-4 py-2 text-sm font-medium text-foreground/80"
+                className="flex items-center gap-2 rounded-full border border-border-subtle bg-white px-4 py-2 text-sm font-medium text-foreground/80"
               >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-brand" aria-hidden="true">
+                  <path d="M12 9v4M12 17h.01" />
+                  <path d="M10.3 3.9 2.5 18a1.8 1.8 0 0 0 1.6 2.6h15.8a1.8 1.8 0 0 0 1.6-2.6L13.7 3.9a1.8 1.8 0 0 0-3.4 0Z" />
+                </svg>
                 {item}
               </li>
             ))}
@@ -228,7 +239,10 @@ export default function PortfolioGutterCarePage() {
             {benefits.map((b) => (
               <StaggerItem key={b.title}>
                 <div className="h-full rounded-2xl border border-border-subtle bg-white p-6 shadow-sm">
-                  <h3 className="font-semibold text-brand-dark">{b.title}</h3>
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-light/30 to-brand/20 text-brand-dark">
+                    <BenefitIcon type={b.icon} />
+                  </span>
+                  <h3 className="mt-4 font-semibold text-brand-dark">{b.title}</h3>
                   <p className="mt-1.5 text-sm text-foreground/70">{b.body}</p>
                 </div>
               </StaggerItem>
@@ -249,22 +263,24 @@ export default function PortfolioGutterCarePage() {
                 Send us your property list and we&apos;ll come back with a proposed inspection
                 schedule and pricing.
               </p>
-              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
                 <a
                   href={enquiryMailto}
-                  className="w-full rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-brand-dark shadow-lg transition-all hover:-translate-y-0.5 hover:bg-white/90 sm:w-auto"
+                  className="rounded-full bg-white px-4 py-2 text-xs font-semibold text-brand-dark shadow-sm transition-all hover:-translate-y-0.5 hover:bg-white/90 sm:text-sm"
                 >
                   Email Us Your Portfolio
                 </a>
                 <a
-                  href={telHref()}
-                  className="w-full rounded-full border border-white/60 px-8 py-3.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-white/10 sm:w-auto"
+                  href={whatsappHref("Hi Cleano, I'd like to discuss the Portfolio Gutter Care Scheme for our properties")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full border border-white/60 px-4 py-2 text-xs font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-white/10 sm:text-sm"
                 >
-                  Call {siteConfig.phoneDisplay}
+                  WhatsApp Us
                 </a>
               </div>
               <p className="mt-6 text-sm text-white/70">
-                Single property instead?{" "}
+                Prefer to call? <a href={telHref()} className="underline hover:text-white">{siteConfig.phoneDisplay}</a>. Single property instead?{" "}
                 <Link href="/gutter-cleaning" className="underline hover:text-white">
                   See our standard gutter cleaning
                 </Link>
@@ -295,5 +311,88 @@ function CheckIcon() {
         <path d="M5 13l4 4L19 7" />
       </svg>
     </span>
+  );
+}
+
+const stepPaths: Record<"list" | "drone" | "reportCheck" | "priceTag", React.ReactNode> = {
+  list: (
+    <>
+      <path d="M8 6h12M8 12h12M8 18h12" />
+      <circle cx="4" cy="6" r="1.3" fill="currentColor" stroke="none" />
+      <circle cx="4" cy="12" r="1.3" fill="currentColor" stroke="none" />
+      <circle cx="4" cy="18" r="1.3" fill="currentColor" stroke="none" />
+    </>
+  ),
+  drone: (
+    <>
+      <rect x="9.5" y="9.5" width="5" height="5" rx="1" />
+      <path d="M9.5 9.5 5 5M14.5 9.5 19 5M9.5 14.5 5 19M14.5 14.5 19 19" />
+      <circle cx="5" cy="5" r="2" /><circle cx="19" cy="5" r="2" />
+      <circle cx="5" cy="19" r="2" /><circle cx="19" cy="19" r="2" />
+    </>
+  ),
+  reportCheck: (
+    <>
+      <path d="M7 3h8l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" />
+      <path d="M15 3v4h4" />
+      <path d="M9 14l2.2 2.2L16 11.5" />
+    </>
+  ),
+  priceTag: (
+    <>
+      <path d="M12.6 3.4 20 10.8a2 2 0 0 1 0 2.8l-6.4 6.4a2 2 0 0 1-2.8 0L3.4 12.6A2 2 0 0 1 3 11.3V5a2 2 0 0 1 2-2h6.3c.5 0 1 .2 1.3.4Z" />
+      <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none" />
+    </>
+  ),
+};
+
+function StepIcon({ type }: { type: "list" | "drone" | "reportCheck" | "priceTag" }) {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {stepPaths[type]}
+    </svg>
+  );
+}
+
+const benefitPaths: Record<"wallet" | "document" | "camera" | "bell" | "handshake", React.ReactNode> = {
+  wallet: (
+    <>
+      <path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v3M3 7v11a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1h-4a2 2 0 1 0 0 4h5" />
+    </>
+  ),
+  document: (
+    <>
+      <path d="M7 3h8l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" />
+      <path d="M15 3v4h4M9 13h6M9 17h4" />
+    </>
+  ),
+  camera: (
+    <>
+      <rect x="3" y="7" width="18" height="13" rx="2" />
+      <path d="M8 7l1.6-2.5h4.8L16 7" />
+      <circle cx="12" cy="13.5" r="3.5" />
+    </>
+  ),
+  bell: (
+    <>
+      <path d="M6 10a6 6 0 1 1 12 0c0 4 1.5 5.5 1.5 5.5H4.5S6 14 6 10Z" />
+      <path d="M10 19a2 2 0 0 0 4 0" />
+    </>
+  ),
+  handshake: (
+    <>
+      <path d="M2 12l4-4 4 3 4-3 3 2" />
+      <path d="M11 8l4 3.5a1.5 1.5 0 0 1-2 2.2M15 11.5l1.8 1.6a1.5 1.5 0 0 1-2 2.2" />
+      <path d="M6 8l-4 4 5 5 2-1.6" />
+      <path d="M18 10l4 2-5 6-2.2-1.8" />
+    </>
+  ),
+};
+
+function BenefitIcon({ type }: { type: "wallet" | "document" | "camera" | "bell" | "handshake" }) {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {benefitPaths[type]}
+    </svg>
   );
 }

@@ -1,12 +1,19 @@
 import Link from "next/link";
 import { priorityAreas, regionName } from "@/lib/content/areas";
+import FloatingButterflies from "./motion/FloatingButterflies";
 
 export default function AreasWeCoverSection() {
   return (
     <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-      <div className="bg-grain relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-dark to-brand px-6 py-14 text-center text-white sm:px-12">
-        <div className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full bg-white/10" />
-        <div className="pointer-events-none absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-white/5" />
+      <div className="bg-grain relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-dark via-brand to-brand-dark px-6 py-14 text-center text-white sm:px-12">
+        <div className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full bg-white/15" />
+        <div className="pointer-events-none absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-brand-light/15" />
+        <FloatingButterflies
+          flock={[
+            { top: "18%", left: "10%", size: 20, duration: 9, delay: 0.3, xDrift: [0, 12, -6, 0], yDrift: [0, -12, 6, 0], rotate: [-8, 10, -4, -8], opacity: 0.45 },
+            { top: "65%", left: "90%", size: 18, duration: 10, delay: 1.1, xDrift: [0, -10, 8, 0], yDrift: [0, 10, -8, 0], rotate: [8, -10, 6, 8], opacity: 0.4 },
+          ]}
+        />
 
         <div className="relative">
           <PinIcon />
