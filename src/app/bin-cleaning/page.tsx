@@ -13,7 +13,10 @@ export default function BinCleaningPage() {
   return (
     <ServicePageLayout
       service={service}
-      realPhotos={[{ before: "/photos/bin-before.jpg", after: "/photos/bin-after.jpg" }]}
+      realPhotos={[
+        { before: "/photos/bin-before.jpg", after: "/photos/bin-after.jpg" },
+        { before: "/photos/bin2-before.jpg", after: "/photos/bin2-after.jpg" },
+      ]}
     />
   );
 }
