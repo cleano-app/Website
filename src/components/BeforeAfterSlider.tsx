@@ -1,12 +1,13 @@
 "use client";
 
 import { useRef, useState } from "react";
-import ServiceIcon from "./illustrations/ServiceIcon";
+import DirtyCleanScene from "./illustrations/DirtyCleanScene";
 
 type ServiceIconType = "gutter" | "bin" | "window" | "pressure" | "commercial";
 
 // A dependency-free before/after slider. The two panels are illustrated
-// (dull/grey vs bright/branded) rather than real photos - swap `beforeSrc`/
+// scenes (dirty vs. clean) rather than real photos - no image-gen or open
+// internet access is available in this environment. Swap `beforeSrc`/
 // `afterSrc` for real photo URLs once real job photography is available.
 export default function BeforeAfterSlider({
   label,
@@ -40,23 +41,23 @@ export default function BeforeAfterSlider({
           updateFromClientX(e.clientX);
         }}
       >
-        {/* After layer (full size, underneath): bright + branded */}
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-brand-light/30 via-white to-brand/10">
-          <ServiceIcon type={icon} className="h-20 w-20 [&_svg]:h-10 [&_svg]:w-10" />
-          <span className="absolute right-3 top-3 rounded-full bg-brand px-3 py-1 text-[11px] font-semibold text-white">
+        {/* After layer (full size, underneath) */}
+        <div className="absolute inset-0">
+          <DirtyCleanScene type={icon} state="after" className="h-full w-full" />
+          <span className="absolute right-3 top-3 rounded-full bg-brand px-3 py-1 text-[11px] font-semibold text-white shadow-sm">
             After
           </span>
         </div>
 
         {/* Before layer - full-size and fixed in place (like a real photo),
             with only the visible portion changing via clip-path, so content
-            doesn't rescale as the slider moves. Dull/desaturated look. */}
+            doesn't rescale as the slider moves. */}
         <div
-          className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-stone-300 via-stone-200 to-stone-300"
+          className="absolute inset-0 overflow-hidden"
           style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
         >
-          <ServiceIcon type={icon} className="h-20 w-20 opacity-40 grayscale [&_svg]:h-10 [&_svg]:w-10" />
-          <span className="absolute left-3 top-3 rounded-full bg-stone-600 px-3 py-1 text-[11px] font-semibold text-white">
+          <DirtyCleanScene type={icon} state="before" className="h-full w-full" />
+          <span className="absolute left-3 top-3 rounded-full bg-stone-600 px-3 py-1 text-[11px] font-semibold text-white shadow-sm">
             Before
           </span>
         </div>

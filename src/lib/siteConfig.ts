@@ -6,7 +6,7 @@ export const siteConfig = {
   name: "Cleano",
   tagline: "Clean places. Better spaces.",
   description:
-    "Professional exterior cleaning for homes and businesses across North London: gutter cleaning, bin cleaning, window cleaning, pressure washing and commercial cleaning.",
+    "Cleano is an exterior cleaning company serving homes and businesses across London and the surrounding areas: gutter cleaning, window cleaning, pressure washing, bin cleaning and commercial cleaning.",
   url: process.env.NEXT_PUBLIC_APP_URL || "https://cleano.services",
   opsAppUrl: process.env.NEXT_PUBLIC_OPS_APP_URL || "https://ops.cleano.services",
 

@@ -6,6 +6,7 @@ const points = [
   "Fully insured",
   "Clear communication",
   "Before and after photos",
+  "Drone photos for roofs and gutters",
   "Photo report when the job is complete",
 ];
 
@@ -21,6 +22,10 @@ export default function CleanoStandard() {
           <h2 className="mt-2 text-3xl font-bold text-foreground sm:text-4xl">
             Professional cleaning. Properly documented.
           </h2>
+          <p className="mt-3 text-foreground/70">
+            Every job ends with a Cleano Photo Report — including drone photography for roofs
+            and gutters where ground-level shots can&apos;t show the full picture.
+          </p>
           <ul className="mt-6 grid gap-3 sm:grid-cols-2">
             {points.map((point) => (
               <li key={point} className="flex items-start gap-3 text-foreground/80">

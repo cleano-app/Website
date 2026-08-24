@@ -10,7 +10,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border-subtle bg-background/95 shadow-sm backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2 sm:px-6">
         <Link href="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
           <Image
             src="/brand/cleano-logo.png"
@@ -18,7 +18,7 @@ export default function Header() {
             width={160}
             height={80}
             priority
-            className="h-9 w-auto sm:h-10"
+            className="h-14 w-auto sm:h-16"
           />
         </Link>
 

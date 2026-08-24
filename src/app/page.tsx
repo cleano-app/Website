@@ -1,12 +1,12 @@
 import Link from "next/link";
 import HeroScene from "@/components/illustrations/HeroScene";
 import TrustStrip from "@/components/TrustStrip";
+import Certifications from "@/components/Certifications";
 import ServicesGrid from "@/components/ServicesGrid";
 import BeforeAfterSlider from "@/components/BeforeAfterSlider";
 import CleanoStandard from "@/components/CleanoStandard";
 import HowItWorks from "@/components/HowItWorks";
 import ResidentialCommercialSplit from "@/components/ResidentialCommercialSplit";
-import AreasWeCoverSection from "@/components/AreasWeCoverSection";
 import Reviews from "@/components/Reviews";
 import FinalCTA from "@/components/FinalCTA";
 import { whatsappHref } from "@/lib/siteConfig";
@@ -19,14 +19,15 @@ export default function HomePage() {
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-24">
           <div>
             <p className="inline-flex items-center gap-2 rounded-full bg-brand/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-brand-dark uppercase">
-              North London&apos;s Exterior Cleaning Specialists
+              Exterior Cleaning Company · London &amp; Surrounding Areas
             </p>
             <h1 className="mt-5 text-4xl font-bold leading-tight text-foreground sm:text-5xl lg:text-6xl">
               Clean places. <span className="text-brand-dark">Better spaces.</span>
             </h1>
             <p className="mt-5 max-w-lg text-lg text-foreground/70">
-              Professional exterior cleaning for homes and businesses across North London —
-              gutters, bins, windows, driveways and scheduled commercial care.
+              Cleano is an exterior cleaning company serving homes and businesses across London
+              and the surrounding areas — gutters, windows, driveways, bins and scheduled
+              commercial care.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
@@ -50,6 +51,7 @@ export default function HomePage() {
       </section>
 
       <TrustStrip />
+      <Certifications />
       <ServicesGrid />
 
       {/* Before & after */}
@@ -75,7 +77,6 @@ export default function HomePage() {
       <CleanoStandard />
       <HowItWorks />
       <ResidentialCommercialSplit />
-      <AreasWeCoverSection />
       <Reviews />
       <FinalCTA />
     </>

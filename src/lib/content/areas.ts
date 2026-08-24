@@ -15,4 +15,4 @@ export const priorityAreas: Area[] = [
   { name: "Enfield", postcodes: ["EN1", "EN2", "EN3"] },
 ];
 
-export const regionName = "North London";
+export const regionName = "London and the surrounding areas";

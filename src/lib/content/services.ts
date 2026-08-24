@@ -36,7 +36,7 @@ export const services: Service[] = [
       "Professional gutter vacuum equipment",
       "Removal of leaves, moss and debris",
       "Downpipe checks where applicable",
-      "Before and after photos",
+      "Before and after photos, including drone photos of the roofline",
       "Cleano Photo Report emailed to you",
     ],
     why: [
@@ -70,7 +70,7 @@ export const services: Service[] = [
       },
       {
         q: "Do I get proof the work was done?",
-        a: "Yes. Every gutter clean includes a Cleano Photo Report with before-and-after photos, sent straight to your email.",
+        a: "Yes. Every gutter clean includes a Cleano Photo Report with before-and-after photos - including drone photos of the roofline where useful - sent straight to your email.",
       },
       {
         q: "What areas do you cover?",
@@ -287,7 +287,7 @@ export const services: Service[] = [
     faqs: [
       {
         q: "Who do you typically work with?",
-        a: "Property managers, landlords, offices, shops, schools, blocks of flats and other organisations across North London.",
+        a: "Property managers, landlords, offices, shops, schools, blocks of flats and other organisations across London and the surrounding areas.",
       },
       {
         q: "Can you manage multiple sites under one contract?",
