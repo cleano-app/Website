@@ -47,7 +47,11 @@ export default function HomePage() {
               />
             </StaggerItem>
             <StaggerItem>
-              <BeforeAfterSlider label="Bin deep clean" icon="bin" />
+              <BeforeAfterSlider
+                label="Bin deep clean"
+                icon="bin"
+                photos={{ before: "/photos/bin-before.jpg", after: "/photos/bin-after.jpg" }}
+              />
             </StaggerItem>
           </StaggerGrid>
         </div>
