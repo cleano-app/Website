@@ -13,6 +13,16 @@ export const metadata: Metadata = {
     "Drone-inspect every gutter across your portfolio, clean only where it's needed, and get a free photographic report where it isn't. For landlords, property managers and commercial portfolios.",
 };
 
+// This hero is centred text running close to full width at every line, so
+// butterflies are confined to the top/bottom padding bands only - never
+// beside the copy itself.
+const heroButterflies = [
+  { top: "1%", left: "4%", size: 20, duration: 9, delay: 0, xDrift: [0, 10, -4, 0], yDrift: [0, -6, 4, 0], rotate: [-8, 10, -4, -8] },
+  { top: "2%", left: "88%", size: 16, duration: 10, delay: 0.8, xDrift: [0, -8, 4, 0], yDrift: [0, 6, -4, 0], rotate: [10, -6, 8, 10] },
+  { top: "93%", left: "8%", size: 16, duration: 11, delay: 1.4, xDrift: [0, 8, -4, 0], yDrift: [0, -6, 4, 0], rotate: [6, -10, 12, 6], opacity: 0.55 },
+  { top: "94%", left: "86%", size: 18, duration: 8, delay: 2, xDrift: [0, -8, 6, 0], yDrift: [0, -6, 4, 0], rotate: [-6, 12, -10, -6], opacity: 0.5 },
+];
+
 const steps = [
   {
     title: "You send us the portfolio",
@@ -86,7 +96,7 @@ export default function PortfolioGutterCarePage() {
       {/* Hero */}
       <section className="bg-grain relative overflow-hidden border-b border-border-subtle bg-gradient-to-br from-muted-bg via-muted-bg to-brand-light/15">
         <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-brand-light/30 blur-3xl" />
-        <FloatingButterflies />
+        <FloatingButterflies flock={heroButterflies} />
         <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:py-20">
           <FadeIn>
             <ServiceIcon type="gutter" idle className="mx-auto h-14 w-14" />

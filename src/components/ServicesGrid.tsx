@@ -6,8 +6,8 @@ import { StaggerGrid, StaggerItem } from "./motion/StaggerGrid";
 import FloatingButterflies from "./motion/FloatingButterflies";
 
 const sectionButterflies = [
-  { top: "4%", left: "3%", size: 18, duration: 9, delay: 0.2, xDrift: [0, 10, -6, 0], yDrift: [0, -10, 6, 0], rotate: [-8, 10, -4, -8], opacity: 0.4 },
-  { top: "8%", left: "94%", size: 16, duration: 10, delay: 1.1, xDrift: [0, -8, 6, 0], yDrift: [0, 8, -6, 0], rotate: [8, -10, 6, 8], opacity: 0.35 },
+  { top: "1%", left: "1%", size: 18, duration: 9, delay: 0.2, xDrift: [0, 8, -4, 0], yDrift: [0, -4, 2, 0], rotate: [-8, 10, -4, -8], opacity: 0.4 },
+  { top: "1%", left: "96%", size: 16, duration: 10, delay: 1.1, xDrift: [0, -6, 4, 0], yDrift: [0, 4, -2, 0], rotate: [8, -10, 6, 8], opacity: 0.35 },
 ];
 
 const iconBySlug: Record<string, "gutter" | "bin" | "window" | "pressure" | "commercial" | "graffiti"> = {

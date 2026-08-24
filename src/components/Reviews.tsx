@@ -29,8 +29,8 @@ export default function Reviews() {
     <section className="relative overflow-hidden bg-muted-bg py-20">
       <FloatingButterflies
         flock={[
-          { top: "8%", left: "4%", size: 18, duration: 9, delay: 0.3, xDrift: [0, 10, -6, 0], yDrift: [0, -10, 6, 0], rotate: [-8, 10, -4, -8], opacity: 0.4 },
-          { top: "10%", left: "90%", size: 16, duration: 10, delay: 1.2, xDrift: [0, -8, 6, 0], yDrift: [0, 8, -6, 0], rotate: [8, -10, 6, 8], opacity: 0.35 },
+          { top: "3%", left: "2%", size: 18, duration: 9, delay: 0.3, xDrift: [0, 8, -4, 0], yDrift: [0, -6, 4, 0], rotate: [-8, 10, -4, -8], opacity: 0.4 },
+          { top: "3%", left: "94%", size: 16, duration: 10, delay: 1.2, xDrift: [0, -6, 4, 0], yDrift: [0, 6, -4, 0], rotate: [8, -10, 6, 8], opacity: 0.35 },
         ]}
       />
       <div className="mx-auto max-w-6xl px-4 sm:px-6">

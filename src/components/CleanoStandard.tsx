@@ -23,7 +23,7 @@ export default function CleanoStandard() {
     <section className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6">
       <FloatingButterflies
         flock={[
-          { top: "6%", left: "92%", size: 18, duration: 10, delay: 0.4, xDrift: [0, -10, 6, 0], yDrift: [0, 10, -6, 0], rotate: [8, -10, 6, 8], opacity: 0.4 },
+          { top: "2%", left: "94%", size: 18, duration: 10, delay: 0.4, xDrift: [0, -8, 4, 0], yDrift: [0, 6, -4, 0], rotate: [8, -10, 6, 8], opacity: 0.4 },
         ]}
       />
       <div className="grid items-center gap-12 lg:grid-cols-2">

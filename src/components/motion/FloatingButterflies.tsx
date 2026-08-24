@@ -17,12 +17,17 @@ type Butterfly = {
 
 // Fixed (not random) flight paths so server/client render match exactly -
 // each butterfly loops a loose, organic drift + wing-tilt wobble forever.
+//
+// Kept to the very top/bottom corners on purpose: on mobile a section's
+// text spans close to the full width, so any mid-height position risks
+// drifting across a headline or paragraph. The top/bottom padding bands
+// (before the first line of text, after the last) stay clear regardless
+// of how tall the section's copy runs.
 const DEFAULT_FLOCK: Butterfly[] = [
-  { top: "12%", left: "6%", size: 28, duration: 9, delay: 0, xDrift: [0, 14, -6, 0], yDrift: [0, -16, -4, 0], rotate: [-8, 10, -4, -8] },
-  { top: "62%", left: "10%", size: 20, duration: 11, delay: 1.2, xDrift: [0, -12, 8, 0], yDrift: [0, 14, -10, 0], rotate: [6, -10, 12, 6], opacity: 0.7 },
-  { top: "20%", left: "88%", size: 24, duration: 10, delay: 0.6, xDrift: [0, -16, 6, 0], yDrift: [0, 12, -14, 0], rotate: [10, -6, 8, 10] },
-  { top: "75%", left: "84%", size: 18, duration: 8, delay: 2, xDrift: [0, 10, -14, 0], yDrift: [0, -10, 8, 0], rotate: [-6, 12, -10, -6], opacity: 0.6 },
-  { top: "42%", left: "48%", size: 16, duration: 12, delay: 0.4, xDrift: [0, 18, -8, 0], yDrift: [0, -8, 10, 0], rotate: [8, -12, 6, 8], opacity: 0.5 },
+  { top: "1%", left: "3%", size: 22, duration: 9, delay: 0, xDrift: [0, 10, -4, 0], yDrift: [0, -6, 4, 0], rotate: [-8, 10, -4, -8] },
+  { top: "2%", left: "91%", size: 18, duration: 10, delay: 0.6, xDrift: [0, -8, 4, 0], yDrift: [0, 6, -4, 0], rotate: [10, -6, 8, 10] },
+  { top: "95%", left: "6%", size: 16, duration: 11, delay: 1.2, xDrift: [0, 8, -4, 0], yDrift: [0, -6, 4, 0], rotate: [6, -10, 12, 6], opacity: 0.6 },
+  { top: "96%", left: "90%", size: 18, duration: 8, delay: 2, xDrift: [0, -8, 6, 0], yDrift: [0, -6, 4, 0], rotate: [-6, 12, -10, -6], opacity: 0.55 },
 ];
 
 /** Decorative flying-butterfly accents using the real logo icon, looping a

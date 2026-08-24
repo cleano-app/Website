@@ -3,9 +3,11 @@ import { whatsappHref } from "@/lib/siteConfig";
 import FadeIn from "./motion/FadeIn";
 import FloatingButterflies from "./motion/FloatingButterflies";
 
+// The card's text/buttons are centred, so butterflies stay in the top and
+// bottom padding bands (py-16) rather than beside the copy or the buttons.
 const ctaButterflies = [
-  { top: "15%", left: "8%", size: 22, duration: 9, delay: 0.2, xDrift: [0, 12, -6, 0], yDrift: [0, -12, 6, 0], rotate: [-8, 10, -4, -8], opacity: 0.5 },
-  { top: "70%", left: "88%", size: 18, duration: 10, delay: 1, xDrift: [0, -10, 8, 0], yDrift: [0, 10, -8, 0], rotate: [8, -10, 6, 8], opacity: 0.4 },
+  { top: "6%", left: "6%", size: 20, duration: 9, delay: 0.2, xDrift: [0, 10, -6, 0], yDrift: [0, -6, 4, 0], rotate: [-8, 10, -4, -8], opacity: 0.5 },
+  { top: "88%", left: "88%", size: 18, duration: 10, delay: 1, xDrift: [0, -8, 6, 0], yDrift: [0, 6, -4, 0], rotate: [8, -10, 6, 8], opacity: 0.4 },
 ];
 
 export default function FinalCTA() {

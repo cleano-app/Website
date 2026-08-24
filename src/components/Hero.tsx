@@ -6,6 +6,19 @@ import HeroScene from "./illustrations/HeroScene";
 import FloatingButterflies from "./motion/FloatingButterflies";
 import { whatsappHref } from "@/lib/siteConfig";
 
+// Confined to the top corners of the section (above the badge/headline) so
+// they never drift across the copy, which runs close to full width on mobile.
+const heroButterflies = [
+  { top: "1%", left: "3%", size: 22, duration: 9, delay: 0, xDrift: [0, 10, -4, 0], yDrift: [0, -6, 4, 0], rotate: [-8, 10, -4, -8] },
+  { top: "2%", left: "90%", size: 18, duration: 10, delay: 0.8, xDrift: [0, -8, 4, 0], yDrift: [0, 6, -4, 0], rotate: [10, -6, 8, 10] },
+];
+
+// A single butterfly scoped to just the illustration box - safe to place
+// anywhere inside since there's no text in there.
+const illustrationButterflies = [
+  { top: "6%", left: "82%", size: 18, duration: 8, delay: 1.4, xDrift: [0, -10, 6, 0], yDrift: [0, 8, -6, 0], rotate: [8, -10, 6, 8], opacity: 0.6 },
+];
+
 export default function Hero() {
   return (
     <section className="bg-grain relative overflow-hidden border-b border-border-subtle bg-gradient-to-br from-muted-bg via-muted-bg to-brand-light/15">
@@ -26,7 +39,7 @@ export default function Hero() {
         transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      <FloatingButterflies />
+      <FloatingButterflies flock={heroButterflies} />
 
       <div className="relative mx-auto grid max-w-6xl items-center gap-2 px-4 py-10 sm:px-6 lg:grid-cols-2 lg:gap-10 lg:py-24">
         <motion.div
@@ -73,7 +86,9 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, delay: 0.15, ease: "easeOut" }}
+          className="relative"
         >
+          <FloatingButterflies flock={illustrationButterflies} />
           <motion.div
             animate={{ y: [0, -10, 0], rotate: [0, 1, -1, 0] }}
             transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
