@@ -1,20 +1,20 @@
 "use client";
 
+import Image from "next/image";
 import { useRef, useState } from "react";
-import DirtyCleanScene from "./illustrations/DirtyCleanScene";
 
-type ServiceIconType = "gutter" | "bin" | "window" | "pressure" | "commercial";
-
-// A dependency-free before/after slider. The two panels are illustrated
-// scenes (dirty vs. clean) rather than real photos - no image-gen or open
-// internet access is available in this environment. Swap `beforeSrc`/
-// `afterSrc` for real photo URLs once real job photography is available.
+// A dependency-free before/after slider driven by two real photographs shot
+// from the same angle. Pass matching `beforeSrc`/`afterSrc` paths.
 export default function BeforeAfterSlider({
   label,
-  icon,
+  beforeSrc,
+  afterSrc,
+  priority = false,
 }: {
   label: string;
-  icon: ServiceIconType;
+  beforeSrc: string;
+  afterSrc: string;
+  priority?: boolean;
 }) {
   const [position, setPosition] = useState(50);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -43,21 +43,35 @@ export default function BeforeAfterSlider({
       >
         {/* After layer (full size, underneath) */}
         <div className="absolute inset-0">
-          <DirtyCleanScene type={icon} state="after" className="h-full w-full" />
+          <Image
+            src={afterSrc}
+            alt={`${label} — after cleaning`}
+            fill
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            className="object-cover"
+            priority={priority}
+          />
           <span className="absolute right-3 top-3 rounded-full bg-brand px-3 py-1 text-[11px] font-semibold text-white shadow-sm">
             After
           </span>
         </div>
 
-        {/* Before layer - full-size and fixed in place (like a real photo),
-            with only the visible portion changing via clip-path, so content
-            doesn't rescale as the slider moves. */}
+        {/* Before layer - full-size and fixed in place, with only the visible
+            portion changing via clip-path so the photo doesn't rescale as the
+            slider moves. */}
         <div
           className="absolute inset-0 overflow-hidden"
           style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
         >
-          <DirtyCleanScene type={icon} state="before" className="h-full w-full" />
-          <span className="absolute left-3 top-3 rounded-full bg-stone-600 px-3 py-1 text-[11px] font-semibold text-white shadow-sm">
+          <Image
+            src={beforeSrc}
+            alt={`${label} — before cleaning`}
+            fill
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            className="object-cover"
+            priority={priority}
+          />
+          <span className="absolute left-3 top-3 rounded-full bg-stone-700 px-3 py-1 text-[11px] font-semibold text-white shadow-sm">
             Before
           </span>
         </div>

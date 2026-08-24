@@ -1,5 +1,5 @@
+import Image from "next/image";
 import Link from "next/link";
-import HeroScene from "@/components/illustrations/HeroScene";
 import TrustStrip from "@/components/TrustStrip";
 import Certifications from "@/components/Certifications";
 import ServicesGrid from "@/components/ServicesGrid";
@@ -46,12 +46,20 @@ export default function HomePage() {
               </a>
             </div>
           </div>
-          <HeroScene className="mx-auto w-full max-w-md" />
+          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border border-border-subtle shadow-xl shadow-foreground/5">
+            <Image
+              src="/images/hero-window-cleaning.png"
+              alt="Cleano technician cleaning the upper windows of a London home with a water-fed pole"
+              fill
+              priority
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-cover"
+            />
+          </div>
         </div>
       </section>
 
       <TrustStrip />
-      <Certifications />
       <ServicesGrid />
 
       {/* Before & after */}
@@ -67,9 +75,21 @@ export default function HomePage() {
             Drag the slider on three of Cleano&apos;s strongest jobs, before and after.
           </p>
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <BeforeAfterSlider label="Gutter clearing" icon="gutter" />
-            <BeforeAfterSlider label="Pressure-washed driveway" icon="pressure" />
-            <BeforeAfterSlider label="Bin deep clean" icon="bin" />
+            <BeforeAfterSlider
+              label="Gutter clearing"
+              beforeSrc="/images/before-gutter.png"
+              afterSrc="/images/after-gutter.png"
+            />
+            <BeforeAfterSlider
+              label="Pressure-washed driveway"
+              beforeSrc="/images/before-driveway.png"
+              afterSrc="/images/after-driveway.png"
+            />
+            <BeforeAfterSlider
+              label="Bin deep clean"
+              beforeSrc="/images/before-bin.png"
+              afterSrc="/images/after-bin.png"
+            />
           </div>
         </div>
       </section>

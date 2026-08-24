@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import PhotoPlaceholder from "@/components/PhotoPlaceholder";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "About Cleano",
@@ -51,15 +51,47 @@ export default function AboutPage() {
               need evidence that scheduled maintenance happened.
             </p>
           </div>
-          <PhotoPlaceholder label="Cleano Photo Report example" aspect="aspect-[4/3]" />
+          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border border-border-subtle shadow-lg shadow-foreground/5">
+            <Image
+              src="/images/photo-report.png"
+              alt="Example Cleano Photo Report on a phone screen, showing before and after photos of a completed job"
+              fill
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="object-cover"
+            />
+          </div>
         </div>
       </section>
 
       <section className="bg-muted-bg py-14">
         <div className="mx-auto grid max-w-4xl gap-6 px-4 sm:grid-cols-3 sm:px-6">
-          <PhotoPlaceholder label="Cleano vehicle" aspect="aspect-square" />
-          <PhotoPlaceholder label="Cleano equipment" aspect="aspect-square" />
-          <PhotoPlaceholder label="Cleano team" aspect="aspect-square" />
+          {[
+            {
+              src: "/images/about-van.png",
+              alt: "Cleano branded van parked on a residential London street",
+            },
+            {
+              src: "/images/about-equipment.png",
+              alt: "Cleano professional cleaning equipment laid out and ready for a job",
+            },
+            {
+              src: "/images/about-team.png",
+              alt: "Uniformed Cleano team members outside a London property",
+            },
+          ].map((photo) => (
+            <div
+              key={photo.src}
+              className="relative aspect-square w-full overflow-hidden rounded-2xl border border-border-subtle shadow-sm"
+            >
+              <Image
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                sizes="(min-width: 640px) 33vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+          ))}
         </div>
       </section>
     </>

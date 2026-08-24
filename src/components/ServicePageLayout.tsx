@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Service } from "@/lib/content/services";
 import ServiceIcon from "./illustrations/ServiceIcon";
@@ -54,8 +55,15 @@ export default function ServicePageLayout({ service }: { service: Service }) {
               </a>
             </div>
           </div>
-          <div className="relative flex items-center justify-center rounded-2xl bg-white/60 p-10">
-            <ServiceIcon type={icon} className="h-40 w-40 [&_svg]:h-20 [&_svg]:w-20" />
+          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border border-border-subtle shadow-xl shadow-foreground/5">
+            <Image
+              src={service.heroImage.src}
+              alt={service.heroImage.alt}
+              fill
+              priority
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-cover"
+            />
           </div>
         </div>
       </section>
@@ -89,18 +97,27 @@ export default function ServicePageLayout({ service }: { service: Service }) {
       </section>
 
       {/* Before & after */}
-      <section className="bg-muted-bg py-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <p className="text-sm font-semibold uppercase tracking-wide text-brand">Real Results</p>
-          <h2 className="mt-2 text-2xl font-bold text-foreground sm:text-3xl">Before &amp; After</h2>
-          <p className="mt-2 text-sm text-foreground/60">Real {service.name.toLowerCase()} jobs.</p>
-          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <BeforeAfterSlider label={`${service.name} job 1`} icon={icon} />
-            <BeforeAfterSlider label={`${service.name} job 2`} icon={icon} />
-            <BeforeAfterSlider label={`${service.name} job 3`} icon={icon} />
+      {service.beforeAfter && service.beforeAfter.length > 0 && (
+        <section className="bg-muted-bg py-16">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <p className="text-sm font-semibold uppercase tracking-wide text-brand">Real Results</p>
+            <h2 className="mt-2 text-2xl font-bold text-foreground sm:text-3xl">Before &amp; After</h2>
+            <p className="mt-2 text-sm text-foreground/60">
+              Drag the slider to see a {service.name.toLowerCase()} job.
+            </p>
+            <div className="mt-6 grid gap-6 sm:max-w-md">
+              {service.beforeAfter.map((pair) => (
+                <BeforeAfterSlider
+                  key={pair.label}
+                  label={pair.label}
+                  beforeSrc={pair.before}
+                  afterSrc={pair.after}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Why this matters */}
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">

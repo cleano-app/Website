@@ -7,6 +7,17 @@ export type ServiceOption = {
   description: string;
 };
 
+export type ServicePhoto = {
+  src: string;
+  alt: string;
+};
+
+export type BeforeAfterPair = {
+  label: string;
+  before: string;
+  after: string;
+};
+
 export type Service = {
   slug: string;
   name: string;
@@ -14,9 +25,12 @@ export type Service = {
   cardBlurb: string;
   heroHeadline: string;
   heroSubhead: string;
+  heroImage: ServicePhoto;
   included: string[];
   why: { title: string; body: string }[];
   serviceOptions?: ServiceOption[];
+  /** Matched before/after pairs shot from the same angle. */
+  beforeAfter?: BeforeAfterPair[];
   pricingFrom: string;
   pricingNote: string;
   faqs: { q: string; a: string }[];
@@ -31,6 +45,17 @@ export const services: Service[] = [
     heroHeadline: "Professional Gutter Cleaning",
     heroSubhead:
       "Protect your property from blocked gutters, overflowing water and avoidable damage.",
+    heroImage: {
+      src: "/images/service-gutter-cleaning.png",
+      alt: "Cleano technician clearing a gutter from the ground with a professional gutter vacuum pole",
+    },
+    beforeAfter: [
+      {
+        label: "Blocked gutter cleared",
+        before: "/images/before-gutter.png",
+        after: "/images/after-gutter.png",
+      },
+    ],
     included: [
       "Full gutter clearing, front and back",
       "Professional gutter vacuum equipment",
@@ -85,6 +110,17 @@ export const services: Service[] = [
     cardBlurb: "No grime, smells or flies - one-off or on a schedule.",
     heroHeadline: "Clean bins. No grime, smells or flies.",
     heroSubhead: "Professional bin cleaning for homes and businesses.",
+    heroImage: {
+      src: "/images/service-bin-cleaning.png",
+      alt: "A row of freshly cleaned wheelie bins outside a London terraced house",
+    },
+    beforeAfter: [
+      {
+        label: "Wheelie bin deep clean",
+        before: "/images/before-bin.png",
+        after: "/images/after-bin.png",
+      },
+    ],
     included: [
       "Full bin washing, inside and outside",
       "Dirt and residue removal",
@@ -149,6 +185,10 @@ export const services: Service[] = [
     cardBlurb: "Streak-free glass, frames and sills - one-off or regular.",
     heroHeadline: "Clean windows. Professional finish.",
     heroSubhead: "Reliable window cleaning for homes and businesses.",
+    heroImage: {
+      src: "/images/service-window-cleaning.png",
+      alt: "Water-fed pole brush cleaning a sash window to a streak-free finish",
+    },
     included: [
       "Glass, inside and out where accessible",
       "Frames and sills",
@@ -203,6 +243,17 @@ export const services: Service[] = [
     heroHeadline: "Bring tired outdoor surfaces back to life.",
     heroSubhead:
       "Professional pressure washing for residential and commercial properties.",
+    heroImage: {
+      src: "/images/service-pressure-washing.png",
+      alt: "Rotary surface cleaner pressure washing a patio, with a sharp line between dirty and clean paving",
+    },
+    beforeAfter: [
+      {
+        label: "Driveway restored",
+        before: "/images/before-driveway.png",
+        after: "/images/after-driveway.png",
+      },
+    ],
     included: [
       "Full surface assessment before we start",
       "Professional-grade pressure washing equipment",
@@ -257,6 +308,10 @@ export const services: Service[] = [
     heroHeadline: "Reliable exterior cleaning for your business.",
     heroSubhead:
       "Professional scheduled and one-off cleaning with clear reporting.",
+    heroImage: {
+      src: "/images/service-commercial-cleaning.png",
+      alt: "Cleano technician cleaning the glass shopfront of a London commercial unit",
+    },
     included: [
       "Gutter cleaning",
       "Bin cleaning",

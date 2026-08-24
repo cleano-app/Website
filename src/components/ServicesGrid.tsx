@@ -1,14 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
 import { services } from "@/lib/content/services";
-import ServiceIcon from "./illustrations/ServiceIcon";
-
-const iconBySlug: Record<string, "gutter" | "bin" | "window" | "pressure" | "commercial"> = {
-  "gutter-cleaning": "gutter",
-  "bin-cleaning": "bin",
-  "window-cleaning": "window",
-  "pressure-washing": "pressure",
-  "commercial-cleaning": "commercial",
-};
 
 export default function ServicesGrid() {
   return (
@@ -19,18 +11,43 @@ export default function ServicesGrid() {
       <h2 className="mt-2 text-center text-3xl font-bold text-foreground sm:text-4xl">
         Our Services
       </h2>
-      <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {services.map((service) => (
           <Link
             key={service.slug}
             href={`/${service.slug}`}
-            className="group flex flex-col items-center gap-3 rounded-2xl border border-border-subtle bg-white px-4 py-7 text-center transition-all hover:-translate-y-1 hover:border-brand/40 hover:shadow-lg"
+            className="group flex flex-col overflow-hidden rounded-2xl border border-border-subtle bg-white transition-all hover:-translate-y-1 hover:border-brand/40 hover:shadow-lg"
           >
-            <ServiceIcon
-              type={iconBySlug[service.slug]}
-              className="h-20 w-20 transition-transform duration-300 ease-out group-hover:-rotate-6 group-hover:scale-110 [&_svg]:h-10 [&_svg]:w-10"
-            />
-            <h3 className="text-base font-semibold text-foreground">{service.name}</h3>
+            <div className="relative aspect-[16/10] w-full overflow-hidden">
+              <Image
+                src={service.heroImage.src}
+                alt={service.heroImage.alt}
+                fill
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+              />
+            </div>
+            <div className="flex flex-1 flex-col gap-1.5 p-5">
+              <h3 className="text-base font-semibold text-foreground">{service.name}</h3>
+              <p className="text-sm leading-relaxed text-foreground/65">{service.cardBlurb}</p>
+              <span className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-dark">
+                View service
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </span>
+            </div>
           </Link>
         ))}
       </div>
