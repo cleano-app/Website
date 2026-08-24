@@ -33,9 +33,10 @@ export default function ServicePageLayout({
   /** Overrides the hero's second button (defaults to WhatsApp) - e.g. a
    * separate path for portfolio/commercial customers vs. regular ones. */
   secondaryCta?: { label: string; href: string };
-  /** Real before/after job photos, shown in the first Before & After slot
-   * instead of the illustrated scene, as real photography becomes available. */
-  realPhotos?: { before: string; after: string };
+  /** Real before/after job photos, shown in the Before & After slots (in
+   * order - first entry fills "job 1", second fills "job 2", etc.) instead
+   * of the illustrated scene, as real photography becomes available. */
+  realPhotos?: { before: string; after: string }[];
 }) {
   const leadService = service.slug.replace(/-/g, "_") as
     | "gutter_cleaning"
@@ -140,13 +141,13 @@ export default function ServicePageLayout({
           </FadeIn>
           <StaggerGrid className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <StaggerItem>
-              <BeforeAfterSlider label={`${service.name} job 1`} icon={icon} photos={realPhotos} />
+              <BeforeAfterSlider label={`${service.name} job 1`} icon={icon} photos={realPhotos?.[0]} />
             </StaggerItem>
             <StaggerItem>
-              <BeforeAfterSlider label={`${service.name} job 2`} icon={icon} />
+              <BeforeAfterSlider label={`${service.name} job 2`} icon={icon} photos={realPhotos?.[1]} />
             </StaggerItem>
             <StaggerItem>
-              <BeforeAfterSlider label={`${service.name} job 3`} icon={icon} />
+              <BeforeAfterSlider label={`${service.name} job 3`} icon={icon} photos={realPhotos?.[2]} />
             </StaggerItem>
           </StaggerGrid>
         </div>
