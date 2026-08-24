@@ -40,7 +40,11 @@ export default function HomePage() {
               />
             </StaggerItem>
             <StaggerItem>
-              <BeforeAfterSlider label="Pressure-washed driveway" icon="pressure" />
+              <BeforeAfterSlider
+                label="Pressure-washed driveway"
+                icon="pressure"
+                photos={{ before: "/photos/driveway-before.jpg", after: "/photos/driveway-after.jpg" }}
+              />
             </StaggerItem>
             <StaggerItem>
               <BeforeAfterSlider label="Bin deep clean" icon="bin" />

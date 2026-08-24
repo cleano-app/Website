@@ -10,5 +10,10 @@ export const metadata: Metadata = {
 };
 
 export default function PressureWashingPage() {
-  return <ServicePageLayout service={service} />;
+  return (
+    <ServicePageLayout
+      service={service}
+      realPhotos={{ before: "/photos/driveway-before.jpg", after: "/photos/driveway-after.jpg" }}
+    />
+  );
 }
