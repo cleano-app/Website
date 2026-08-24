@@ -25,8 +25,12 @@ export function whatsappHref(message?: string): string {
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
 
-export function mailtoHref(): string {
-  return `mailto:${siteConfig.email}`;
+export function mailtoHref(options?: { subject?: string; body?: string }): string {
+  const params = new URLSearchParams();
+  if (options?.subject) params.set("subject", options.subject);
+  if (options?.body) params.set("body", options.body);
+  const query = params.toString();
+  return `mailto:${siteConfig.email}${query ? `?${query}` : ""}`;
 }
 
 export const mainNav: { label: string; href: string }[] = [

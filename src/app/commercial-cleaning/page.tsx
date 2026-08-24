@@ -27,6 +27,7 @@ const whoWeWorkWith = [
 
 const commercialServices = [
   { label: "Gutter Cleaning", href: "/gutter-cleaning" },
+  { label: "Portfolio Gutter Care Scheme", href: "/gutter-cleaning/portfolio" },
   { label: "Bin Cleaning", href: "/bin-cleaning" },
   { label: "Window Cleaning", href: "/window-cleaning" },
   { label: "Pressure Washing", href: "/pressure-washing" },

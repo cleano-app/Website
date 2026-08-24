@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import type { Service } from "@/lib/content/services";
 import ServiceIcon from "./illustrations/ServiceIcon";
 import BeforeAfterSlider from "./BeforeAfterSlider";
@@ -18,7 +19,14 @@ const iconBySlug: Record<string, IconType> = {
   "commercial-cleaning": "commercial",
 };
 
-export default function ServicePageLayout({ service }: { service: Service }) {
+export default function ServicePageLayout({
+  service,
+  afterHero,
+}: {
+  service: Service;
+  /** Optional extra content rendered right after the hero, before "What's Included". */
+  afterHero?: ReactNode;
+}) {
   const leadService = service.slug.replace(/-/g, "_") as
     | "gutter_cleaning"
     | "bin_cleaning"
@@ -61,6 +69,8 @@ export default function ServicePageLayout({ service }: { service: Service }) {
           </FadeIn>
         </div>
       </section>
+
+      {afterHero}
 
       {/* Service options (bin cleaning: one-off vs regular) */}
       {service.serviceOptions && (
