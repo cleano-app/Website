@@ -16,6 +16,7 @@ export default function PressureWashingPage() {
       realPhotos={[
         { before: "/photos/driveway-before.jpg", after: "/photos/driveway-after.jpg" },
         { before: "/photos/driveway2-before.jpg", after: "/photos/driveway2-after.jpg" },
+        { before: "/photos/driveway3-before.jpg", after: "/photos/driveway3-after.jpg" },
       ]}
     />
   );
