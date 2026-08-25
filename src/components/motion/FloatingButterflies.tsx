@@ -30,6 +30,14 @@ const DEFAULT_FLOCK: Butterfly[] = [
   { top: "96%", left: "90%", size: 18, duration: 8, delay: 2, xDrift: [0, -8, 6, 0], yDrift: [0, -6, 4, 0], rotate: [-6, 12, -10, -6], opacity: 0.55 },
 ];
 
+// Global multipliers applied to every flock (rather than hand-tuning every
+// individual flock definition across the site) so butterflies read as
+// bigger, slower and more languid everywhere at once - bump these instead
+// of touching per-page numbers.
+const SIZE_SCALE = 1.6;
+const DURATION_SCALE = 1.9;
+const DRIFT_SCALE = 1.5;
+
 /** Decorative flying-butterfly accents using the real logo icon, looping a
  * gentle organic flight path forever. Purely decorative - aria-hidden. */
 export default function FloatingButterflies({
@@ -46,14 +54,18 @@ export default function FloatingButterflies({
           key={i}
           className="absolute"
           style={{ top: b.top, left: b.left, opacity: b.opacity ?? 0.85 }}
-          animate={{ x: b.xDrift, y: b.yDrift, rotate: b.rotate }}
-          transition={{ duration: b.duration, delay: b.delay, repeat: Infinity, ease: "easeInOut" }}
+          animate={{
+            x: b.xDrift.map((v) => v * DRIFT_SCALE),
+            y: b.yDrift.map((v) => v * DRIFT_SCALE),
+            rotate: b.rotate,
+          }}
+          transition={{ duration: b.duration * DURATION_SCALE, delay: b.delay, repeat: Infinity, ease: "easeInOut" }}
         >
           <Image
             src="/brand/cleano-icon.png"
             alt=""
-            width={b.size}
-            height={b.size}
+            width={b.size * SIZE_SCALE}
+            height={b.size * SIZE_SCALE}
             className="drop-shadow-sm"
           />
         </motion.div>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Service } from "@/lib/content/services";
 import ServiceIcon from "./illustrations/ServiceIcon";
+import HeroLoopScene from "./illustrations/HeroLoopScene";
 import BeforeAfterSlider from "./BeforeAfterSlider";
 import FAQAccordion from "./FAQAccordion";
 import QuoteForm from "./QuoteForm";
@@ -91,8 +92,8 @@ export default function ServicePageLayout({
               )}
             </div>
           </FadeIn>
-          <FadeIn delay={0.15} className="relative flex items-center justify-center rounded-2xl bg-white/60 p-10">
-            <ServiceIcon type={icon} idle className="h-40 w-40 [&_svg]:h-20 [&_svg]:w-20" />
+          <FadeIn delay={0.15} className="relative">
+            <HeroLoopScene type={icon} className="mx-auto w-full max-w-xs" />
           </FadeIn>
         </div>
       </section>

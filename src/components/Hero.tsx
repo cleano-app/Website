@@ -1,10 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
 import HeroScene from "./illustrations/HeroScene";
 import FloatingButterflies from "./motion/FloatingButterflies";
-import { whatsappHref } from "@/lib/siteConfig";
 
 // Confined to the top corners of the section (above the badge/headline) so
 // they never drift across the copy, which runs close to full width on mobile.
@@ -59,26 +57,6 @@ export default function Hero() {
             Cleano is an exterior cleaning company serving homes and businesses across London and
             the surrounding areas — gutters, roofs, windows, driveways and bins.
           </p>
-          <div className="mt-6 flex flex-wrap gap-2">
-            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
-              <Link
-                href="/quote"
-                className="block rounded-full bg-brand px-4 py-2 text-center text-xs font-semibold text-white shadow-sm shadow-brand/25 transition-colors hover:bg-brand-dark hover:shadow-md sm:text-sm"
-              >
-                Get a Free Quote
-              </Link>
-            </motion.div>
-            <motion.a
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
-              href={whatsappHref("Hi Cleano, I'd like a quote for...")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full border border-brand/40 bg-white px-4 py-2 text-center text-xs font-semibold text-brand-dark transition-colors hover:border-brand hover:shadow-sm sm:text-sm"
-            >
-              WhatsApp Us
-            </motion.a>
-          </div>
         </motion.div>
 
         <motion.div

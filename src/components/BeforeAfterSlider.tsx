@@ -32,10 +32,10 @@ export default function BeforeAfterSlider({
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-border-subtle bg-white shadow-sm">
+    <div className="rounded-2xl border border-border-subtle bg-white p-2.5 shadow-sm">
       <div
         ref={trackRef}
-        className="relative aspect-[4/3] w-full cursor-ew-resize touch-none select-none"
+        className="relative aspect-[4/3] w-full overflow-hidden rounded-xl cursor-ew-resize touch-none select-none"
         onPointerDown={(e) => {
           (e.target as HTMLElement).setPointerCapture(e.pointerId);
           updateFromClientX(e.clientX);
@@ -108,7 +108,7 @@ export default function BeforeAfterSlider({
           aria-label={`Before/after slider for ${label}`}
         />
       </div>
-      <p className="px-4 py-3 text-sm font-medium text-foreground/80">{label}</p>
+      <p className="px-1.5 pt-3 pb-1 text-sm font-medium text-foreground/80">{label}</p>
     </div>
   );
 }

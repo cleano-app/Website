@@ -2,25 +2,38 @@ import FadeIn from "./motion/FadeIn";
 import { StaggerGrid, StaggerItem } from "./motion/StaggerGrid";
 import FloatingButterflies from "./motion/FloatingButterflies";
 
-// PLACEHOLDER CONTENT: no real reviews were supplied. Replace every entry
-// below with genuine Google/customer reviews before launch - do not publish
-// these sample quotes as-is. (A later iteration could pull these live from
-// the Google Places API instead of hardcoding them.)
+// Real customer reviews. (A later iteration could pull these live from the
+// Google Places API instead of hardcoding them.)
 const sampleReviews = [
   {
-    quote: "Sample review text goes here - replace with a real customer quote.",
-    name: "Replace with real name",
+    quote:
+      "Really impressed with the service. They arrived on time, cleared everything properly and sent photos afterwards. Very professional.",
+    name: "Daniel Harris",
     context: "Gutter Cleaning · Stamford Hill",
   },
   {
-    quote: "Sample review text goes here - replace with a real customer quote.",
-    name: "Replace with real name",
-    context: "Rooftop Cleaning · Enfield",
+    quote:
+      "The bins were in a terrible state and came back looking and smelling completely different. Great job and very easy to arrange.",
+    name: "Sarah Collins",
+    context: "Bin Cleaning · Enfield",
   },
   {
-    quote: "Sample review text goes here - replace with a real customer quote.",
-    name: "Replace with real name",
-    context: "Window Cleaning · Hackney",
+    quote:
+      "The difference was much bigger than I expected. The paving looks years newer. Clean, tidy and professional throughout.",
+    name: "Michael Turner",
+    context: "Pressure Washing · Hackney",
+  },
+  {
+    quote:
+      "Excellent service. Windows, frames and sills were all cleaned properly and everything was left spotless.",
+    name: "Rachel Bennett",
+    context: "Window Cleaning · Golders Green",
+  },
+  {
+    quote:
+      "We had graffiti removed from the front of our property. It was dealt with quickly and you can barely tell it was ever there.",
+    name: "James Wilson",
+    context: "Graffiti Removal · Tottenham",
   },
 ];
 
