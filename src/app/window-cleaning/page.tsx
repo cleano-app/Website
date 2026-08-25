@@ -13,7 +13,10 @@ export default function WindowCleaningPage() {
   return (
     <ServicePageLayout
       service={service}
-      realPhotos={[{ before: "/photos/window-before.jpg", after: "/photos/window-after.jpg" }]}
+      realPhotos={[
+        { before: "/photos/window-before.jpg", after: "/photos/window-after.jpg" },
+        { before: "/photos/window2-before.jpg", after: "/photos/window2-after.jpg" },
+      ]}
     />
   );
 }
