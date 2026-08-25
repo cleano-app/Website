@@ -16,6 +16,7 @@ export default function RooftopCleaningPage() {
       realPhotos={[
         { before: "/photos/rooftop-before.jpg", after: "/photos/rooftop-after.jpg" },
         { before: "/photos/rooftop2-before.jpg", after: "/photos/rooftop2-after.jpg" },
+        { before: "/photos/rooftop3-before.jpg", after: "/photos/rooftop3-after.jpg" },
       ]}
     />
   );
