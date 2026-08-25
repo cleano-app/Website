@@ -13,7 +13,10 @@ export default function RooftopCleaningPage() {
   return (
     <ServicePageLayout
       service={service}
-      realPhotos={[{ before: "/photos/rooftop-before.jpg", after: "/photos/rooftop-after.jpg" }]}
+      realPhotos={[
+        { before: "/photos/rooftop-before.jpg", after: "/photos/rooftop-after.jpg" },
+        { before: "/photos/rooftop2-before.jpg", after: "/photos/rooftop2-after.jpg" },
+      ]}
     />
   );
 }
