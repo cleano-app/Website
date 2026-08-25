@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import PhotoPlaceholder from "@/components/PhotoPlaceholder";
 import FloatingButterflies from "@/components/motion/FloatingButterflies";
 
 export const metadata: Metadata = {
@@ -90,7 +89,14 @@ export default function AboutPage() {
               className="object-cover"
             />
           </div>
-          <PhotoPlaceholder label="Cleano team" aspect="aspect-square" />
+          <div className="relative aspect-square overflow-hidden rounded-2xl border border-border-subtle shadow-sm">
+            <Image
+              src="/photos/cleano-team.jpg"
+              alt="The Cleano team in branded uniforms, standing beside the Cleano van and equipment"
+              fill
+              className="object-cover"
+            />
+          </div>
         </div>
       </section>
     </>
