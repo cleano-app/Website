@@ -42,8 +42,8 @@ export default function ResidentialCommercialSplit() {
               <p className="mt-2 flex-1 text-sm text-foreground/70">
                 Scheduled cleaning for commercial properties, landlords, property managers and organisations.
               </p>
-              <Link href="/commercial-cleaning" className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-dark hover:underline">
-                Commercial Cleaning
+              <Link href="/quote" className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-dark hover:underline">
+                Get a Quote
                 <ArrowIcon />
               </Link>
             </div>

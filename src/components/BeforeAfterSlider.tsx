@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import DirtyCleanScene from "./illustrations/DirtyCleanScene";
 
-type ServiceIconType = "gutter" | "bin" | "window" | "pressure" | "commercial" | "graffiti";
+type ServiceIconType = "gutter" | "bin" | "window" | "pressure" | "graffiti" | "rooftop";
 
 // A dependency-free before/after slider. By default the two panels are
 // illustrated scenes (dirty vs. clean) - no image-gen or open internet

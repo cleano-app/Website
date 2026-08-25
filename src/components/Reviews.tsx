@@ -15,7 +15,7 @@ const sampleReviews = [
   {
     quote: "Sample review text goes here - replace with a real customer quote.",
     name: "Replace with real name",
-    context: "Commercial Cleaning · Enfield",
+    context: "Rooftop Cleaning · Enfield",
   },
   {
     quote: "Sample review text goes here - replace with a real customer quote.",

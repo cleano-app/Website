@@ -57,8 +57,7 @@ export default function Hero() {
           </h1>
           <p className="mt-5 max-w-lg text-lg text-foreground/70">
             Cleano is an exterior cleaning company serving homes and businesses across London and
-            the surrounding areas — gutters, windows, driveways, bins and scheduled commercial
-            care.
+            the surrounding areas — gutters, roofs, windows, driveways and bins.
           </p>
           <div className="mt-6 flex flex-wrap gap-2">
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>

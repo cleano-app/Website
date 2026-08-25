@@ -14,8 +14,8 @@ type ServiceIconType =
   | "bin"
   | "window"
   | "pressure"
-  | "commercial"
-  | "graffiti";
+  | "graffiti"
+  | "rooftop";
 
 const paths: Record<ServiceIconType, React.ReactNode> = {
   gutter: (
@@ -50,20 +50,20 @@ const paths: Record<ServiceIconType, React.ReactNode> = {
       <path d="M9 22l-2 5M14 22l-1 5M19 22l-1 5" />
     </>
   ),
-  commercial: (
-    <>
-      <path d="M7 26V9l7-3 7 3v17" />
-      <path d="M7 26h14" />
-      <path d="M11 13h2M11 17h2M17 13h2M17 17h2" />
-      <path d="M13 26v-5h4v5" />
-    </>
-  ),
   graffiti: (
     <>
       <rect x="11" y="12" width="10" height="15" rx="2" />
       <path d="M13 12V8a3 3 0 0 1 6 0v4" />
       <circle cx="16" cy="7" r="1" fill="currentColor" stroke="none" />
       <path d="M22 15l3-1M23 19h3M22 23l3 1" />
+    </>
+  ),
+  rooftop: (
+    <>
+      <path d="M5 17L16 6l11 11" />
+      <path d="M8 17v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8" />
+      <path d="M20 11V7h3v4" />
+      <path d="M11 21h4M17 21h4" />
     </>
   ),
 };
@@ -76,8 +76,8 @@ const tintByType: Record<ServiceIconType, string> = {
   bin: "from-brand/45 to-brand-dark/25",
   window: "from-brand-light/55 via-brand/30 to-brand-light/20",
   pressure: "from-brand/50 to-brand-dark/35",
-  commercial: "from-brand-dark/25 via-brand/35 to-brand-light/40",
   graffiti: "from-brand-dark/35 to-brand/30",
+  rooftop: "from-brand-dark/30 via-brand-light/40 to-brand/25",
 };
 
 export default function ServiceIcon({

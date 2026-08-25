@@ -1,6 +1,9 @@
-// NOTE: `pricingFrom` values below are PLACEHOLDER "from" prices, not real
-// Cleano pricing - nobody gave us a price list. Review and correct every
-// figure in this file before the site goes live.
+// NOTE: `pricingFrom`/`pricingNote` are only rendered on the service page
+// when `hidePricing` is NOT set. Bin Cleaning has real, confirmed pricing
+// from Cleano and is shown. Every other service still carries placeholder
+// "from" figures (nobody gave us a full price list) so `hidePricing: true`
+// keeps them off the live site - fill in real numbers and drop the flag
+// once they're confirmed.
 
 export type ServiceOption = {
   title: string;
@@ -19,6 +22,8 @@ export type Service = {
   serviceOptions?: ServiceOption[];
   pricingFrom: string;
   pricingNote: string;
+  /** Hides the Pricing section on the service page - use while pricingFrom is still a placeholder. */
+  hidePricing?: boolean;
   faqs: { q: string; a: string }[];
 };
 
@@ -55,6 +60,7 @@ export const services: Service[] = [
     ],
     pricingFrom: "£45",
     pricingNote: "Exact quote based on property size, gutter length and access.",
+    hidePricing: true,
     faqs: [
       {
         q: "How often should gutters be cleaned?",
@@ -73,8 +79,12 @@ export const services: Service[] = [
         a: "Yes. Every gutter clean includes a Cleano Photo Report with before-and-after photos - including drone photos of the roofline where useful - sent straight to your email.",
       },
       {
+        q: "Do you also carry out gutter repairs?",
+        a: "Yes - alongside cleaning we carry out minor gutter repairs such as reseals, loose brackets and small leaks where needed. Let us know when you request a quote and we'll take a look.",
+      },
+      {
         q: "What areas do you cover?",
-        a: "We cover Stamford Hill, Tottenham, Hackney, Wood Green, Golders Green, Edgware, Enfield and the surrounding areas - see our Areas We Cover page.",
+        a: "We cover London and the surrounding areas.",
       },
     ],
   },
@@ -174,6 +184,7 @@ export const services: Service[] = [
     ],
     pricingFrom: "£20",
     pricingNote: "Prices from, based on property size - or request a property-specific quote.",
+    hidePricing: true,
     faqs: [
       {
         q: "How often do you recommend window cleaning?",
@@ -193,7 +204,7 @@ export const services: Service[] = [
       },
       {
         q: "Do you clean commercial shopfronts?",
-        a: "Yes, including scheduled cleaning for shops and offices - see our Commercial Cleaning page.",
+        a: "Yes, including scheduled cleaning for shops and offices - just let us know when you request a quote.",
       },
     ],
   },
@@ -228,6 +239,7 @@ export const services: Service[] = [
     ],
     pricingFrom: "£60",
     pricingNote: "Based on area, surface type and condition - upload a photo for a fast quote.",
+    hidePricing: true,
     faqs: [
       {
         q: "What surfaces can you pressure wash?",
@@ -247,65 +259,7 @@ export const services: Service[] = [
       },
       {
         q: "Do you offer this for commercial properties?",
-        a: "Yes, including scheduled maintenance for commercial forecourts and shared areas - see our Commercial Cleaning page.",
-      },
-    ],
-  },
-  {
-    slug: "commercial-cleaning",
-    name: "Commercial Cleaning",
-    shortName: "Commercial",
-    cardBlurb: "Scheduled exterior cleaning with clear reporting.",
-    heroHeadline: "Reliable exterior cleaning for your business.",
-    heroSubhead:
-      "Professional scheduled and one-off cleaning with clear reporting.",
-    included: [
-      "Gutter cleaning",
-      "Bin cleaning",
-      "Window cleaning",
-      "Pressure washing",
-      "Scheduled maintenance visits",
-    ],
-    why: [
-      {
-        title: "VAT invoices",
-        body: "Proper VAT invoicing for your accounts, every time.",
-      },
-      {
-        title: "Fully insured",
-        body: "Cleano is fully insured for work on commercial premises, multi-site portfolios and shared buildings.",
-      },
-      {
-        title: "One point of contact",
-        body: "A single point of contact for scheduling across multiple sites, instead of juggling different contractors.",
-      },
-      {
-        title: "Photo reports",
-        body: "Every visit is documented with a Cleano Photo Report - useful evidence for property managers and landlords.",
-      },
-    ],
-    pricingFrom: "Custom",
-    pricingNote: "Priced per site based on scope and schedule - request a commercial quote.",
-    faqs: [
-      {
-        q: "Who do you typically work with?",
-        a: "Property managers, landlords, offices, shops, schools, blocks of flats and other organisations across London and the surrounding areas.",
-      },
-      {
-        q: "Can you manage multiple sites under one contract?",
-        a: "Yes - multi-site scheduling with one point of contact is one of the most common commercial setups we run.",
-      },
-      {
-        q: "Do you provide VAT invoices?",
-        a: "Yes, full VAT invoices are provided for all commercial work.",
-      },
-      {
-        q: "How does the Photo Report help commercial customers?",
-        a: "It gives property managers and landlords documented evidence that scheduled maintenance was actually carried out, useful for compliance and for leaseholders/tenants.",
-      },
-      {
-        q: "How do we get started?",
-        a: "Request a commercial quote with your site details and we'll come back with a proposed scope and schedule.",
+        a: "Yes, including scheduled maintenance for commercial forecourts and shared areas - just let us know when you request a quote.",
       },
     ],
   },
@@ -341,6 +295,7 @@ export const services: Service[] = [
     ],
     pricingFrom: "£75",
     pricingNote: "Based on surface area, surface type and paint - send a photo for a fast quote.",
+    hidePricing: true,
     faqs: [
       {
         q: "How quickly can you remove graffiti?",
@@ -360,7 +315,63 @@ export const services: Service[] = [
       },
       {
         q: "Do you offer this for commercial properties?",
-        a: "Yes, including shopfronts, shutters and managed buildings - see our Commercial Cleaning page.",
+        a: "Yes, including shopfronts, shutters and managed buildings - just let us know when you request a quote.",
+      },
+    ],
+  },
+  {
+    slug: "rooftop-cleaning",
+    name: "Rooftop Cleaning",
+    shortName: "Rooftop",
+    cardBlurb: "Safe moss and algae removal that protects your roof.",
+    heroHeadline: "Professional Rooftop Cleaning",
+    heroSubhead:
+      "Safe, professional roof cleaning that removes moss and algae and protects your roof.",
+    included: [
+      "Moss, algae and lichen removal from roof tiles",
+      "Soft-wash treatment suited to your roof type",
+      "Debris and moss clearance from valleys and flat sections",
+      "Ridge and roofline inspection while we're up there",
+      "Before and after photos, including drone photos of the roof",
+      "Cleano Photo Report emailed to you",
+    ],
+    why: [
+      {
+        title: "Moss traps moisture",
+        body: "Moss and algae hold water against the tiles, which speeds up wear and can lead to leaks over time.",
+      },
+      {
+        title: "Extends roof life",
+        body: "Regular cleaning protects the roof surface and can delay costly repairs or a full re-roof.",
+      },
+      {
+        title: "Kerb appeal",
+        body: "A moss-covered, streaked roof is one of the most visible signs of a neglected property.",
+      },
+    ],
+    pricingFrom: "£150",
+    pricingNote: "Exact quote based on roof size, pitch and access.",
+    hidePricing: true,
+    faqs: [
+      {
+        q: "Is roof cleaning safe for my tiles?",
+        a: "Yes - we use a soft-wash approach suited to your roof type, rather than aggressive pressure washing that can damage or dislodge tiles.",
+      },
+      {
+        q: "How is this different from gutter cleaning?",
+        a: "Gutter cleaning clears the gutters themselves; rooftop cleaning treats the roof surface - removing moss, algae and lichen from the tiles. We're happy to quote for both together.",
+      },
+      {
+        q: "How do you access the roof safely?",
+        a: "We use appropriate access equipment for the property and follow standard safety practice throughout - and use drone photography to inspect and document areas that are hard to reach safely.",
+      },
+      {
+        q: "Do I get proof the work was done?",
+        a: "Yes. Every rooftop clean includes a Cleano Photo Report with before-and-after photos - including drone photos of the roof - sent straight to your email.",
+      },
+      {
+        q: "What areas do you cover?",
+        a: "We cover London and the surrounding areas.",
       },
     ],
   },

@@ -1,7 +1,7 @@
 // Small "surface" illustrations used by BeforeAfterSlider - a schematic
 // dirty vs. clean rendering per service type (texture + colour), since no
 // real photography or image-generation is available in this environment.
-type SceneType = "gutter" | "bin" | "window" | "pressure" | "commercial" | "graffiti";
+type SceneType = "gutter" | "bin" | "window" | "pressure" | "graffiti" | "rooftop";
 type SceneState = "before" | "after";
 
 export default function DirtyCleanScene({
@@ -114,28 +114,6 @@ function renderScene(type: SceneType, dirty: boolean) {
           )}
         </>
       );
-    case "commercial":
-      return (
-        <>
-          <rect x="55" y="20" width="90" height="105" fill="white" stroke={line} strokeWidth="3" />
-          {[0, 1, 2, 3].map((row) =>
-            [0, 1].map((col) => (
-              <rect
-                key={`${row}-${col}`}
-                x={68 + col * 40}
-                y={32 + row * 22}
-                width="28"
-                height="16"
-                fill={dirty ? grime : "var(--color-brand-light)"}
-                opacity={dirty ? 0.4 : 0.35}
-                stroke={line}
-                strokeWidth="1.5"
-              />
-            ))
-          )}
-          {!dirty && <path d="M60 118l80-90" stroke="white" strokeWidth="6" opacity="0.5" strokeLinecap="round" />}
-        </>
-      );
     case "graffiti":
       return (
         <>
@@ -164,6 +142,23 @@ function renderScene(type: SceneType, dirty: boolean) {
             </>
           ) : (
             <path d="M25 125L175 25" stroke="white" strokeWidth="8" opacity="0.5" strokeLinecap="round" />
+          )}
+        </>
+      );
+    case "rooftop":
+      return (
+        <>
+          <path d="M20 110L100 20L180 110Z" fill="white" stroke={line} strokeWidth="3" />
+          <path d="M100 20v90" stroke={line} strokeWidth="1.5" opacity="0.5" />
+          <path d="M40 100l50-64M70 100l30-40M110 100l30-40M140 100l20-26" stroke={line} strokeWidth="1" opacity="0.35" />
+          {dirty ? (
+            <>
+              <ellipse cx="65" cy="80" rx="18" ry="10" fill="#6b7f4a" opacity="0.55" />
+              <ellipse cx="130" cy="70" rx="16" ry="9" fill="#7a8f5e" opacity="0.5" />
+              <ellipse cx="95" cy="55" rx="12" ry="7" fill="#6b7f4a" opacity="0.45" />
+            </>
+          ) : (
+            <path d="M35 100L145 35" stroke="white" strokeWidth="7" opacity="0.5" strokeLinecap="round" />
           )}
         </>
       );

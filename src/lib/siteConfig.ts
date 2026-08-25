@@ -6,7 +6,7 @@ export const siteConfig = {
   name: "Cleano",
   tagline: "Clean places. Better spaces.",
   description:
-    "Cleano is an exterior cleaning company serving homes and businesses across London and the surrounding areas: gutter cleaning, window cleaning, pressure washing, bin cleaning, graffiti removal and commercial cleaning.",
+    "Cleano is an exterior cleaning company serving homes and businesses across London and the surrounding areas: gutter cleaning, rooftop cleaning, window cleaning, pressure washing, bin cleaning and graffiti removal.",
   url: process.env.NEXT_PUBLIC_APP_URL || "https://cleano.services",
   opsAppUrl: process.env.NEXT_PUBLIC_OPS_APP_URL || "https://ops.cleano.services",
 
@@ -35,10 +35,10 @@ export function mailtoHref(options?: { subject?: string; body?: string }): strin
 
 export const mainNav: { label: string; href: string }[] = [
   { label: "Gutter Cleaning", href: "/gutter-cleaning" },
+  { label: "Rooftop Cleaning", href: "/rooftop-cleaning" },
   { label: "Bin Cleaning", href: "/bin-cleaning" },
   { label: "Window Cleaning", href: "/window-cleaning" },
   { label: "Pressure Washing", href: "/pressure-washing" },
   { label: "Graffiti Removal", href: "/graffiti-removal" },
-  { label: "Commercial", href: "/commercial-cleaning" },
   { label: "About", href: "/about" },
 ];

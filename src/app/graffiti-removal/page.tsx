@@ -10,5 +10,14 @@ export const metadata: Metadata = {
 };
 
 export default function GraffitiRemovalPage() {
-  return <ServicePageLayout service={service} />;
+  return (
+    <ServicePageLayout
+      service={service}
+      realPhotos={[
+        { before: "/photos/graffiti-before.jpg", after: "/photos/graffiti-after.jpg" },
+        { before: "/photos/graffiti2-before.jpg", after: "/photos/graffiti2-after.jpg" },
+        { before: "/photos/graffiti3-before.jpg", after: "/photos/graffiti3-after.jpg" },
+      ]}
+    />
+  );
 }

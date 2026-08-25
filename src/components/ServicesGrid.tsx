@@ -10,13 +10,13 @@ const sectionButterflies = [
   { top: "1%", left: "96%", size: 16, duration: 10, delay: 1.1, xDrift: [0, -6, 4, 0], yDrift: [0, 4, -2, 0], rotate: [8, -10, 6, 8], opacity: 0.35 },
 ];
 
-const iconBySlug: Record<string, "gutter" | "bin" | "window" | "pressure" | "commercial" | "graffiti"> = {
+const iconBySlug: Record<string, "gutter" | "bin" | "window" | "pressure" | "graffiti" | "rooftop"> = {
   "gutter-cleaning": "gutter",
   "bin-cleaning": "bin",
   "window-cleaning": "window",
   "pressure-washing": "pressure",
-  "commercial-cleaning": "commercial",
   "graffiti-removal": "graffiti",
+  "rooftop-cleaning": "rooftop",
 };
 
 // A little scrapbook-style twist per card instead of a rigid grid - each

@@ -10,15 +10,15 @@ import { StaggerGrid, StaggerItem } from "./motion/StaggerGrid";
 import FloatingButterflies from "./motion/FloatingButterflies";
 import { whatsappHref } from "@/lib/siteConfig";
 
-type IconType = "gutter" | "bin" | "window" | "pressure" | "commercial" | "graffiti";
+type IconType = "gutter" | "bin" | "window" | "pressure" | "graffiti" | "rooftop";
 
 const iconBySlug: Record<string, IconType> = {
   "gutter-cleaning": "gutter",
   "bin-cleaning": "bin",
   "window-cleaning": "window",
   "pressure-washing": "pressure",
-  "commercial-cleaning": "commercial",
   "graffiti-removal": "graffiti",
+  "rooftop-cleaning": "rooftop",
 };
 
 export default function ServicePageLayout({
@@ -43,8 +43,8 @@ export default function ServicePageLayout({
     | "bin_cleaning"
     | "window_cleaning"
     | "pressure_washing"
-    | "commercial_cleaning"
-    | "graffiti_removal";
+    | "graffiti_removal"
+    | "rooftop_cleaning";
   const icon = iconBySlug[service.slug];
 
   return (
@@ -172,16 +172,18 @@ export default function ServicePageLayout({
         </StaggerGrid>
       </section>
 
-      {/* Pricing */}
-      <section className="bg-muted-bg py-16">
-        <FadeIn className="mx-auto max-w-6xl px-4 text-center sm:px-6">
-          <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Pricing</h2>
-          <p className="mt-3 text-3xl font-bold text-brand-dark">
-            {service.pricingFrom !== "Custom" ? `Prices from ${service.pricingFrom}` : "Custom pricing"}
-          </p>
-          <p className="mt-2 text-sm text-foreground/60">{service.pricingNote}</p>
-        </FadeIn>
-      </section>
+      {/* Pricing - only shown where we have real, confirmed pricing */}
+      {!service.hidePricing && (
+        <section className="bg-muted-bg py-16">
+          <FadeIn className="mx-auto max-w-6xl px-4 text-center sm:px-6">
+            <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Pricing</h2>
+            <p className="mt-3 text-3xl font-bold text-brand-dark">
+              {service.pricingFrom !== "Custom" ? `Prices from ${service.pricingFrom}` : "Custom pricing"}
+            </p>
+            <p className="mt-2 text-sm text-foreground/60">{service.pricingNote}</p>
+          </FadeIn>
+        </section>
+      )}
 
       {/* FAQs */}
       <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
