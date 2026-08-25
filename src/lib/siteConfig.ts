@@ -33,12 +33,15 @@ export function mailtoHref(options?: { subject?: string; body?: string }): strin
   return `mailto:${siteConfig.email}${query ? `?${query}` : ""}`;
 }
 
+// Short forms for the header nav specifically - the full service names
+// live on their own pages (<h1>, <title>, cardBlurb etc.); the nav just
+// needs to fit seven items across the header without wrapping.
 export const mainNav: { label: string; href: string }[] = [
-  { label: "Gutter Cleaning", href: "/gutter-cleaning" },
-  { label: "Rooftop Cleaning", href: "/rooftop-cleaning" },
-  { label: "Bin Cleaning", href: "/bin-cleaning" },
-  { label: "Window Cleaning", href: "/window-cleaning" },
-  { label: "Pressure Washing", href: "/pressure-washing" },
-  { label: "Graffiti Removal", href: "/graffiti-removal" },
+  { label: "Gutters", href: "/gutter-cleaning" },
+  { label: "Rooftop", href: "/rooftop-cleaning" },
+  { label: "Bins", href: "/bin-cleaning" },
+  { label: "Windows", href: "/window-cleaning" },
+  { label: "Pressure", href: "/pressure-washing" },
+  { label: "Graffiti", href: "/graffiti-removal" },
   { label: "About", href: "/about" },
 ];

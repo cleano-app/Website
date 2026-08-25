@@ -22,7 +22,7 @@ export default function Header() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-6 lg:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-5 lg:flex" aria-label="Primary">
           {mainNav.map((item) => (
             <Link
               key={item.href}
@@ -34,15 +34,22 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-2 lg:flex">
           <a
             href={telHref()}
-            className="flex items-center gap-1.5 text-sm font-semibold text-brand-dark hover:underline"
+            className="flex items-center gap-1.5 px-1 text-sm font-semibold whitespace-nowrap text-brand-dark hover:underline"
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
               <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" />
             </svg>
             {siteConfig.phoneDisplay}
+          </a>
+          <a
+            href={`${siteConfig.opsAppUrl}/login`}
+            className="flex items-center gap-1.5 rounded-full border border-border-subtle px-3.5 py-2.5 text-sm font-semibold whitespace-nowrap text-foreground/80 transition-colors hover:border-brand hover:text-brand-dark"
+          >
+            <SignInIcon />
+            Sign In
           </a>
           <Link
             href="/quote"
@@ -89,15 +96,34 @@ export default function Header() {
               </li>
             ))}
           </ul>
-          <Link
-            href="/quote"
-            onClick={() => setMenuOpen(false)}
-            className="mt-3 block rounded-full bg-brand px-5 py-3 text-center text-sm font-semibold text-white"
-          >
-            Get a Free Quote
-          </Link>
+          <div className="mt-3 flex gap-2">
+            <a
+              href={`${siteConfig.opsAppUrl}/login`}
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-border-subtle px-5 py-3 text-center text-sm font-semibold text-foreground/80"
+            >
+              <SignInIcon />
+              Sign In
+            </a>
+            <Link
+              href="/quote"
+              onClick={() => setMenuOpen(false)}
+              className="flex-1 rounded-full bg-brand px-5 py-3 text-center text-sm font-semibold text-white"
+            >
+              Get a Free Quote
+            </Link>
+          </div>
         </nav>
       )}
     </header>
+  );
+}
+
+function SignInIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4" />
+      <path d="M10 17l5-5-5-5" />
+      <path d="M15 12H3" />
+    </svg>
   );
 }
