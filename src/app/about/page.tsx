@@ -59,14 +59,25 @@ export default function AboutPage() {
               need evidence that scheduled maintenance happened.
             </p>
           </div>
-          <div className="overflow-hidden rounded-2xl border border-border-subtle shadow-sm">
-            <Image
-              src="/photos/report-example.jpg"
-              alt="A real Cleano Field Service Report, showing the job details, checklist and photo sections sent to customers after every job"
-              width={1400}
-              height={1044}
-              className="h-auto w-full"
-            />
+          <div className="flex flex-col gap-4">
+            <div className="overflow-hidden rounded-2xl border border-border-subtle shadow-sm">
+              <Image
+                src="/photos/report-example.jpg"
+                alt="A real Cleano Field Service Report, showing the job details and checklist sent to customers after every job"
+                width={1400}
+                height={1044}
+                className="h-auto w-full"
+              />
+            </div>
+            <div className="overflow-hidden rounded-2xl border border-border-subtle shadow-sm">
+              <Image
+                src="/photos/report-photos-example.jpg"
+                alt="Real before photos from a Cleano Field Service Report, plus an annotated defect photo flagging an issue for the customer"
+                width={1400}
+                height={931}
+                className="h-auto w-full"
+              />
+            </div>
           </div>
         </div>
       </section>
