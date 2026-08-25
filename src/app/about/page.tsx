@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import PhotoPlaceholder from "@/components/PhotoPlaceholder";
 import FloatingButterflies from "@/components/motion/FloatingButterflies";
 
@@ -59,7 +60,15 @@ export default function AboutPage() {
               need evidence that scheduled maintenance happened.
             </p>
           </div>
-          <PhotoPlaceholder label="Cleano Photo Report example" aspect="aspect-[4/3]" />
+          <div className="overflow-hidden rounded-2xl border border-border-subtle shadow-sm">
+            <Image
+              src="/photos/report-example.jpg"
+              alt="A real Cleano Field Service Report, showing the job details, checklist and photo sections sent to customers after every job"
+              width={1400}
+              height={1044}
+              className="h-auto w-full"
+            />
+          </div>
         </div>
       </section>
 
