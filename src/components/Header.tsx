@@ -15,10 +15,10 @@ export default function Header() {
           <Image
             src="/brand/cleano-logo.png"
             alt={`${siteConfig.name} - ${siteConfig.tagline}`}
-            width={288}
+            width={255}
             height={80}
             priority
-            className="h-[2.6rem] w-auto sm:h-[2.95rem]"
+            className="h-[3.1rem] w-auto sm:h-[3.55rem]"
           />
         </Link>
 
