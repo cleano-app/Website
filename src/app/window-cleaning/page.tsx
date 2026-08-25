@@ -10,5 +10,10 @@ export const metadata: Metadata = {
 };
 
 export default function WindowCleaningPage() {
-  return <ServicePageLayout service={service} />;
+  return (
+    <ServicePageLayout
+      service={service}
+      realPhotos={[{ before: "/photos/window-before.jpg", after: "/photos/window-after.jpg" }]}
+    />
+  );
 }
