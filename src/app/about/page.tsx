@@ -74,8 +74,22 @@ export default function AboutPage() {
 
       <section className="bg-muted-bg py-14">
         <div className="mx-auto grid max-w-4xl gap-6 px-4 sm:grid-cols-3 sm:px-6">
-          <PhotoPlaceholder label="Cleano vehicle" aspect="aspect-square" />
-          <PhotoPlaceholder label="Cleano equipment" aspect="aspect-square" />
+          <div className="relative aspect-square overflow-hidden rounded-2xl border border-border-subtle shadow-sm">
+            <Image
+              src="/photos/cleano-vehicle.jpg"
+              alt="A Cleano branded van, liveried with the Cleano logo and list of services"
+              fill
+              className="object-cover"
+            />
+          </div>
+          <div className="relative aspect-square overflow-hidden rounded-2xl border border-border-subtle shadow-sm">
+            <Image
+              src="/photos/cleano-equipment.jpg"
+              alt="Cleano's branded cleaning equipment - pressure washer, hose reels, chemicals and tools, laid out beside the van"
+              fill
+              className="object-cover"
+            />
+          </div>
           <PhotoPlaceholder label="Cleano team" aspect="aspect-square" />
         </div>
       </section>
