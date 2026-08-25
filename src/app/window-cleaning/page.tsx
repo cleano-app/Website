@@ -16,6 +16,7 @@ export default function WindowCleaningPage() {
       realPhotos={[
         { before: "/photos/window-before.jpg", after: "/photos/window-after.jpg" },
         { before: "/photos/window2-before.jpg", after: "/photos/window2-after.jpg" },
+        { before: "/photos/window3-before.jpg", after: "/photos/window3-after.jpg" },
       ]}
     />
   );
