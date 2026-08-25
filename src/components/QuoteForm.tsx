@@ -2,14 +2,23 @@
 
 import { useState } from "react";
 import { services } from "@/lib/content/services";
-import { LEAD_SERVICE_LABELS, type LeadService, type NewLeadInput } from "@/lib/leads";
+import { LEAD_LIMITS, LEAD_SERVICE_LABELS, type LeadService, type NewLeadInput } from "@/lib/leads";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { siteConfig, telHref, whatsappHref } from "@/lib/siteConfig";
+import Turnstile from "./Turnstile";
 
 const serviceChoices: { value: LeadService; label: string }[] = [
   ...services.map((s) => ({ value: s.slug.replace(/-/g, "_") as LeadService, label: s.name })),
   { value: "other", label: "Other" },
 ];
+
+// Mirrors the DB-level limits on the lead-photos storage bucket (see
+// supabase/migrations/0004_harden_lead_photos_bucket.sql) so a rejected
+// upload never gets that far - the user finds out immediately instead.
+const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10MB
+const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"];
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 type Step = 1 | 2 | 3;
 
@@ -27,6 +36,8 @@ export default function QuoteForm({
   const [phone, setPhone] = useState("");
   const [postcode, setPostcode] = useState("");
   const [photos, setPhotos] = useState<File[]>([]);
+  const [website, setWebsite] = useState(""); // honeypot - see the hidden field below
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -49,8 +60,30 @@ export default function QuoteForm({
     setStep(3);
   }
 
+  function handlePhotoSelect(files: File[]) {
+    const accepted: File[] = [];
+    for (const file of files) {
+      if (accepted.length + photos.length >= LEAD_LIMITS.maxPhotos) break;
+      if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+        setErrorMessage(`${file.name} isn't a supported image type - please use JPEG, PNG, WebP or HEIC.`);
+        continue;
+      }
+      if (file.size > MAX_FILE_BYTES) {
+        setErrorMessage(`${file.name} is too large - please keep photos under 10MB.`);
+        continue;
+      }
+      accepted.push(file);
+    }
+    if (accepted.length) setErrorMessage(null);
+    setPhotos((prev) => [...prev, ...accepted].slice(0, LEAD_LIMITS.maxPhotos));
+  }
+
   async function handleSubmit() {
     if (!service) return;
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      setErrorMessage("Please complete the verification check above.");
+      return;
+    }
     setSubmitting(true);
     setErrorMessage(null);
 
@@ -66,6 +99,8 @@ export default function QuoteForm({
       photoPaths,
       sourcePage,
       utm,
+      website,
+      turnstileToken: turnstileToken || undefined,
     };
 
     try {
@@ -117,6 +152,22 @@ export default function QuoteForm({
 
   return (
     <div className="rounded-2xl border border-border-subtle p-6 sm:p-8">
+      {/* Honeypot - invisible to real visitors (off-screen, not display:none,
+          since some bots skip that), tempting to anything auto-filling every
+          field on the page. See /api/leads route.ts for how this is used. */}
+      <div aria-hidden="true" className="relative h-0 w-0 overflow-hidden">
+        <label htmlFor="website">Website</label>
+        <input
+          id="website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={website}
+          onChange={(e) => setWebsite(e.target.value)}
+        />
+      </div>
+
       <StepIndicator step={step} />
 
       {step === 1 && (
@@ -200,11 +251,16 @@ export default function QuoteForm({
             accept="image/*"
             multiple
             capture="environment"
-            onChange={(e) => setPhotos(Array.from(e.target.files ?? []))}
+            onChange={(e) => handlePhotoSelect(Array.from(e.target.files ?? []))}
             className="mt-4 block w-full text-sm text-foreground/70 file:mr-4 file:rounded-full file:border-0 file:bg-muted-bg file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand-dark"
           />
           {photos.length > 0 && (
             <p className="mt-2 text-xs text-foreground/50">{photos.length} photo(s) selected</p>
+          )}
+          {TURNSTILE_SITE_KEY && (
+            <div className="mt-4">
+              <Turnstile siteKey={TURNSTILE_SITE_KEY} onVerify={setTurnstileToken} />
+            </div>
           )}
           {errorMessage && <p className="mt-3 text-sm text-red-600">{errorMessage}</p>}
           <div className="mt-6 flex gap-3">
@@ -292,14 +348,30 @@ function StepIndicator({ step }: { step: Step }) {
   );
 }
 
+// Strips a user-supplied filename down to a safe charset before it becomes
+// part of a storage path - filenames can contain almost anything (path
+// separators, unicode tricks, control characters), and this path is later
+// matched server-side against PHOTO_PATH_RE in lib/leads.ts, so the two
+// need to agree on what's "safe".
+function sanitizeFileName(name: string): string {
+  const dot = name.lastIndexOf(".");
+  const base = dot > 0 ? name.slice(0, dot) : name;
+  const ext = dot > 0 ? name.slice(dot) : "";
+  const safeBase = base.replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 60) || "photo";
+  const safeExt = ext.replace(/[^a-zA-Z0-9.]/g, "").slice(0, 10);
+  return `${safeBase}${safeExt}`;
+}
+
 async function uploadPhotos(files: File[]): Promise<string[]> {
   if (files.length === 0) return [];
 
   try {
     const supabase = createBrowserSupabaseClient();
     const paths: string[] = [];
-    for (const file of files) {
-      const path = `${crypto.randomUUID()}-${file.name}`;
+    // handlePhotoSelect already caps this, but never trust that a caller
+    // won't grow the array some other way - re-cap here too.
+    for (const file of files.slice(0, LEAD_LIMITS.maxPhotos)) {
+      const path = `${crypto.randomUUID()}-${sanitizeFileName(file.name)}`;
       const { error } = await supabase.storage.from("lead-photos").upload(path, file);
       if (!error) paths.push(path);
     }
