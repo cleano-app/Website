@@ -10,5 +10,10 @@ export const metadata: Metadata = {
 };
 
 export default function RooftopCleaningPage() {
-  return <ServicePageLayout service={service} />;
+  return (
+    <ServicePageLayout
+      service={service}
+      realPhotos={[{ before: "/photos/rooftop-before.jpg", after: "/photos/rooftop-after.jpg" }]}
+    />
+  );
 }
