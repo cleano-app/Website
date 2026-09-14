@@ -4,7 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StickyMobileBar from "@/components/StickyMobileBar";
-import { companyDetails, isPlaceholder, siteConfig } from "@/lib/siteConfig";
+import { companyDetails, siteConfig } from "@/lib/siteConfig";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -78,11 +78,10 @@ export default function RootLayout({
               url: siteConfig.url,
               telephone: siteConfig.phone,
               email: siteConfig.email,
-              // Only once the real registered office is in siteConfig -
-              // a placeholder string must never reach structured data.
-              ...(isPlaceholder(companyDetails.registeredOffice)
-                ? {}
-                : { address: companyDetails.registeredOffice }),
+              address: {
+                "@type": "PostalAddress",
+                ...companyDetails.registeredOfficeAddress,
+              },
               areaServed: [
                 "Stamford Hill",
                 "Tottenham",

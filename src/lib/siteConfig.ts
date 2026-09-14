@@ -71,16 +71,21 @@ export const companyDetails = {
   registrationPlace: "England and Wales",
   companyNumber: "17237218",
   vatNumber: "GB 522 0120 63",
-  // MUST be the registered office address exactly as filed at Companies
-  // House - not the trading address, not reformatted or abbreviated. Left
-  // as a visibly marked placeholder until it's supplied; isPlaceholder()
-  // below keeps it out of structured data meanwhile.
-  registeredOffice: "[Registered office address — exactly as filed at Companies House]",
+  // The registered office as filed at Companies House - must stay identical
+  // to the filing and to the Stripe application. Structured so the footer
+  // text and the LocalBusiness PostalAddress in the root layout can't
+  // drift from each other.
+  registeredOfficeAddress: {
+    streetAddress: "14 Olinda Road",
+    addressLocality: "London",
+    postalCode: "N16 6TL",
+    addressCountry: "GB",
+  },
+  get registeredOffice(): string {
+    const a = this.registeredOfficeAddress;
+    return `${a.streetAddress}, ${a.addressLocality}, ${a.postalCode}`;
+  },
 };
-
-export function isPlaceholder(value: string): boolean {
-  return value.trim().startsWith("[");
-}
 
 // The policy pages Stripe (and its card-network partners) expect to find
 // linked from every page. Wording on each is supplied separately - see the
