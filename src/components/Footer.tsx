@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { siteConfig, telHref, mailtoHref } from "@/lib/siteConfig";
+import { companyDetails, legalNav, siteConfig, telHref, mailtoHref } from "@/lib/siteConfig";
 import { services } from "@/lib/content/services";
 
 export default function Footer() {
@@ -42,9 +42,39 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-border-subtle px-4 py-6 sm:px-6">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 text-xs text-foreground/50 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 text-xs text-foreground/50">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p>
+              © {new Date().getFullYear()} {companyDetails.legalName}. All rights reserved.
+            </p>
+            {/* Policy pages - Stripe and its card-network partners expect
+                these reachable from every page, hence the footer. */}
+            <nav aria-label="Legal">
+              <ul className="flex flex-wrap items-center gap-x-1.5">
+                {legalNav.map((item, i) => (
+                  <li key={item.href} className="flex items-center gap-x-1.5">
+                    {i > 0 && <span aria-hidden="true">·</span>}
+                    <Link href={item.href} className="hover:text-brand-dark hover:underline">
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
           <p>London &amp; the surrounding areas · Fully insured · VAT registered</p>
+          {/* Statutory trading disclosures for a UK limited company - name,
+              company number, place of registration, registered office.
+              Values live in siteConfig so they can't drift from the
+              structured data in the root layout. */}
+          <p className="leading-relaxed text-foreground/45">
+            {companyDetails.legalName} · Registered in {companyDetails.registrationPlace} · Company
+            number {companyDetails.companyNumber}
+            <br />
+            VAT registration number {companyDetails.vatNumber}
+            <br />
+            Registered office: {companyDetails.registeredOffice}
+          </p>
         </div>
       </div>
     </footer>

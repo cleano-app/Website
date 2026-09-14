@@ -9,6 +9,15 @@ import Reviews from "@/components/Reviews";
 import FinalCTA from "@/components/FinalCTA";
 import FadeIn from "@/components/motion/FadeIn";
 import { StaggerGrid, StaggerItem } from "@/components/motion/StaggerGrid";
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import { siteConfig } from "@/lib/siteConfig";
+
+export const metadata: Metadata = pageMetadata({
+  title: { absolute: `${siteConfig.name} | ${siteConfig.tagline}` },
+  description: siteConfig.description,
+  path: "/",
+});
 
 export default function HomePage() {
   return (

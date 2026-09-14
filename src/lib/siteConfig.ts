@@ -2,12 +2,25 @@
 // review (contact details, external links) - pulled from env so they can
 // be corrected in Vercel without a redeploy of source.
 
+// The site's canonical public origin - what every og:url, canonical link
+// and sitemap entry is built from. Env-overridable so a domain change never
+// needs a source edit, but a Vercel deployment hostname is never accepted:
+// NEXT_PUBLIC_APP_URL was pointed at https://website.vercel.app for a while
+// and every social/WhatsApp preview of the live site leaked it.
+function canonicalSiteUrl(): string {
+  const configured = process.env.NEXT_PUBLIC_APP_URL?.trim().replace(/\/+$/, "");
+  if (configured && /^https:\/\//.test(configured) && !/\.vercel\.app$/i.test(configured)) {
+    return configured;
+  }
+  return "https://www.cleano.services";
+}
+
 export const siteConfig = {
   name: "Cleano",
   tagline: "Clean places. Better spaces.",
   description:
     "Cleano is an exterior cleaning company serving homes and businesses across London and the surrounding areas: gutter cleaning, rooftop cleaning, window cleaning, pressure washing, bin cleaning and graffiti removal.",
-  url: process.env.NEXT_PUBLIC_APP_URL || "https://cleano.services",
+  url: canonicalSiteUrl(),
   opsAppUrl: process.env.NEXT_PUBLIC_OPS_APP_URL || "https://ops.cleano.services",
 
   phone: process.env.NEXT_PUBLIC_CONTACT_PHONE || "02033704040",
@@ -44,4 +57,37 @@ export const mainNav: { label: string; href: string }[] = [
   { label: "Pressure", href: "/pressure-washing" },
   { label: "Graffiti", href: "/graffiti-removal" },
   { label: "About", href: "/about" },
+];
+
+// The registered company behind the Cleano trading name. A UK limited
+// company must show its registered name, company number, place of
+// registration and registered office on its website (Companies Act 2006 /
+// the Company, LLP and Business (Names and Trading Disclosures) Regs) -
+// rendered in the footer on every page. These are also what Stripe's
+// reviewers check the site against, so they must match Companies House and
+// the Stripe application exactly.
+export const companyDetails = {
+  legalName: "Cleano Ltd",
+  registrationPlace: "England and Wales",
+  companyNumber: "17237218",
+  vatNumber: "GB 522 0120 63",
+  // MUST be the registered office address exactly as filed at Companies
+  // House - not the trading address, not reformatted or abbreviated. Left
+  // as a visibly marked placeholder until it's supplied; isPlaceholder()
+  // below keeps it out of structured data meanwhile.
+  registeredOffice: "[Registered office address — exactly as filed at Companies House]",
+};
+
+export function isPlaceholder(value: string): boolean {
+  return value.trim().startsWith("[");
+}
+
+// The policy pages Stripe (and its card-network partners) expect to find
+// linked from every page. Wording on each is supplied separately - see the
+// pages themselves; this is only where the links live.
+export const legalNav: { label: string; href: string }[] = [
+  { label: "Terms", href: "/terms" },
+  { label: "Privacy", href: "/privacy" },
+  { label: "Cancellation", href: "/cancellation" },
+  { label: "Refunds", href: "/refunds" },
 ];

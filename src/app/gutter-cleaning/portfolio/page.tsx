@@ -6,12 +6,14 @@ import FadeIn from "@/components/motion/FadeIn";
 import { StaggerGrid, StaggerItem } from "@/components/motion/StaggerGrid";
 import FloatingButterflies from "@/components/motion/FloatingButterflies";
 import { mailtoHref, telHref, whatsappHref, siteConfig } from "@/lib/siteConfig";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Portfolio Gutter Care Scheme",
   description:
     "Drone-inspect every gutter across your portfolio, clean only where it's needed, and get a free photographic report where it isn't. For landlords, property managers and commercial portfolios.",
-};
+  path: "/gutter-cleaning/portfolio",
+});
 
 // This hero is centred text running close to full width at every line, so
 // butterflies are confined to the top/bottom padding bands only - never

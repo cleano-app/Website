@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import ServicePageLayout from "@/components/ServicePageLayout";
 import { getServiceBySlug } from "@/lib/content/services";
+import { pageMetadata } from "@/lib/seo";
 
 const service = getServiceBySlug("graffiti-removal")!;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: service.name,
   description: service.heroSubhead,
-};
+  path: `/${service.slug}`,
+});
 
 export default function GraffitiRemovalPage() {
   return (

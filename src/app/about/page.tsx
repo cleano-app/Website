@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { pageMetadata } from "@/lib/seo";
 import FloatingButterflies from "@/components/motion/FloatingButterflies";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "About Cleano",
   description: "Who Cleano is, the Cleano Standard, and why every job comes with a Photo Report.",
-};
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

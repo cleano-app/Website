@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import QuoteForm from "@/components/QuoteForm";
+import { pageMetadata } from "@/lib/seo";
 import FloatingButterflies from "@/components/motion/FloatingButterflies";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Get a Free Quote",
   description: "Tell us what needs cleaning and we'll send you a free quote.",
-};
+  path: "/quote",
+});
 
 export default function QuotePage() {
   return (

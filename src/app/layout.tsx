@@ -4,7 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StickyMobileBar from "@/components/StickyMobileBar";
-import { siteConfig } from "@/lib/siteConfig";
+import { companyDetails, isPlaceholder, siteConfig } from "@/lib/siteConfig";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +25,10 @@ const sora = Sora({
   weight: ["600", "700", "800"],
 });
 
+// Site-wide defaults. Every page sets its own title/description/og/canonical
+// through pageMetadata() (src/lib/seo.ts) - relative paths there resolve
+// against this metadataBase, so og:url and the canonical link always carry
+// the live domain plus the page's own path.
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
@@ -32,11 +36,14 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  alternates: { canonical: "/" },
   openGraph: {
     title: `${siteConfig.name} | ${siteConfig.tagline}`,
     description: siteConfig.description,
     type: "website",
-    url: siteConfig.url,
+    url: "/",
+    siteName: siteConfig.name,
+    locale: "en_GB",
   },
   twitter: {
     card: "summary_large_image",
@@ -65,10 +72,17 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
               name: siteConfig.name,
+              legalName: companyDetails.legalName,
+              vatID: companyDetails.vatNumber,
               description: siteConfig.description,
               url: siteConfig.url,
               telephone: siteConfig.phone,
               email: siteConfig.email,
+              // Only once the real registered office is in siteConfig -
+              // a placeholder string must never reach structured data.
+              ...(isPlaceholder(companyDetails.registeredOffice)
+                ? {}
+                : { address: companyDetails.registeredOffice }),
               areaServed: [
                 "Stamford Hill",
                 "Tottenham",
