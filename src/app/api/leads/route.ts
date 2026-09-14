@@ -77,7 +77,19 @@ export async function POST(request: NextRequest) {
 
   if (error) {
     console.error("Failed to insert lead:", error);
-    return NextResponse.json({ error: "Something went wrong saving your request." }, { status: 500 });
+    // TEMPORARY diagnostic: echo Postgres' error code back to the form, so the
+    // cause is readable without opening the Vercel logs. The common ones here:
+    // 42P01 = the `leads` table doesn't exist on this Supabase project (the
+    // migrations were never run against it), 42501 = the insert was blocked by
+    // row-level security (i.e. SUPABASE_SERVICE_ROLE_KEY isn't actually the
+    // service-role key). Error codes alone carry no customer data. Remove this
+    // once the live Supabase project is sorted.
+    return NextResponse.json(
+      {
+        error: `Something went wrong saving your request.${error.code ? ` [ref: ${error.code}]` : ""}`,
+      },
+      { status: 500 }
+    );
   }
 
   await sendLeadNotification(input, data.id);
