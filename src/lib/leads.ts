@@ -32,8 +32,46 @@ export const LEAD_LIMITS = {
   sourcePage: 200,
   utmField: 200,
   maxPhotos: 8,
-  photoPath: 300,
 } as const;
+
+// Photos are never stored by this site: the browser shrinks them (see
+// QuoteForm), they travel to /api/leads as multipart form fields, and the
+// API attaches them to the office notification email. The caps exist
+// because that email goes through Microsoft Graph's sendMail, whose whole
+// JSON payload (attachments base64-encoded, so ~1.37x the raw bytes) has
+// to stay under 4MB. 8 photos x 300KB raw ~ 3.3MB encoded, with headroom.
+export const PHOTO_LIMITS = {
+  /** Original file size accepted from the picker before compression. */
+  maxOriginalBytes: 10 * 1024 * 1024,
+  /** What the client compresses each photo down to, and the per-photo cap
+   * the server enforces (slightly above the target - compression isn't
+   * exact). */
+  targetBytes: 300 * 1024,
+  maxBytesPerPhoto: 450 * 1024,
+  maxTotalBytes: 2500 * 1024,
+  maxWidthOrHeight: 1280,
+} as const;
+
+/** Sniffs the real image format from the first bytes. The declared MIME
+ * type on an upload is whatever the client says it is; the office is going
+ * to open these attachments, so only accept what actually parses as one of
+ * the three formats every mail client renders. HEIC is deliberately not
+ * here: it's converted client-side (iOS does this itself for a plain file
+ * input) and Outlook can't display it anyway. */
+export function sniffImageType(bytes: Uint8Array): "image/jpeg" | "image/png" | "image/webp" | null {
+  if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return "image/jpeg";
+  if (
+    bytes.length >= 8 &&
+    bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47 &&
+    bytes[4] === 0x0d && bytes[5] === 0x0a && bytes[6] === 0x1a && bytes[7] === 0x0a
+  ) return "image/png";
+  if (
+    bytes.length >= 12 &&
+    bytes[0] === 0x52 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x46 &&
+    bytes[8] === 0x57 && bytes[9] === 0x45 && bytes[10] === 0x42 && bytes[11] === 0x50
+  ) return "image/webp";
+  return null;
+}
 
 // Phone: digits, spaces and the handful of punctuation marks real phone
 // numbers use. Postcode: letters, digits and spaces. Deliberately loose
@@ -41,11 +79,6 @@ export const LEAD_LIMITS = {
 // garbage/script-like input, not to be a phone-format authority.
 const PHONE_RE = /^[0-9+()\-\s]{7,20}$/;
 const POSTCODE_RE = /^[A-Za-z0-9\s]{2,10}$/;
-// Object path this app itself generates in QuoteForm's uploadPhotos - a
-// random UUID, a hyphen, then a filename we've already sanitised to a safe
-// charset. Anything that doesn't match this shape didn't come from our own
-// upload flow.
-const PHOTO_PATH_RE = /^[0-9a-f-]{36}-[A-Za-z0-9._-]{1,255}$/;
 
 export type NewLeadInput = {
   name: string;
@@ -53,7 +86,6 @@ export type NewLeadInput = {
   postcode: string;
   service: LeadService;
   serviceOtherNote?: string;
-  photoPaths?: string[];
   sourcePage: string;
   utm?: {
     source?: string;
@@ -100,12 +132,5 @@ export function validateNewLead(input: Partial<NewLeadInput>): string | null {
       if (typeof value === "string" && value.length > LEAD_LIMITS.utmField) return "Invalid request.";
     }
   }
-  if (input.photoPaths) {
-    if (input.photoPaths.length > LEAD_LIMITS.maxPhotos) return `Please attach at most ${LEAD_LIMITS.maxPhotos} photos.`;
-    for (const path of input.photoPaths) {
-      if (path.length > LEAD_LIMITS.photoPath || !PHOTO_PATH_RE.test(path)) return "Invalid request.";
-    }
-  }
-
   return null;
 }

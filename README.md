@@ -41,15 +41,19 @@ service page) POSTs to `/api/leads`, which:
 
 1. Inserts a row into the `leads` table in Supabase (schema in
    `supabase/migrations/0001_init_leads.sql`) — capturing name, phone,
-   postcode, service, uploaded photo paths, source page, UTM params, and a
+   postcode, service, source page, UTM params, and a
    `status` column (`new` → `contacted` → `quoted` → `booked` → `completed`
    → `lost`) ready to plug into Cleano's wider operating system later.
-2. Sends a notification email via Resend to `LEADS_NOTIFICATION_EMAIL`.
+2. Emails the office (`LEADS_NOTIFICATION_EMAIL`) through Microsoft 365
+   via Graph — the same mailbox/app registration Cleano Ops uses — with
+   any photos the customer attached.
 
-Optional photos are uploaded directly from the browser to a private
-`lead-photos` Supabase Storage bucket (anon key can only insert, never
-read/list — only the service role can read them back out).
-
+Photos are never stored by this site: the browser compresses them
+(`browser-image-compression`, ~300KB each, max 8) and they travel with the
+form post as multipart fields; `/api/leads` sniffs the real image format,
+enforces the size caps in `PHOTO_LIMITS`, and attaches them to that email.
+A daily Vercel cron (`/api/cron/purge-leads`, `vercel.json`) deletes lead
+rows older than twelve months, which is what lets the privacy policy say so.
 ## Deployment
 
 ### 1. Supabase — create a **new, separate** project
@@ -71,10 +75,12 @@ this site's leads shouldn't share a database with Ops.
    `.env.local.example` with real values:
    - `NEXT_PUBLIC_APP_URL` — this site's production URL
    - `NEXT_PUBLIC_OPS_APP_URL` — defaults to `https://ops.cleano.services`
-   - `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` /
-     `SUPABASE_SERVICE_ROLE_KEY` — from the new Supabase project above
-   - `RESEND_API_KEY` / `LEADS_NOTIFICATION_EMAIL` — for the lead
-     notification email
+   - `NEXT_PUBLIC_SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` — from the
+     new Supabase project above (the *secret* key, not the publishable one)
+   - `MICROSOFT_TENANT_ID` / `MICROSOFT_CLIENT_ID` / `MICROSOFT_CLIENT_SECRET`
+     / `MICROSOFT_SENDER_MAILBOX` / `LEADS_NOTIFICATION_EMAIL` — for the
+     lead notification email (same values as Cleano Ops)
+   - `CRON_SECRET` — for the daily enquiry purge
    - `NEXT_PUBLIC_CONTACT_PHONE` / `NEXT_PUBLIC_CONTACT_PHONE_DISPLAY` /
      `NEXT_PUBLIC_CONTACT_EMAIL` / `NEXT_PUBLIC_WHATSAPP_NUMBER`
 4. Deploy

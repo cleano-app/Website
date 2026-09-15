@@ -1,7 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
 import { createServiceRoleSupabaseClient } from "@/lib/supabase/server";
-import { LEAD_SERVICE_LABELS, type NewLeadInput, validateNewLead } from "@/lib/leads";
+import { escapeHtml } from "@/lib/escapeHtml";
+import { isGraphMailConfigured, sendGraphMail, type GraphMailAttachment } from "@/lib/email/graph";
+import {
+  LEAD_LIMITS,
+  LEAD_SERVICE_LABELS,
+  PHOTO_LIMITS,
+  sniffImageType,
+  type NewLeadInput,
+  validateNewLead,
+} from "@/lib/leads";
 
 export const runtime = "nodejs";
 
@@ -12,18 +20,17 @@ export async function POST(request: NextRequest) {
   // hit directly - the browser sets Origin on every fetch/form POST and
   // JS cannot forge it, so this blocks that class of abuse outright. It
   // does nothing against a script hitting the API directly (curl etc, no
-  // browser involved) - that's what the honeypot/Turnstire checks below
+  // browser involved) - that's what the honeypot/Turnstile checks below
   // and DB-level limits are for.
   if (!isSameOrigin(request)) {
     return NextResponse.json({ error: "Invalid request." }, { status: 403 });
   }
 
-  let body: Partial<NewLeadInput>;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+  const parsed = await parseRequest(request);
+  if ("error" in parsed) {
+    return NextResponse.json({ error: parsed.error }, { status: 400 });
   }
+  const { body, photos } = parsed;
 
   // Honeypot: a field real visitors never see or fill in (see QuoteForm).
   // A bot that fills in every input trips this. Respond as if the lead was
@@ -36,6 +43,11 @@ export async function POST(request: NextRequest) {
   const validationError = validateNewLead(body);
   if (validationError) {
     return NextResponse.json({ error: validationError }, { status: 400 });
+  }
+
+  const photoError = validatePhotos(photos);
+  if (photoError) {
+    return NextResponse.json({ error: photoError }, { status: 400 });
   }
 
   const turnstileError = await verifyTurnstile(body.turnstileToken, request);
@@ -64,7 +76,9 @@ export async function POST(request: NextRequest) {
       postcode: input.postcode.trim().toUpperCase(),
       service: input.service,
       service_other_note: input.serviceOtherNote?.trim() || null,
-      photo_paths: input.photoPaths ?? [],
+      // Photos are attached to the notification email below and stored
+      // nowhere - the column stays for older rows only.
+      photo_paths: [],
       source_page: input.sourcePage,
       utm_source: input.utm?.source ?? null,
       utm_medium: input.utm?.medium ?? null,
@@ -92,7 +106,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  await sendLeadNotification(input, data.id);
+  await sendLeadNotification(input, data.id, photos);
 
   return NextResponse.json({ ok: true, id: data.id });
 }
@@ -112,12 +126,67 @@ function isSameOrigin(request: NextRequest): boolean {
   }
 }
 
+interface UploadedPhoto {
+  bytes: Uint8Array;
+  contentType: "image/jpeg" | "image/png" | "image/webp";
+}
+
+/** The form posts multipart: a `payload` field holding the lead as JSON,
+ * plus zero or more `photos` files. A plain JSON body (no photos) is still
+ * accepted so nothing depends on the encoding. */
+async function parseRequest(
+  request: NextRequest
+): Promise<{ body: Partial<NewLeadInput>; photos: UploadedPhoto[] } | { error: string }> {
+  const contentType = request.headers.get("content-type") ?? "";
+  try {
+    if (contentType.startsWith("multipart/form-data")) {
+      const form = await request.formData();
+      const payload = form.get("payload");
+      if (typeof payload !== "string") return { error: "Invalid request body." };
+      const body = JSON.parse(payload) as Partial<NewLeadInput>;
+
+      const files = form.getAll("photos").filter((v): v is File => v instanceof File);
+      if (files.length > LEAD_LIMITS.maxPhotos) {
+        return { error: `Please attach at most ${LEAD_LIMITS.maxPhotos} photos.` };
+      }
+      const photos: UploadedPhoto[] = [];
+      for (const file of files) {
+        if (file.size === 0) continue;
+        const bytes = new Uint8Array(await file.arrayBuffer());
+        // Never trust file.type - it's whatever the client said. Only the
+        // bytes decide what this is.
+        const sniffed = sniffImageType(bytes);
+        if (!sniffed) return { error: "One of the photos isn't a supported image - please use JPEG or PNG." };
+        photos.push({ bytes, contentType: sniffed });
+      }
+      return { body, photos };
+    }
+    return { body: (await request.json()) as Partial<NewLeadInput>, photos: [] };
+  } catch {
+    return { error: "Invalid request body." };
+  }
+}
+
+function validatePhotos(photos: UploadedPhoto[]): string | null {
+  let total = 0;
+  for (const photo of photos) {
+    if (photo.bytes.byteLength > PHOTO_LIMITS.maxBytesPerPhoto) {
+      return "One of the photos is too large - please try again with smaller photos.";
+    }
+    total += photo.bytes.byteLength;
+  }
+  if (total > PHOTO_LIMITS.maxTotalBytes) {
+    return "Those photos are too large to send together - please attach fewer photos.";
+  }
+  return null;
+}
+
 /** Verifies a Cloudflare Turnstile token server-side when Turnstile is
  * configured (TURNSTILE_SECRET_KEY set). Returns an error message to reject
  * the request, or null to proceed. Fails OPEN (skips the check) when
  * Turnstile isn't configured yet, matching the rest of this codebase's
- * pattern for optional integrations (e.g. Resend) - the form still works
- * before someone adds the env vars, it's just less bot-resistant. */
+ * pattern for optional integrations - the form still works before someone
+ * adds the env vars, it's just less bot-resistant. */
 async function verifyTurnstile(token: string | undefined, request: NextRequest): Promise<string | null> {
   const secret = process.env.TURNSTILE_SECRET_KEY;
   if (!secret) return null;
@@ -143,38 +212,62 @@ async function verifyTurnstile(token: string | undefined, request: NextRequest):
   }
 }
 
-async function sendLeadNotification(input: NewLeadInput, leadId: string) {
-  const apiKey = process.env.RESEND_API_KEY;
+async function sendLeadNotification(input: NewLeadInput, leadId: string, photos: UploadedPhoto[]) {
   const to = process.env.LEADS_NOTIFICATION_EMAIL;
-  if (!apiKey || !to) {
-    // Not configured yet - the lead is still safely in Supabase either way.
-    console.warn("RESEND_API_KEY / LEADS_NOTIFICATION_EMAIL not set - skipping notification email.");
+  if (!to || !isGraphMailConfigured()) {
+    // The lead is saved in Supabase either way - but any photos only exist
+    // in this email, so make the gap loud in the logs rather than a warn.
+    console.error(
+      `LEAD NOTIFICATION NOT SENT for lead ${leadId}: MICROSOFT_* / LEADS_NOTIFICATION_EMAIL not configured` +
+        (photos.length ? ` - ${photos.length} photo(s) attached by the customer were NOT delivered.` : ".")
+    );
     return;
   }
 
-  try {
-    const resend = new Resend(apiKey);
-    await resend.emails.send({
-      from: "Cleano Website <leads@cleano.services>",
-      to,
-      subject: `New quote request: ${LEAD_SERVICE_LABELS[input.service]} - ${input.postcode}`,
-      text: [
-        `New lead from the website (#${leadId})`,
-        "",
-        `Service: ${LEAD_SERVICE_LABELS[input.service]}`,
-        input.serviceOtherNote ? `Details: ${input.serviceOtherNote}` : null,
-        `Name: ${input.name}`,
-        `Phone: ${input.phone}`,
-        `Postcode: ${input.postcode}`,
-        `Source page: ${input.sourcePage}`,
-        input.photoPaths?.length ? `Photos uploaded: ${input.photoPaths.length}` : "Photos uploaded: none",
-      ]
-        .filter(Boolean)
-        .join("\n"),
-    });
-  } catch (err) {
-    // A failed notification email should never fail the lead submission -
-    // the lead is already saved in Supabase and visible in the pipeline.
-    console.error("Failed to send lead notification email:", err);
+  const serviceLabel = LEAD_SERVICE_LABELS[input.service];
+  const rows: [string, string | undefined][] = [
+    ["Service", serviceLabel],
+    ["Details", input.serviceOtherNote],
+    ["Name", input.name],
+    ["Phone", input.phone],
+    ["Postcode", input.postcode],
+    ["Source page", input.sourcePage],
+    [
+      "Campaign",
+      input.utm
+        ? Object.entries(input.utm)
+            .filter(([, v]) => v)
+            .map(([k, v]) => `${k}=${v}`)
+            .join(" ")
+        : undefined,
+    ],
+    ["Photos attached", photos.length ? String(photos.length) : "none"],
+  ];
+  const html =
+    `<p>New quote request from the website (#${escapeHtml(leadId)})</p>` +
+    `<table cellpadding="4">` +
+    rows
+      .filter(([, v]) => v)
+      .map(([k, v]) => `<tr><td><strong>${k}</strong></td><td>${escapeHtml(v!)}</td></tr>`)
+      .join("") +
+    `</table>`;
+
+  const attachments: GraphMailAttachment[] = photos.map((photo, i) => ({
+    filename: `photo-${i + 1}.${photo.contentType === "image/png" ? "png" : photo.contentType === "image/webp" ? "webp" : "jpg"}`,
+    contentType: photo.contentType,
+    content: Buffer.from(photo.bytes).toString("base64"),
+  }));
+
+  // A failed notification email must never fail the submission itself -
+  // the lead is already saved and visible - but it must be loud in the
+  // logs, because the photos travel only in this email.
+  const { error } = await sendGraphMail({
+    to,
+    subject: `New quote request: ${serviceLabel} - ${input.postcode.toUpperCase()}`,
+    html,
+    attachments,
+  });
+  if (error) {
+    console.error(`Failed to send lead notification email for lead ${leadId}:`, error);
   }
 }

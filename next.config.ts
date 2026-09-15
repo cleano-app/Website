@@ -15,18 +15,25 @@ import type { NextConfig } from "next";
 // Other allowances:
 //  - 'unsafe-inline' on style-src: Next.js/Tailwind inject some inline
 //    styles; again no user input in any of them.
-//  - *.supabase.co on connect-src: direct-from-browser photo upload to
-//    Supabase Storage (anon key, insert-only - see lib/supabase/client.ts).
+//  - connect-src is same-origin only: the quote form posts to /api/leads
+//    (photos included, as multipart) and nothing in the browser talks to
+//    Supabase or anyone else directly.
 //  - challenges.cloudflare.com: the optional Turnstile bot-check widget
 //    (only loads at all if NEXT_PUBLIC_TURNSTILE_SITE_KEY is set).
+//  - worker-src 'self' blob:: browser-image-compression shrinks quote-form
+//    photos in a Web Worker it spins up from a blob: URL. Without this the
+//    worker is refused (worker-src falls back to script-src) and the
+//    library silently compresses on the main thread instead - same result,
+//    but it stalls the page on a phone and logs a CSP error per photo.
 const csp = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
-  "connect-src 'self' https://*.supabase.co https://challenges.cloudflare.com",
+  "connect-src 'self' https://challenges.cloudflare.com",
   "frame-src https://challenges.cloudflare.com",
+  "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

@@ -2,8 +2,13 @@
 
 import { useState } from "react";
 import { services } from "@/lib/content/services";
-import { LEAD_LIMITS, LEAD_SERVICE_LABELS, type LeadService, type NewLeadInput } from "@/lib/leads";
-import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import {
+  LEAD_LIMITS,
+  LEAD_SERVICE_LABELS,
+  PHOTO_LIMITS,
+  type LeadService,
+  type NewLeadInput,
+} from "@/lib/leads";
 import { siteConfig, telHref, whatsappHref } from "@/lib/siteConfig";
 import Turnstile from "./Turnstile";
 
@@ -12,10 +17,10 @@ const serviceChoices: { value: LeadService; label: string }[] = [
   { value: "other", label: "Other" },
 ];
 
-// Mirrors the DB-level limits on the lead-photos storage bucket (see
-// supabase/migrations/0004_harden_lead_photos_bucket.sql) so a rejected
-// upload never gets that far - the user finds out immediately instead.
-const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10MB
+// What the picker will accept at all. HEIC is allowed in because iOS hands
+// a plain <input type="file"> a JPEG for HEIC photos anyway; if a real HEIC
+// does get through, compression fails on it and the user is told to pick a
+// JPEG instead - it never reaches the office as something Outlook can't open.
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"];
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
@@ -68,7 +73,7 @@ export default function QuoteForm({
         setErrorMessage(`${file.name} isn't a supported image type - please use JPEG, PNG, WebP or HEIC.`);
         continue;
       }
-      if (file.size > MAX_FILE_BYTES) {
+      if (file.size > PHOTO_LIMITS.maxOriginalBytes) {
         setErrorMessage(`${file.name} is too large - please keep photos under 10MB.`);
         continue;
       }
@@ -87,8 +92,6 @@ export default function QuoteForm({
     setSubmitting(true);
     setErrorMessage(null);
 
-    const photoPaths = await uploadPhotos(photos);
-
     const utm = readUtmParams();
     const payload: NewLeadInput = {
       name: name.trim(),
@@ -96,7 +99,6 @@ export default function QuoteForm({
       postcode: postcode.trim(),
       service,
       serviceOtherNote: service === "other" ? serviceOtherNote.trim() : undefined,
-      photoPaths,
       sourcePage,
       utm,
       website,
@@ -104,11 +106,15 @@ export default function QuoteForm({
     };
 
     try {
-      const res = await fetch("/api/leads", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      // Photos ride along in the same request as multipart fields - shrunk
+      // first so eight of them stay comfortably inside the email they're
+      // about to be attached to. Nothing is uploaded anywhere else.
+      const form = new FormData();
+      form.set("payload", JSON.stringify(payload));
+      const prepared = await preparePhotos(photos);
+      prepared.forEach((file, i) => form.append("photos", file, `photo-${i + 1}.jpg`));
+
+      const res = await fetch("/api/leads", { method: "POST", body: form });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error || "Something went wrong. Please call or WhatsApp us instead.");
@@ -255,8 +261,17 @@ export default function QuoteForm({
             className="mt-4 block w-full text-sm text-foreground/70 file:mr-4 file:rounded-full file:border-0 file:bg-muted-bg file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand-dark"
           />
           {photos.length > 0 && (
-            <p className="mt-2 text-xs text-foreground/50">{photos.length} photo(s) selected</p>
+            <p className="mt-2 text-xs text-foreground/50">
+              {photos.length} photo(s) selected ·{" "}
+              <button type="button" onClick={() => setPhotos([])} className="underline">
+                clear
+              </button>
+            </p>
           )}
+          <p className="mt-2 text-xs text-foreground/50">
+            Photos are emailed to our office with your request. They aren&apos;t stored on this
+            website.
+          </p>
           {TURNSTILE_SITE_KEY && (
             <div className="mt-4">
               <Turnstile siteKey={TURNSTILE_SITE_KEY} onVerify={setTurnstileToken} />
@@ -348,39 +363,39 @@ function StepIndicator({ step }: { step: Step }) {
   );
 }
 
-// Strips a user-supplied filename down to a safe charset before it becomes
-// part of a storage path - filenames can contain almost anything (path
-// separators, unicode tricks, control characters), and this path is later
-// matched server-side against PHOTO_PATH_RE in lib/leads.ts, so the two
-// need to agree on what's "safe".
-function sanitizeFileName(name: string): string {
-  const dot = name.lastIndexOf(".");
-  const base = dot > 0 ? name.slice(0, dot) : name;
-  const ext = dot > 0 ? name.slice(dot) : "";
-  const safeBase = base.replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 60) || "photo";
-  const safeExt = ext.replace(/[^a-zA-Z0-9.]/g, "").slice(0, 10);
-  return `${safeBase}${safeExt}`;
-}
-
-async function uploadPhotos(files: File[]): Promise<string[]> {
+/** Shrinks each photo to roughly PHOTO_LIMITS.targetBytes as a JPEG so all
+ * of them fit in the notification email. A photo that can't be processed
+ * (a genuine HEIC on a browser that can't decode it, a corrupt file) is
+ * reported by name rather than silently dropped - the customer chose to
+ * send it, so they should know if it isn't going. */
+async function preparePhotos(files: File[]): Promise<File[]> {
   if (files.length === 0) return [];
-
-  try {
-    const supabase = createBrowserSupabaseClient();
-    const paths: string[] = [];
-    // handlePhotoSelect already caps this, but never trust that a caller
-    // won't grow the array some other way - re-cap here too.
-    for (const file of files.slice(0, LEAD_LIMITS.maxPhotos)) {
-      const path = `${crypto.randomUUID()}-${sanitizeFileName(file.name)}`;
-      const { error } = await supabase.storage.from("lead-photos").upload(path, file);
-      if (!error) paths.push(path);
+  const imageCompression = (await import("browser-image-compression")).default;
+  const out: File[] = [];
+  for (const file of files.slice(0, LEAD_LIMITS.maxPhotos)) {
+    try {
+      const compressed = await imageCompression(file, {
+        maxSizeMB: PHOTO_LIMITS.targetBytes / (1024 * 1024),
+        maxWidthOrHeight: PHOTO_LIMITS.maxWidthOrHeight,
+        useWebWorker: true,
+        fileType: "image/jpeg",
+        initialQuality: 0.8,
+      });
+      if (compressed.size > PHOTO_LIMITS.maxBytesPerPhoto) {
+        throw new Error("still too large after compression");
+      }
+      out.push(new File([compressed], "photo.jpg", { type: "image/jpeg" }));
+    } catch {
+      throw new Error(
+        `We couldn't process ${file.name}. Please try a JPEG or PNG photo, or send it to us on WhatsApp instead.`
+      );
     }
-    return paths;
-  } catch {
-    // Supabase not configured yet, or upload failed - never block the lead
-    // submission itself on photos.
-    return [];
   }
+  const total = out.reduce((sum, f) => sum + f.size, 0);
+  if (total > PHOTO_LIMITS.maxTotalBytes) {
+    throw new Error("Those photos are too large to send together - please attach fewer photos.");
+  }
+  return out;
 }
 
 function readUtmParams(): NewLeadInput["utm"] {
