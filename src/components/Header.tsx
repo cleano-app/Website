@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { mainNav, siteConfig, telHref, whatsappHref } from "@/lib/siteConfig";
+import { mainNav, siteConfig, whatsappHref } from "@/lib/siteConfig";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -12,38 +12,49 @@ export default function Header() {
     <header className="sticky top-0 z-40 border-b border-border-subtle bg-background/95 shadow-sm backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-1 sm:px-6">
         <Link href="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
+          {/* The source PNG is trimmed to the artwork itself (it used to
+              carry ~4% transparent padding on every edge, which made the
+              mark render smaller than the space it took). Breathing room
+              now comes from the header's own padding, where it can be
+              tuned, rather than from empty pixels in the file. */}
           <Image
             src="/brand/cleano-logo.png"
             alt={`${siteConfig.name} - ${siteConfig.tagline}`}
-            width={255}
-            height={80}
+            width={4491}
+            height={1162}
             priority
-            className="h-[3.1rem] w-auto sm:h-[3.55rem]"
+            className="h-[2.7rem] w-auto min-[380px]:h-[2.95rem] sm:h-[3.4rem] lg:h-[3.75rem]"
           />
         </Link>
 
-        <nav className="hidden items-center gap-4 lg:flex xl:gap-5" aria-label="Primary">
-          {mainNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="relative text-sm font-medium text-foreground/80 transition-colors after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-brand after:transition-all hover:text-brand-dark hover:after:w-full"
-            >
-              {item.label}
-            </Link>
-          ))}
+        {/* Service links stay neutral so Contact - the one link that is an
+            action rather than a destination - carries the brand colour and
+            reads as the thing to click. */}
+        <nav className="hidden items-center gap-5 lg:flex xl:gap-6" aria-label="Primary">
+          {mainNav.map((item) => {
+            const isContact = item.href === "/contact";
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`relative text-sm transition-colors after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-brand after:transition-all hover:after:w-full ${
+                  isContact
+                    ? "font-semibold text-brand hover:text-brand-dark"
+                    : "font-medium text-foreground/70 hover:text-foreground"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
+        {/* The phone number and the Get a Free Quote button used to live
+            here; both were dropped to unclutter the bar now that /contact
+            carries every way to reach Cleano. WhatsApp stays as the one
+            one-tap action. Each page still ends on its own quote CTA, and
+            phones keep the sticky Call / WhatsApp / Quote bar. */}
         <div className="hidden items-center gap-2 lg:flex">
-          <a
-            href={telHref()}
-            className="flex items-center gap-1.5 px-1 text-sm font-semibold whitespace-nowrap text-brand-dark hover:underline"
-          >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
-              <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" />
-            </svg>
-            {siteConfig.phoneDisplay}
-          </a>
           <a
             href={whatsappHref("Hi Cleano, I'd like a quote for...")}
             target="_blank"
@@ -60,12 +71,6 @@ export default function Header() {
             <SignInIcon />
             Sign In
           </a>
-          <Link
-            href="/quote"
-            className="shrink-0 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold whitespace-nowrap text-white shadow-sm shadow-brand/25 transition-colors hover:bg-brand-dark"
-          >
-            Get a Free Quote
-          </Link>
         </div>
 
         {/* Mobile: Sign In sits in the bar itself, not only inside the
@@ -75,7 +80,7 @@ export default function Header() {
         <div className="flex items-center gap-2 lg:hidden">
           <a
             href={`${siteConfig.opsAppUrl}/login`}
-            className="flex h-10 items-center gap-1.5 rounded-lg border border-border-subtle px-3 text-sm font-semibold text-foreground/80"
+            className="flex h-10 shrink-0 items-center gap-1.5 rounded-lg border border-border-subtle px-3 text-sm font-semibold whitespace-nowrap text-foreground/80"
             aria-label="Sign in to the Cleano app"
           >
             <SignInIcon />
@@ -112,7 +117,11 @@ export default function Header() {
                 <Link
                   href={item.href}
                   onClick={() => setMenuOpen(false)}
-                  className="block rounded-lg px-3 py-2.5 text-base font-medium text-foreground/85 hover:bg-muted-bg"
+                  className={`block rounded-lg px-3 py-2.5 text-base hover:bg-muted-bg ${
+                    item.href === "/contact"
+                      ? "font-semibold text-brand"
+                      : "font-medium text-foreground/85"
+                  }`}
                 >
                   {item.label}
                 </Link>

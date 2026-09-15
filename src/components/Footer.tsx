@@ -18,9 +18,9 @@ export default function Footer() {
           <Image
             src="/brand/cleano-logo.png"
             alt={`${siteConfig.name} - ${siteConfig.tagline}`}
-            width={255}
-            height={80}
-            className="h-6 w-auto"
+            width={4491}
+            height={1162}
+            className="h-7 w-auto"
           />
           <p className="mt-4 max-w-sm text-sm text-foreground/70">{siteConfig.description}</p>
           <p className="mt-4 text-sm text-foreground/70">
