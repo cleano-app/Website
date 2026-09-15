@@ -22,7 +22,7 @@ export default function Header() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-5 lg:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-4 lg:flex xl:gap-5" aria-label="Primary">
           {mainNav.map((item) => (
             <Link
               key={item.href}
@@ -62,7 +62,7 @@ export default function Header() {
           </a>
           <Link
             href="/quote"
-            className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-brand/25 transition-colors hover:bg-brand-dark"
+            className="shrink-0 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold whitespace-nowrap text-white shadow-sm shadow-brand/25 transition-colors hover:bg-brand-dark"
           >
             Get a Free Quote
           </Link>

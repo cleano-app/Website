@@ -4,7 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StickyMobileBar from "@/components/StickyMobileBar";
-import { companyDetails, siteConfig } from "@/lib/siteConfig";
+import { companyDetails, serviceAreas, siteConfig } from "@/lib/siteConfig";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -82,15 +82,15 @@ export default function RootLayout({
                 "@type": "PostalAddress",
                 ...companyDetails.registeredOfficeAddress,
               },
-              areaServed: [
-                "Stamford Hill",
-                "Tottenham",
-                "Hackney",
-                "Wood Green",
-                "Golders Green",
-                "Edgware",
-                "Enfield",
-              ],
+              areaServed: [...serviceAreas],
+              contactPoint: {
+                "@type": "ContactPoint",
+                telephone: siteConfig.phone,
+                email: siteConfig.email,
+                contactType: "customer service",
+                areaServed: "GB",
+                availableLanguage: "English",
+              },
               image: `${siteConfig.url}/brand/cleano-logo.png`,
             }),
           }}

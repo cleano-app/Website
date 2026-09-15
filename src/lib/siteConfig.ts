@@ -57,7 +57,21 @@ export const mainNav: { label: string; href: string }[] = [
   { label: "Pressure", href: "/pressure-washing" },
   { label: "Graffiti", href: "/graffiti-removal" },
   { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
+
+// Named areas Cleano covers, as used in the LocalBusiness structured data
+// and on /contact. "London and the surrounding areas" is the umbrella; these
+// are the places worth naming for local search.
+export const serviceAreas = [
+  "Stamford Hill",
+  "Tottenham",
+  "Hackney",
+  "Wood Green",
+  "Golders Green",
+  "Edgware",
+  "Enfield",
+] as const;
 
 // The registered company behind the Cleano trading name. A UK limited
 // company must show its registered name, company number, place of
