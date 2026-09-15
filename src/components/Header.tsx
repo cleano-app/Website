@@ -68,22 +68,36 @@ export default function Header() {
           </Link>
         </div>
 
-        <button
-          type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-lg border border-border-subtle lg:hidden"
-          aria-expanded={menuOpen}
-          aria-controls="mobile-nav"
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
-          onClick={() => setMenuOpen((v) => !v)}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            {menuOpen ? (
-              <path d="M6 6l12 12M18 6L6 18" />
-            ) : (
-              <path d="M4 7h16M4 12h16M4 17h16" />
-            )}
-          </svg>
-        </button>
+        {/* Mobile: Sign In sits in the bar itself, not only inside the
+            drawer - customers who never open the menu still need to find
+            the app login. The sticky bottom bar is Call / WhatsApp / Quote
+            only, so this is the one place it's always visible on a phone. */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <a
+            href={`${siteConfig.opsAppUrl}/login`}
+            className="flex h-10 items-center gap-1.5 rounded-lg border border-border-subtle px-3 text-sm font-semibold text-foreground/80"
+            aria-label="Sign in to the Cleano app"
+          >
+            <SignInIcon />
+            Sign In
+          </a>
+          <button
+            type="button"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-border-subtle"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              {menuOpen ? (
+                <path d="M6 6l12 12M18 6L6 18" />
+              ) : (
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              )}
+            </svg>
+          </button>
+        </div>
       </div>
 
       {menuOpen && (
