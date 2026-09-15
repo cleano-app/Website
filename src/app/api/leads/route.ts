@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceRoleSupabaseClient } from "@/lib/supabase/server";
 import { escapeHtml } from "@/lib/escapeHtml";
-import { isGraphMailConfigured, sendGraphMail, type GraphMailAttachment } from "@/lib/email/graph";
+import { mailTransport, sendMail, type MailAttachment } from "@/lib/email/send";
 import {
   LEAD_LIMITS,
   LEAD_SERVICE_LABELS,
@@ -259,8 +259,10 @@ async function sendLeadNotification(
   saveProblem?: string
 ): Promise<{ sent: boolean; problem?: string }> {
   const to = process.env.LEADS_NOTIFICATION_EMAIL;
-  if (!to || !isGraphMailConfigured()) {
-    const problem = "MICROSOFT_* / LEADS_NOTIFICATION_EMAIL not configured";
+  if (!to || !mailTransport()) {
+    const problem = !to
+      ? "LEADS_NOTIFICATION_EMAIL not set"
+      : "no email transport configured (RESEND_API_KEY or MICROSOFT_*)";
     console.error(
       `LEAD NOTIFICATION NOT SENT (${leadId ?? "unsaved"}): ${problem}` +
         (photos.length ? ` - ${photos.length} photo(s) attached by the customer were NOT delivered.` : ".")
@@ -305,13 +307,13 @@ async function sendLeadNotification(
     `</table>` +
     (saveProblem ? `<p style="color:#6b7280;font-size:12px">Database error: ${escapeHtml(saveProblem)}</p>` : "");
 
-  const attachments: GraphMailAttachment[] = photos.map((photo, i) => ({
+  const attachments: MailAttachment[] = photos.map((photo, i) => ({
     filename: `photo-${i + 1}.${photo.contentType === "image/png" ? "png" : photo.contentType === "image/webp" ? "webp" : "jpg"}`,
     contentType: photo.contentType,
-    content: Buffer.from(photo.bytes).toString("base64"),
+    contentBase64: Buffer.from(photo.bytes).toString("base64"),
   }));
 
-  const { error } = await sendGraphMail({
+  const { error } = await sendMail({
     to,
     subject:
       `${saved(leadId) ? "" : "[NOT SAVED] "}New quote request: ` +

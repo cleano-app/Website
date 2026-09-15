@@ -15,8 +15,9 @@ export const metadata: Metadata = pageMetadata({
 //     optional photos (no email/address field) plus source page and any
 //     campaign tag; photos are emailed to the office and never stored here
 //     (src/app/api/leads/route.ts)
-//   - providers: Microsoft 365 carries the enquiry email, Vercel hosts the
-//     site, Cloudflare runs the quote-form bot check; Resend is gone
+//   - providers: Resend delivers the enquiry email into the office's
+//     Microsoft 365 mailbox, Vercel hosts the site, Cloudflare runs the
+//     quote-form bot check (see src/lib/email/send.ts for the transport)
 //   - Cookies section written against the build: the site sets no cookies
 //     and runs no analytics; only Cloudflare's Turnstile check on the form
 //   - the twelve-month deletion is enforced by /api/cron/purge-leads
@@ -33,6 +34,11 @@ const providers: { name: string; holds: string; where: string }[] = [
     name: "Microsoft (Office 365)",
     holds: "Email, including quote enquiries and any photos sent with them, and documents",
     where: "UK / EU",
+  },
+  {
+    name: "Resend",
+    holds: "Delivers the quote enquiry, and any photos sent with it, to our office inbox",
+    where: "EU / US",
   },
   {
     name: "Vercel",

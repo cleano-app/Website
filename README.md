@@ -44,9 +44,11 @@ service page) POSTs to `/api/leads`, which:
    postcode, service, source page, UTM params, and a
    `status` column (`new` → `contacted` → `quoted` → `booked` → `completed`
    → `lost`) ready to plug into Cleano's wider operating system later.
-2. Emails the office (`LEADS_NOTIFICATION_EMAIL`) through Microsoft 365
-   via Graph — the same mailbox/app registration Cleano Ops uses — with
-   any photos the customer attached.
+2. Emails the office (`LEADS_NOTIFICATION_EMAIL`) with any photos the
+   customer attached. Sent through Resend when `RESEND_API_KEY` is set
+   (cleano.services is verified there, EU region), otherwise Microsoft 365
+   via Graph using the same app registration Cleano Ops uses — see
+   `src/lib/email/send.ts`.
 
 Photos are never stored by this site: the browser compresses them
 (`browser-image-compression`, ~300KB each, max 8) and they travel with the
@@ -77,9 +79,9 @@ this site's leads shouldn't share a database with Ops.
    - `NEXT_PUBLIC_OPS_APP_URL` — defaults to `https://ops.cleano.services`
    - `NEXT_PUBLIC_SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` — from the
      new Supabase project above (the *secret* key, not the publishable one)
-   - `MICROSOFT_TENANT_ID` / `MICROSOFT_CLIENT_ID` / `MICROSOFT_CLIENT_SECRET`
-     / `MICROSOFT_SENDER_MAILBOX` / `LEADS_NOTIFICATION_EMAIL` — for the
-     lead notification email (same values as Cleano Ops)
+   - `LEADS_NOTIFICATION_EMAIL` — where quote requests are emailed, plus
+     **either** `RESEND_API_KEY` **or** the four `MICROSOFT_*` values (same
+     as Cleano Ops) to carry them
    - `CRON_SECRET` — for the daily enquiry purge
    - `NEXT_PUBLIC_CONTACT_PHONE` / `NEXT_PUBLIC_CONTACT_PHONE_DISPLAY` /
      `NEXT_PUBLIC_CONTACT_EMAIL` / `NEXT_PUBLIC_WHATSAPP_NUMBER`
