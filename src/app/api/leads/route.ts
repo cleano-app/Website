@@ -57,15 +57,63 @@ export async function POST(request: NextRequest) {
 
   const input = body as NewLeadInput;
 
+  // Saving and notifying are deliberately independent. A quote request that
+  // reaches a human has done its job; one that is refused because of an
+  // infrastructure problem the customer can't see is a lost customer. So the
+  // database write is attempted first (it's the durable record and gives the
+  // email a reference), but a failure there never stops the email - it just
+  // gets flagged inside it, loudly, so the office knows to record it by hand.
+  const saved = await saveLead(input);
+  const notified = await sendLeadNotification(input, saved.id, photos, saved.problem);
+
+  if (!saved.id && !notified.sent) {
+    // Nothing survived: neither stored nor delivered. This is the only case
+    // where the customer must be told to try another way.
+    console.error(
+      `LEAD LOST - not saved and not emailed. DB: ${saved.problem ?? "unknown"}. Email: ${notified.problem ?? "unknown"}.`
+    );
+    return NextResponse.json(
+      {
+        // TEMPORARY diagnostic: the Postgres error code makes the cause
+        // readable from the form itself instead of the Vercel logs. 42P01 =
+        // the `leads` table doesn't exist on this project, 42501 = the insert
+        // was refused by row-level security (SUPABASE_SERVICE_ROLE_KEY isn't
+        // really the service-role key). Codes carry no customer data. Remove
+        // once the live Supabase project and mailbox are both sorted.
+        error: `Something went wrong saving your request.${saved.code ? ` [ref: ${saved.code}]` : ""}`,
+      },
+      { status: 500 }
+    );
+  }
+
+  if (!saved.id) {
+    // Delivered by email but not recorded. The customer is fine; this is an
+    // operational alarm, and the email itself carries the same warning.
+    console.error(`Lead emailed but NOT saved to the database: ${saved.problem ?? "unknown"}`);
+  }
+
+  return NextResponse.json({ ok: true, id: saved.id ?? "emailed" });
+}
+
+interface SaveResult {
+  /** Row id, or null when the lead could not be stored. */
+  id: string | null;
+  /** Operator-facing reason it failed - goes to the logs and the email. */
+  problem?: string;
+  /** Postgres error code, when there was one. */
+  code?: string;
+}
+
+async function saveLead(input: NewLeadInput): Promise<SaveResult> {
   let supabase;
   try {
     supabase = createServiceRoleSupabaseClient();
   } catch (err) {
-    console.error("Supabase not configured:", err);
-    return NextResponse.json(
-      { error: "The site isn't fully set up yet - Supabase is not configured." },
-      { status: 500 }
-    );
+    // Includes the "wrong Supabase key" case, which names itself - see
+    // supabaseKeyProblem() in lib/supabase/server.ts.
+    const problem = err instanceof Error ? err.message : String(err);
+    console.error("Supabase not usable:", problem);
+    return { id: null, problem };
   }
 
   const { data, error } = await supabase
@@ -76,8 +124,8 @@ export async function POST(request: NextRequest) {
       postcode: input.postcode.trim().toUpperCase(),
       service: input.service,
       service_other_note: input.serviceOtherNote?.trim() || null,
-      // Photos are attached to the notification email below and stored
-      // nowhere - the column stays for older rows only.
+      // Photos are attached to the notification email and stored nowhere -
+      // the column stays for older rows only.
       photo_paths: [],
       source_page: input.sourcePage,
       utm_source: input.utm?.source ?? null,
@@ -91,24 +139,16 @@ export async function POST(request: NextRequest) {
 
   if (error) {
     console.error("Failed to insert lead:", error);
-    // TEMPORARY diagnostic: echo Postgres' error code back to the form, so the
-    // cause is readable without opening the Vercel logs. The common ones here:
-    // 42P01 = the `leads` table doesn't exist on this Supabase project (the
-    // migrations were never run against it), 42501 = the insert was blocked by
-    // row-level security (i.e. SUPABASE_SERVICE_ROLE_KEY isn't actually the
-    // service-role key). Error codes alone carry no customer data. Remove this
-    // once the live Supabase project is sorted.
-    return NextResponse.json(
-      {
-        error: `Something went wrong saving your request.${error.code ? ` [ref: ${error.code}]` : ""}`,
-      },
-      { status: 500 }
-    );
+    const hint =
+      error.code === "42501"
+        ? " (row-level security refused the insert - SUPABASE_SERVICE_ROLE_KEY is probably not the secret/service_role key)"
+        : error.code === "42P01"
+          ? " (the `leads` table does not exist on this Supabase project - the migrations were never run against it)"
+          : "";
+    return { id: null, code: error.code, problem: `${error.message}${hint}` };
   }
 
-  await sendLeadNotification(input, data.id, photos);
-
-  return NextResponse.json({ ok: true, id: data.id });
+  return { id: data.id };
 }
 
 function isSameOrigin(request: NextRequest): boolean {
@@ -212,16 +252,20 @@ async function verifyTurnstile(token: string | undefined, request: NextRequest):
   }
 }
 
-async function sendLeadNotification(input: NewLeadInput, leadId: string, photos: UploadedPhoto[]) {
+async function sendLeadNotification(
+  input: NewLeadInput,
+  leadId: string | null,
+  photos: UploadedPhoto[],
+  saveProblem?: string
+): Promise<{ sent: boolean; problem?: string }> {
   const to = process.env.LEADS_NOTIFICATION_EMAIL;
   if (!to || !isGraphMailConfigured()) {
-    // The lead is saved in Supabase either way - but any photos only exist
-    // in this email, so make the gap loud in the logs rather than a warn.
+    const problem = "MICROSOFT_* / LEADS_NOTIFICATION_EMAIL not configured";
     console.error(
-      `LEAD NOTIFICATION NOT SENT for lead ${leadId}: MICROSOFT_* / LEADS_NOTIFICATION_EMAIL not configured` +
+      `LEAD NOTIFICATION NOT SENT (${leadId ?? "unsaved"}): ${problem}` +
         (photos.length ? ` - ${photos.length} photo(s) attached by the customer were NOT delivered.` : ".")
     );
-    return;
+    return { sent: false, problem };
   }
 
   const serviceLabel = LEAD_SERVICE_LABELS[input.service];
@@ -243,14 +287,23 @@ async function sendLeadNotification(input: NewLeadInput, leadId: string, photos:
     ],
     ["Photos attached", photos.length ? String(photos.length) : "none"],
   ];
+  // When the row didn't save, the email IS the only record - say so at the
+  // top, in the body, where whoever opens it cannot miss it.
+  const warning = saved(leadId)
+    ? ""
+    : `<p style="padding:12px;border:2px solid #b91c1c;color:#b91c1c;font-weight:bold">` +
+      `Not saved to the website database - this email is the only record of this request. ` +
+      `Please add it to Cleano Ops by hand.</p>`;
   const html =
-    `<p>New quote request from the website (#${escapeHtml(leadId)})</p>` +
+    warning +
+    `<p>New quote request from the website${leadId ? ` (#${escapeHtml(leadId)})` : ""}</p>` +
     `<table cellpadding="4">` +
     rows
       .filter(([, v]) => v)
       .map(([k, v]) => `<tr><td><strong>${k}</strong></td><td>${escapeHtml(v!)}</td></tr>`)
       .join("") +
-    `</table>`;
+    `</table>` +
+    (saveProblem ? `<p style="color:#6b7280;font-size:12px">Database error: ${escapeHtml(saveProblem)}</p>` : "");
 
   const attachments: GraphMailAttachment[] = photos.map((photo, i) => ({
     filename: `photo-${i + 1}.${photo.contentType === "image/png" ? "png" : photo.contentType === "image/webp" ? "webp" : "jpg"}`,
@@ -258,16 +311,21 @@ async function sendLeadNotification(input: NewLeadInput, leadId: string, photos:
     content: Buffer.from(photo.bytes).toString("base64"),
   }));
 
-  // A failed notification email must never fail the submission itself -
-  // the lead is already saved and visible - but it must be loud in the
-  // logs, because the photos travel only in this email.
   const { error } = await sendGraphMail({
     to,
-    subject: `New quote request: ${serviceLabel} - ${input.postcode.toUpperCase()}`,
+    subject:
+      `${saved(leadId) ? "" : "[NOT SAVED] "}New quote request: ` +
+      `${serviceLabel} - ${input.postcode.toUpperCase()}`,
     html,
     attachments,
   });
   if (error) {
-    console.error(`Failed to send lead notification email for lead ${leadId}:`, error);
+    console.error(`Failed to send lead notification email (${leadId ?? "unsaved"}):`, error);
+    return { sent: false, problem: error };
   }
+  return { sent: true };
+}
+
+function saved(leadId: string | null): boolean {
+  return leadId !== null;
 }

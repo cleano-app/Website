@@ -2,14 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import FloatingButterflies from "@/components/motion/FloatingButterflies";
 import { pageMetadata } from "@/lib/seo";
-import {
-  companyDetails,
-  mailtoHref,
-  serviceAreas,
-  siteConfig,
-  telHref,
-  whatsappHref,
-} from "@/lib/siteConfig";
+import { mailtoHref, siteConfig, telHref, whatsappHref } from "@/lib/siteConfig";
 
 export const metadata: Metadata = pageMetadata({
   title: "Contact Us",
@@ -104,46 +97,12 @@ export default function ContactPage() {
       </section>
 
       <section className="bg-muted-bg py-14">
-        <div className="mx-auto grid max-w-4xl gap-10 px-4 sm:px-6 md:grid-cols-2">
-          <div>
-            <h2 className="text-2xl font-bold text-foreground">Our office</h2>
-            <address className="mt-4 not-italic leading-relaxed text-foreground/75">
-              {companyDetails.legalName}
-              <br />
-              {companyDetails.registeredOfficeAddress.streetAddress}
-              <br />
-              {companyDetails.registeredOfficeAddress.addressLocality}
-              <br />
-              {companyDetails.registeredOfficeAddress.postalCode}
-            </address>
-            <p className="mt-4 text-sm text-foreground/60">
-              Registered in {companyDetails.registrationPlace}, company number{" "}
-              {companyDetails.companyNumber}. VAT registration number {companyDetails.vatNumber}.
-            </p>
-            <p className="mt-2 text-sm text-foreground/60">
-              We work at your property, not from a shop — please call or message rather than visiting.
-            </p>
-          </div>
-          <div>
-            <h2 className="text-2xl font-bold text-foreground">Where we work</h2>
-            <p className="mt-4 text-foreground/75">
-              London and the surrounding areas, including:
-            </p>
-            <ul className="mt-3 flex flex-wrap gap-2">
-              {serviceAreas.map((area) => (
-                <li
-                  key={area}
-                  className="rounded-full border border-border-subtle bg-background px-3 py-1 text-sm text-foreground/75"
-                >
-                  {area}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-4 text-sm text-foreground/60">
-              Not listed? Ask — we cover more than we can fit here, and we&apos;ll tell you straight
-              away if we reach your postcode.
-            </p>
-          </div>
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
+          <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Where we work</h2>
+          <p className="mx-auto mt-3 max-w-xl text-foreground/75">
+            We cover London and the surrounding areas. Tell us your postcode when you get in touch
+            and we&apos;ll let you know straight away.
+          </p>
         </div>
       </section>
 
