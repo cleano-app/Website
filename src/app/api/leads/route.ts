@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceRoleSupabaseClient } from "@/lib/supabase/server";
 import { escapeHtml } from "@/lib/escapeHtml";
+import { telLink, whatsAppNumber } from "@/lib/phone";
 import { mailTransport, sendMail, type MailAttachment } from "@/lib/email/send";
 import {
   LEAD_LIMITS,
@@ -271,24 +272,60 @@ async function sendLeadNotification(
   }
 
   const serviceLabel = LEAD_SERVICE_LABELS[input.service];
+
+  // The office replies by phone or WhatsApp - the form collects no email
+  // address - so the number is a link, and there are one-tap buttons under
+  // the details. whatsAppNumber() returns null rather than guess at a
+  // number it can't convert confidently, in which case no WhatsApp button
+  // is rendered (a wrong wa.me link opens a chat with a stranger).
+  const tel = telLink(input.phone);
+  const wa = whatsAppNumber(input.phone);
+  const firstName = input.name.trim().split(/\s+/)[0];
+
+  // Values are pre-escaped here because the phone row carries a link; every
+  // one of these fields is typed by a stranger on a public form.
   const rows: [string, string | undefined][] = [
-    ["Service", serviceLabel],
-    ["Details", input.serviceOtherNote],
-    ["Name", input.name],
-    ["Phone", input.phone],
-    ["Postcode", input.postcode],
-    ["Source page", input.sourcePage],
+    ["Service", escapeHtml(serviceLabel)],
+    ["Details", input.serviceOtherNote ? escapeHtml(input.serviceOtherNote) : undefined],
+    ["Name", escapeHtml(input.name)],
+    [
+      "Phone",
+      tel
+        ? `<a href="tel:${escapeHtml(tel)}" style="color:#0f5d46;font-weight:bold">${escapeHtml(input.phone)}</a>`
+        : escapeHtml(input.phone),
+    ],
+    ["Postcode", escapeHtml(input.postcode)],
+    ["Source page", escapeHtml(input.sourcePage)],
     [
       "Campaign",
       input.utm
-        ? Object.entries(input.utm)
-            .filter(([, v]) => v)
-            .map(([k, v]) => `${k}=${v}`)
-            .join(" ")
+        ? escapeHtml(
+            Object.entries(input.utm)
+              .filter(([, v]) => v)
+              .map(([k, v]) => `${k}=${v}`)
+              .join(" ")
+          ) || undefined
         : undefined,
     ],
     ["Photos attached", photos.length ? String(photos.length) : "none"],
   ];
+
+  const button = (href: string, bg: string, label: string) =>
+    `<a href="${href}" style="display:inline-block;margin:0 8px 8px 0;padding:12px 22px;` +
+    `background:${bg};color:#ffffff;font-weight:bold;font-family:Arial,sans-serif;` +
+    `font-size:15px;text-decoration:none;border-radius:999px">${label}</a>`;
+
+  const waText = encodeURIComponent(
+    `Hi ${firstName}, thanks for your ${serviceLabel.toLowerCase()} quote request to Cleano.`
+  );
+  const actions =
+    tel || wa
+      ? `<p style="margin:18px 0 4px">` +
+        (tel ? button(`tel:${tel}`, "#0f5d46", `Call ${escapeHtml(firstName)}`) : "") +
+        (wa ? button(`https://wa.me/${wa}?text=${waText}`, "#25D366", "WhatsApp") : "") +
+        `</p>` +
+        (wa ? "" : `<p style="color:#6b7280;font-size:12px">No WhatsApp button - couldn't read that number as an international one.</p>`)
+      : "";
   // When the row didn't save, the email IS the only record - say so at the
   // top, in the body, where whoever opens it cannot miss it.
   const warning = saved(leadId)
@@ -302,9 +339,10 @@ async function sendLeadNotification(
     `<table cellpadding="4">` +
     rows
       .filter(([, v]) => v)
-      .map(([k, v]) => `<tr><td><strong>${k}</strong></td><td>${escapeHtml(v!)}</td></tr>`)
+      .map(([k, v]) => `<tr><td><strong>${k}</strong></td><td>${v}</td></tr>`)
       .join("") +
     `</table>` +
+    actions +
     (saveProblem ? `<p style="color:#6b7280;font-size:12px">Database error: ${escapeHtml(saveProblem)}</p>` : "");
 
   const attachments: MailAttachment[] = photos.map((photo, i) => ({
