@@ -90,7 +90,15 @@ export const mainNav: { label: string; href: string }[] = [
 // which is what produces a knowledge panel for "Cleano" rather than a bare
 // blue link. Add the real URLs (Facebook, Instagram, the Google Business
 // Profile's own share link) and they flow into the structured data.
-export const socialLinks: string[] = [];
+export const socialLinks: string[] = [
+  // Google's AI answer for "Cleano" cites CLEANO CLEANING LIMITED, a
+  // different company entirely. This is the authoritative record for the
+  // real one - Cleano Ltd, 17237218 - and linking it from sameAs is the
+  // clearest way to tell Google which registered company this website
+  // belongs to. Add Facebook / Instagram / the Google Business Profile
+  // alongside it as they come.
+  "https://find-and-update.company-information.service.gov.uk/company/17237218",
+];
 
 // Named areas Cleano covers, as used in the LocalBusiness structured data
 // and on /contact. "London and the surrounding areas" is the umbrella; these
@@ -124,12 +132,18 @@ export const companyDetails = {
   registeredOfficeAddress: {
     streetAddress: "14 Olinda Road",
     addressLocality: "London",
+    // Companies House files this as "14 Olinda Road, London, England,
+    // N16 6TL" - the England line is part of the filed address and is
+    // reproduced verbatim, because the whole point of the disclosure is
+    // that it matches the filing and the Stripe application exactly.
+    addressRegion: "England",
     postalCode: "N16 6TL",
     addressCountry: "GB",
   },
+  incorporatedOn: "2026-05-22",
   get registeredOffice(): string {
     const a = this.registeredOfficeAddress;
-    return `${a.streetAddress}, ${a.addressLocality}, ${a.postalCode}`;
+    return `${a.streetAddress}, ${a.addressLocality}, ${a.addressRegion}, ${a.postalCode}`;
   },
 };
 

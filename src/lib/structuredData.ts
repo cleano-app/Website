@@ -41,6 +41,9 @@ export function businessSchema() {
       "@type": "PostalAddress",
       ...companyDetails.registeredOfficeAddress,
     },
+    // Another hard fact to pin the right company: Cleano Ltd was
+    // incorporated 2026-05-22, which CLEANO CLEANING LIMITED was not.
+    foundingDate: companyDetails.incorporatedOn,
     areaServed: serviceAreas.map((name) => ({ "@type": "City", name })),
     contactPoint: {
       "@type": "ContactPoint",
