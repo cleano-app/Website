@@ -1,5 +1,5 @@
 import { companyDetails, serviceAreas, siteConfig, socialLinks } from "@/lib/siteConfig";
-import type { Service } from "@/lib/content/services";
+import { services, type Service } from "@/lib/content/services";
 
 // Schema.org data, kept in one place so the business is described
 // identically everywhere.
@@ -52,6 +52,27 @@ export function businessSchema() {
       contactType: "customer service",
       areaServed: "GB",
       availableLanguage: "English",
+    },
+    // What Cleano actually sells, on the business node itself rather than
+    // only on the six service pages. Google's AI answer for the bare query
+    // "cleano" described the business as "property reporting and
+    // maintenance services" - language it could only have taken from the
+    // Portfolio page's drone-inspection and photo-report copy, which is one
+    // service for landlords, not what the company is. An explicit catalogue
+    // states the six services in one place, so the entity does not have to
+    // be inferred from whichever page was read most recently.
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Exterior cleaning services",
+      itemListElement: services.map((service) => ({
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          "@id": `${siteConfig.url}/${service.slug}/#service`,
+          name: service.name,
+          url: `${siteConfig.url}/${service.slug}`,
+        },
+      })),
     },
     image: `${siteConfig.url}/og-image.jpg`,
     logo: `${siteConfig.url}/brand/cleano-logo.png`,
