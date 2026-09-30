@@ -50,7 +50,7 @@ export default function CancellationPage() {
         <ul className="list-disc space-y-1 pl-5">
           <li>
             WhatsApp{" "}
-            <a href={whatsappHref("Hi Cleano, I'd like to cancel my bin cleaning.")} target="_blank" rel="noopener noreferrer" className={linkClass}>
+            <a href={whatsappHref("Hi Cleano, I'd like to cancel my bin cleaning.", "/cancellation")} target="_blank" rel="noopener noreferrer" className={linkClass}>
               {siteConfig.phoneDisplay}
             </a>
           </li>

@@ -33,9 +33,34 @@ export function telHref(): string {
   return `tel:${siteConfig.phone}`;
 }
 
-export function whatsappHref(message?: string): string {
+/** The bare domain, for the "via ..." tag below - derived from siteConfig.url
+ * so a domain change carries through rather than being hardcoded twice. */
+function siteHost(): string {
+  return siteConfig.url.replace(/^https?:\/\//, "").replace(/^www\./, "");
+}
+
+/**
+ * A wa.me deep link, optionally tagged with the page it was tapped from.
+ *
+ * WhatsApp passes nothing through a deep link except the prefilled text, so
+ * there is no query parameter to hide a source in - if the office is to know
+ * a lead came from the website, it has to be visible in the message itself.
+ * Hence a short second line: "(via cleano.services/pressure-washing)".
+ *
+ * Best-effort by nature: the customer can delete the line before sending,
+ * and the first real one (2026-09-30, pressure washing) sent the prefilled
+ * text untouched, which is the usual behaviour. It costs nothing when
+ * ignored and answers "did the website bring this in, and from which page"
+ * when it isn't.
+ */
+export function whatsappHref(message?: string, sourcePath?: string): string {
   const base = `https://wa.me/${siteConfig.whatsappNumber}`;
-  return message ? `${base}?text=${encodeURIComponent(message)}` : base;
+  // The homepage tags as the bare domain rather than a trailing slash.
+  const tag = sourcePath
+    ? `(via ${siteHost()}${sourcePath === "/" ? "" : sourcePath})`
+    : "";
+  const text = [message, tag].filter(Boolean).join("\n\n");
+  return text ? `${base}?text=${encodeURIComponent(text)}` : base;
 }
 
 export function mailtoHref(options?: { subject?: string; body?: string }): string {

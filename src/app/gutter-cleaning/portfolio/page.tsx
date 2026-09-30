@@ -283,7 +283,10 @@ export default function PortfolioGutterCarePage() {
                   Email Us Your Portfolio
                 </a>
                 <a
-                  href={whatsappHref("Hi Cleano, I'd like to discuss the Portfolio Gutter Care Scheme for our properties")}
+                  href={whatsappHref(
+                    "Hi Cleano, I'd like to discuss the Portfolio Gutter Care Scheme for our properties",
+                    "/gutter-cleaning/portfolio"
+                  )}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="rounded-full border border-white/60 px-4 py-2 text-xs font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-white/10 sm:text-sm"

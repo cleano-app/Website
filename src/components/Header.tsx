@@ -2,11 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { mainNav, siteConfig, whatsappHref } from "@/lib/siteConfig";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  // Tags the WhatsApp link with whichever page the visitor is on.
+  const pathname = usePathname();
 
   return (
     <header className="sticky top-0 z-40 border-b border-border-subtle bg-background/95 shadow-sm backdrop-blur">
@@ -56,7 +59,7 @@ export default function Header() {
             phones keep the sticky Call / WhatsApp / Quote bar. */}
         <div className="hidden items-center gap-2 lg:flex">
           <a
-            href={whatsappHref("Hi Cleano, I'd like a quote for...")}
+            href={whatsappHref("Hi Cleano, I'd like a quote for...", pathname)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex h-9 w-9 items-center justify-center rounded-full text-[#25D366] transition-colors hover:bg-[#25D366]/10"

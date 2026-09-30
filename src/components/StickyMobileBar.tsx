@@ -1,10 +1,18 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { siteConfig, telHref, whatsappHref } from "@/lib/siteConfig";
 
 // Per the V1 build plan: mobile visitors should always have Call, WhatsApp
 // and Get Quote within reach - a sticky bar rather than just a floating
 // WhatsApp icon. Hidden on lg+ where the header already shows this.
 export default function StickyMobileBar() {
+  // A client component only so the WhatsApp link can name the page it was
+  // tapped from - this bar is the likeliest WhatsApp entry point on a phone,
+  // so that attribution is worth the few KB.
+  const pathname = usePathname();
+
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 flex border-t border-border-subtle bg-background shadow-[0_-2px_10px_rgba(0,0,0,0.06)] lg:hidden">
       <a
@@ -16,7 +24,7 @@ export default function StickyMobileBar() {
         <span className="text-[11px] font-medium">Call</span>
       </a>
       <a
-        href={whatsappHref("Hi Cleano, I'd like a quote for...")}
+        href={whatsappHref("Hi Cleano, I'd like a quote for...", pathname)}
         target="_blank"
         rel="noopener noreferrer"
         className="flex flex-1 flex-col items-center justify-center gap-0.5 border-x border-border-subtle py-2.5 text-foreground/80"

@@ -26,7 +26,7 @@ const ways = [
   {
     label: "WhatsApp",
     value: "Message us on WhatsApp",
-    href: whatsappHref("Hi Cleano, I'd like a quote for..."),
+    href: whatsappHref("Hi Cleano, I'd like a quote for...", "/contact"),
     note: "Send photos of the job and we can often quote from them.",
     icon: <WhatsAppIcon />,
     external: true,

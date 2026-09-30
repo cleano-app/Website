@@ -144,7 +144,7 @@ export default function QuoteForm({
             Call {siteConfig.phoneDisplay}
           </a>
           <a
-            href={whatsappHref()}
+            href={whatsappHref("Hi Cleano, I'd like a quote.", sourcePage)}
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-full border border-brand px-6 py-3 text-sm font-semibold text-brand-dark"
@@ -301,7 +301,7 @@ export default function QuoteForm({
 
       <p className="mt-6 text-center text-xs text-foreground/40">
         Prefer to talk? <a href={telHref()} className="underline">Call {siteConfig.phoneDisplay}</a> or{" "}
-        <a href={whatsappHref()} target="_blank" rel="noopener noreferrer" className="underline">
+        <a href={whatsappHref("Hi Cleano, I'd like a quote.", sourcePage)} target="_blank" rel="noopener noreferrer" className="underline">
           WhatsApp us
         </a>
         .

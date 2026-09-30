@@ -32,7 +32,7 @@ export default function FinalCTA() {
                 Get a Free Quote
               </Link>
               <a
-                href={whatsappHref("Hi Cleano, I'd like a quote for...")}
+                href={whatsappHref("Hi Cleano, I'd like a quote for...", "/")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-full border border-white/60 px-4 py-2 text-xs font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-white/10 sm:text-sm"
