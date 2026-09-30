@@ -75,13 +75,11 @@ export async function POST(request: NextRequest) {
     );
     return NextResponse.json(
       {
-        // TEMPORARY diagnostic: the Postgres error code makes the cause
-        // readable from the form itself instead of the Vercel logs. 42P01 =
-        // the `leads` table doesn't exist on this project, 42501 = the insert
-        // was refused by row-level security (SUPABASE_SERVICE_ROLE_KEY isn't
-        // really the service-role key). Codes carry no customer data. Remove
-        // once the live Supabase project and mailbox are both sorted.
-        error: `Something went wrong saving your request.${saved.code ? ` [ref: ${saved.code}]` : ""}`,
+        // The customer gets a way through, not a cause. The cause is in the
+        // console line above, which carries the Postgres code and a hint;
+        // this used to append that code to the message so it could be read
+        // off the form during setup, which is no longer needed.
+        error: "Something went wrong saving your request. Please call or WhatsApp us and we'll take the details.",
       },
       { status: 500 }
     );
@@ -101,8 +99,6 @@ interface SaveResult {
   id: string | null;
   /** Operator-facing reason it failed - goes to the logs and the email. */
   problem?: string;
-  /** Postgres error code, when there was one. */
-  code?: string;
 }
 
 async function saveLead(input: NewLeadInput): Promise<SaveResult> {
@@ -146,7 +142,7 @@ async function saveLead(input: NewLeadInput): Promise<SaveResult> {
         : error.code === "42P01"
           ? " (the `leads` table does not exist on this Supabase project - the migrations were never run against it)"
           : "";
-    return { id: null, code: error.code, problem: `${error.message}${hint}` };
+    return { id: null, problem: `${error.message}${hint}` };
   }
 
   return { id: data.id };
