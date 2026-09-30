@@ -11,18 +11,30 @@ capture.
 
 ## Status: V1
 
-This is a first version built to the V1 build plan. Known gaps to close
-before launch:
+The site is live at https://www.cleano.services. What still needs a real
+person's attention:
 
-- **All photography is a placeholder.** Every image on the site is a
-  labelled grey box (see `PhotoPlaceholder`/`BeforeAfterSlider`) rather than
-  stock photography, on purpose — drop real Cleano photos into
-  `public/images/` and swap them in (see `public/images/README.md`).
-- **Reviews are sample text**, clearly marked in `src/components/Reviews.tsx`
-  — replace with real Google/customer reviews.
-- **Pricing figures are placeholders**, clearly marked in
-  `src/lib/content/services.ts` — replace with Cleano's real "from" prices.
-- **Neither Vercel nor Supabase has been set up yet** — see Deployment below.
+- **Three brand photos are AI-generated and must be replaced with real
+  ones**: `public/photos/cleano-vehicle.jpg`, `cleano-equipment.jpg` and
+  `cleano-team.jpg` (the About page row, and the van is also the site's
+  share image at `public/og-image.jpg`). They were generated with
+  `cleano.co.uk` on the van — a domain that is not this website and does
+  not reach it — so the lettering has been repainted to read
+  `cleano.services`. When real photographs replace them, check the livery
+  in shot says the right domain, and regenerate `og-image.jpg` from the new
+  van photo (1200x630).
+- **The job before/after photos are real** (`gutter*`, `bin*`, `driveway*`,
+  `graffiti*`, `window*`, `rooftop*`), as are the two Photo Report
+  screenshots on the About page — those are a genuine Cleano report with
+  the customer's name, address and email redacted.
+- **`/refunds` is still placeholder wording** — the only policy page not yet
+  written. See `src/components/legal/LegalPage.tsx` for how the others were
+  handled.
+- **"Our work and your rights" on `/terms`** is deliberately unpublished
+  until an adviser checks it; the draft sits in a comment at that section.
+- **No Google Business Profile yet.** Nothing in this repo can substitute
+  for it: it is what produces the knowledge panel, the map listing and most
+  of what the AI answer engines repeat back about Cleano.
 
 ## Getting Started
 
