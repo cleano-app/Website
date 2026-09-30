@@ -11,6 +11,16 @@ import { siteConfig } from "@/lib/siteConfig";
  * page-specific and og:url / canonical always carry the page's own path,
  * resolved against `metadataBase` (siteConfig.url) in the root layout.
  */
+// The liveried van: it carries the logo, the tagline, all six services and
+// the phone number, so a share or an AI preview card shows what Cleano is
+// without reading a word. Resolved against metadataBase in the root layout.
+const OG_IMAGE = {
+  url: "/og-image.jpg",
+  width: 1200,
+  height: 630,
+  alt: "A Cleano van, liveried with the Cleano logo and the services it covers",
+};
+
 export function pageMetadata({
   title,
   description,
@@ -34,11 +44,13 @@ export function pageMetadata({
       siteName: siteConfig.name,
       type: "website",
       locale: "en_GB",
+      images: [OG_IMAGE],
     },
     twitter: {
       card: "summary_large_image",
       title: socialTitle,
       description,
+      images: [OG_IMAGE.url],
     },
   };
 }

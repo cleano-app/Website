@@ -4,7 +4,9 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StickyMobileBar from "@/components/StickyMobileBar";
-import { companyDetails, serviceAreas, siteConfig } from "@/lib/siteConfig";
+import JsonLd from "@/components/JsonLd";
+import { businessSchema } from "@/lib/structuredData";
+import { siteConfig } from "@/lib/siteConfig";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,11 +46,13 @@ export const metadata: Metadata = {
     url: "/",
     siteName: siteConfig.name,
     locale: "en_GB",
+    images: ["/og-image.jpg"],
   },
   twitter: {
     card: "summary_large_image",
     title: `${siteConfig.name} | ${siteConfig.tagline}`,
     description: siteConfig.description,
+    images: ["/og-image.jpg"],
   },
 };
 
@@ -63,38 +67,9 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${sora.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        {/* Local SEO foundation: LocalBusiness structured data so search
-            engines can associate Cleano with the service area/areas below. */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "LocalBusiness",
-              name: siteConfig.name,
-              legalName: companyDetails.legalName,
-              vatID: companyDetails.vatNumber,
-              description: siteConfig.description,
-              url: siteConfig.url,
-              telephone: siteConfig.phone,
-              email: siteConfig.email,
-              address: {
-                "@type": "PostalAddress",
-                ...companyDetails.registeredOfficeAddress,
-              },
-              areaServed: [...serviceAreas],
-              contactPoint: {
-                "@type": "ContactPoint",
-                telephone: siteConfig.phone,
-                email: siteConfig.email,
-                contactType: "customer service",
-                areaServed: "GB",
-                availableLanguage: "English",
-              },
-              image: `${siteConfig.url}/brand/cleano-logo.png`,
-            }),
-          }}
-        />
+        {/* One business entity for the whole site - every service page's
+            schema points back at this node. See lib/structuredData.ts. */}
+        <JsonLd data={businessSchema()} />
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>

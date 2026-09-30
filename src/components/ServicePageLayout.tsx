@@ -10,6 +10,8 @@ import FadeIn from "./motion/FadeIn";
 import { StaggerGrid, StaggerItem } from "./motion/StaggerGrid";
 import FloatingButterflies from "./motion/FloatingButterflies";
 import { whatsappHref } from "@/lib/siteConfig";
+import JsonLd from "./JsonLd";
+import { faqSchema, serviceSchema } from "@/lib/structuredData";
 
 type IconType = "gutter" | "bin" | "window" | "pressure" | "graffiti" | "rooftop";
 
@@ -50,6 +52,11 @@ export default function ServicePageLayout({
 
   return (
     <>
+      {/* This service, tied to the one business node in the root layout,
+          plus the page's own Q&As in the form answer engines read. */}
+      <JsonLd data={serviceSchema(service)} />
+      {service.faqs.length > 0 && <JsonLd data={faqSchema(service.faqs)} />}
+
       {/* Hero */}
       <section className="bg-grain relative overflow-hidden border-b border-border-subtle bg-gradient-to-br from-muted-bg via-muted-bg to-brand-light/15">
         <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-brand-light/30 blur-3xl" />

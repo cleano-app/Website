@@ -85,6 +85,13 @@ export const mainNav: { label: string; href: string }[] = [
   { label: "Contact", href: "/contact" },
 ];
 
+// Profiles that prove this is the same Cleano - Google uses them to tie the
+// website, the Business Profile and the social accounts into one entity,
+// which is what produces a knowledge panel for "Cleano" rather than a bare
+// blue link. Add the real URLs (Facebook, Instagram, the Google Business
+// Profile's own share link) and they flow into the structured data.
+export const socialLinks: string[] = [];
+
 // Named areas Cleano covers, as used in the LocalBusiness structured data
 // and on /contact. "London and the surrounding areas" is the umbrella; these
 // are the places worth naming for local search.
