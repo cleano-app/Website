@@ -18,8 +18,12 @@ function canonicalSiteUrl(): string {
 export const siteConfig = {
   name: "Cleano",
   tagline: "Clean places. Better spaces.",
+  // Worded to match the Google Business Profile description, so the profile,
+  // the page meta and the schema all say the same thing about what Cleano
+  // is. "Minor gutter repairs" goes last and qualified, as on the gutter
+  // cleaning FAQ - a headline "gutter repairs" invites re-fit enquiries.
   description:
-    "Cleano is an exterior cleaning company serving homes and businesses across London and the surrounding areas: gutter cleaning, rooftop cleaning, window cleaning, pressure washing, bin cleaning and graffiti removal.",
+    "Cleano provides professional exterior cleaning for residential and commercial properties across London and the surrounding areas: gutter cleaning, roof cleaning, pressure washing, window cleaning, bin cleaning, graffiti removal and minor gutter repairs.",
   url: canonicalSiteUrl(),
   opsAppUrl: process.env.NEXT_PUBLIC_OPS_APP_URL || "https://ops.cleano.services",
 
