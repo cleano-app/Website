@@ -1,4 +1,4 @@
-import ReportScene from "./illustrations/ReportScene";
+import { ReportStoryScene } from "./scenes/MoreScenes";
 import FadeIn from "./motion/FadeIn";
 import FloatingButterflies from "./motion/FloatingButterflies";
 
@@ -46,7 +46,9 @@ export default function CleanoStandard() {
           </ul>
         </FadeIn>
         <FadeIn delay={0.15}>
-          <ReportScene className="mx-auto w-full max-w-sm" />
+          <div className="mx-auto w-full max-w-sm overflow-hidden rounded-[1.4rem] shadow-xl shadow-brand/20 ring-1 ring-white">
+            <ReportStoryScene className="block w-full" />
+          </div>
         </FadeIn>
       </div>
     </section>

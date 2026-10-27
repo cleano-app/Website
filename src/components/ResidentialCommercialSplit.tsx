@@ -1,6 +1,5 @@
 import Link from "next/link";
-import HeroScene from "./illustrations/HeroScene";
-import BuildingScene from "./illustrations/BuildingScene";
+import { BusinessScene, HomeVisitScene } from "./scenes/MoreScenes";
 import { StaggerGrid, StaggerItem } from "./motion/StaggerGrid";
 import FloatingButterflies from "./motion/FloatingButterflies";
 
@@ -14,9 +13,11 @@ export default function ResidentialCommercialSplit() {
       <StaggerGrid className="grid gap-6 md:grid-cols-2">
         <StaggerItem>
           <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border-subtle bg-white transition-shadow hover:shadow-lg">
-            <div className="relative flex items-center justify-center bg-muted-bg px-8 py-10">
+            <div className="relative flex items-center justify-center bg-muted-bg px-5 py-6 sm:px-8 sm:py-8">
               <FloatingButterflies flock={panelButterflies} />
-              <HeroScene className="w-full max-w-[280px] transition-transform duration-300 group-hover:scale-105" />
+              <div className="w-full max-w-md overflow-hidden rounded-[1.2rem] shadow-lg shadow-brand/15 ring-1 ring-white transition-transform duration-300 group-hover:scale-[1.02]">
+                <HomeVisitScene className="block w-full" />
+              </div>
             </div>
             <div className="flex flex-1 flex-col p-6">
               <h3 className="text-xl font-bold text-foreground">For Your Home</h3>
@@ -33,9 +34,11 @@ export default function ResidentialCommercialSplit() {
 
         <StaggerItem>
           <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border-subtle bg-white transition-shadow hover:shadow-lg">
-            <div className="relative flex items-center justify-center bg-muted-bg px-8 py-10">
+            <div className="relative flex items-center justify-center bg-muted-bg px-5 py-6 sm:px-8 sm:py-8">
               <FloatingButterflies flock={panelButterflies} />
-              <BuildingScene className="w-full max-w-[280px] transition-transform duration-300 group-hover:scale-105" />
+              <div className="w-full max-w-md overflow-hidden rounded-[1.2rem] shadow-lg shadow-brand/15 ring-1 ring-white transition-transform duration-300 group-hover:scale-[1.02]">
+                <BusinessScene className="block w-full" />
+              </div>
             </div>
             <div className="flex flex-1 flex-col p-6">
               <h3 className="text-xl font-bold text-foreground">For Your Business</h3>

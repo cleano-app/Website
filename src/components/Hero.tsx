@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import HeroScene from "./illustrations/HeroScene";
+import HomeHeroScene from "./scenes/HomeHeroScene";
 import FloatingButterflies from "./motion/FloatingButterflies";
 
 // Confined to the top corners of the section (above the badge/headline) so
@@ -66,12 +66,12 @@ export default function Hero() {
           className="relative"
         >
           <FloatingButterflies flock={illustrationButterflies} />
-          <motion.div
-            animate={{ y: [0, -10, 0], rotate: [0, 1, -1, 0] }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <HeroScene className="mx-auto w-full max-w-[13rem] drop-shadow-xl sm:max-w-xs lg:max-w-md" />
-          </motion.div>
+          <div className="relative mx-auto mt-6 max-w-xl lg:mt-0">
+            <div className="absolute -inset-4 rounded-[2.4rem] bg-gradient-to-br from-brand-light/40 to-sky-200/40 blur-2xl" aria-hidden="true" />
+            <div className="relative overflow-hidden rounded-[1.6rem] shadow-2xl shadow-brand/25 ring-1 ring-white">
+              <HomeHeroScene className="block w-full" />
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>

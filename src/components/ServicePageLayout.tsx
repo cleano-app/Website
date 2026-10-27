@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Service } from "@/lib/content/services";
 import ServiceIcon from "./illustrations/ServiceIcon";
-import HeroLoopScene from "./illustrations/HeroLoopScene";
+import ServiceScene from "./scenes/ServiceScenes";
 import BeforeAfterSlider from "./BeforeAfterSlider";
 import FAQAccordion from "./FAQAccordion";
 import QuoteForm from "./QuoteForm";
@@ -100,7 +100,12 @@ export default function ServicePageLayout({
             </div>
           </FadeIn>
           <FadeIn delay={0.15} className="relative">
-            <HeroLoopScene type={icon} className="mx-auto w-full max-w-xs" />
+            <div className="relative mx-auto max-w-xl">
+              <div className="absolute -inset-4 rounded-[2.4rem] bg-gradient-to-br from-brand-light/40 to-sky-200/40 blur-2xl" aria-hidden="true" />
+              <div className="relative overflow-hidden rounded-[1.6rem] shadow-2xl shadow-brand/25 ring-1 ring-white">
+                <ServiceScene type={icon} className="block w-full" />
+              </div>
+            </div>
           </FadeIn>
         </div>
       </section>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { services } from "@/lib/content/services";
-import ServiceIcon from "./illustrations/ServiceIcon";
+import ServiceScene from "./scenes/ServiceScenes";
 import FadeIn from "./motion/FadeIn";
 import { StaggerGrid, StaggerItem } from "./motion/StaggerGrid";
 import FloatingButterflies from "./motion/FloatingButterflies";
@@ -63,7 +63,7 @@ export default function ServicesGrid() {
             <StaggerItem key={service.slug}>
               <Link
                 href={`/${service.slug}`}
-                className={`group relative flex h-full flex-col items-center gap-3 overflow-hidden rounded-2xl border border-border-subtle bg-gradient-to-br px-5 py-7 text-center shadow-sm transition-all duration-300 ${cardTint[icon]} ${tilt[i % tilt.length]} hover:-translate-y-1 hover:rotate-0 hover:border-brand/40 hover:shadow-lg active:rotate-0`}
+                className={`group relative flex h-full flex-col items-center gap-3 overflow-hidden rounded-2xl border border-border-subtle bg-gradient-to-br px-3 pt-3 pb-5 text-center shadow-sm transition-all duration-300 ${cardTint[icon]} ${tilt[i % tilt.length]} hover:-translate-y-1 hover:rotate-0 hover:border-brand/40 hover:shadow-lg active:rotate-0`}
               >
                 {/* Corner accent - a soft blurred blob peeking from behind
                     the card, tucked further in on hover like it's being
@@ -73,11 +73,11 @@ export default function ServicesGrid() {
                   className={`pointer-events-none absolute -top-8 -right-8 h-20 w-20 rounded-full blur-2xl transition-transform duration-300 group-hover:scale-125 ${cornerAccent[icon]}`}
                 />
 
-                <ServiceIcon
-                  type={icon}
-                  idle
-                  className="relative h-20 w-20 [&_svg]:h-10 [&_svg]:w-10"
-                />
+                {/* Each service's own story loop - the same scene as its
+                    page hero, so the card previews what the page shows. */}
+                <div className="relative w-full overflow-hidden rounded-xl shadow-sm ring-1 ring-black/5">
+                  <ServiceScene type={icon} className="block w-full" startAfter={i * 1100} />
+                </div>
                 <div className="relative">
                   <h3 className="text-base font-semibold text-foreground">{service.name}</h3>
                   <p className="mt-1 text-xs leading-snug text-foreground/60">{service.cardBlurb}</p>

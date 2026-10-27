@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ServiceIcon from "@/components/illustrations/ServiceIcon";
-import ReportScene from "@/components/illustrations/ReportScene";
+import { ReportStoryScene } from "@/components/scenes/MoreScenes";
 import FadeIn from "@/components/motion/FadeIn";
 import { StaggerGrid, StaggerItem } from "@/components/motion/StaggerGrid";
 import FloatingButterflies from "@/components/motion/FloatingButterflies";
@@ -200,7 +200,9 @@ export default function PortfolioGutterCarePage() {
               </p>
             </FadeIn>
             <FadeIn delay={0.15}>
-              <ReportScene className="mx-auto w-full max-w-sm" />
+              <div className="mx-auto w-full max-w-sm overflow-hidden rounded-[1.4rem] shadow-xl shadow-brand/20 ring-1 ring-white">
+            <ReportStoryScene className="block w-full" />
+          </div>
             </FadeIn>
           </div>
         </div>
