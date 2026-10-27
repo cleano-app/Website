@@ -26,6 +26,8 @@ import {
 // The owner, 27 Oct 2026: about the inspection, not the cleaning - gutters
 // and downpipes as they're found, and how the photos become the report.
 // Designed for the site, not copied from the printed flyer; no video yet.
+// Bright and lively rather than dark, leading on what makes it worth
+// acting on now: free, Stamford Hill only, for a limited time.
 export const metadata: Metadata = {
   ...pageMetadata({
     title: "Free drone gutter inspection",
@@ -42,7 +44,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const heroFacts = ["A drone, not a ladder", "No need to be home", "Report by email"];
+const heroFacts = ["A drone, not a ladder", "No need to be home", "Photos by email"];
+
+// The ticker under the hero: what the offer is, where, and for how long.
+const ticker = ["Free drone gutter check", "Stamford Hill only", "Limited time", "No need to be home", "Photos by email"];
 
 const perks = ["Every gutter and downpipe", "Problems marked on the photos", "No need to be home", "No obligation"];
 
@@ -85,33 +90,47 @@ export default async function FreeInspectionPage() {
 
   return (
     <>
-      {/* Hero: the drone at work */}
-      <section className="bg-grain relative overflow-hidden bg-brand-dark text-white">
-        <div className="pointer-events-none absolute -top-40 right-0 h-96 w-96 rounded-full bg-brand-light/20 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-48 -left-24 h-96 w-96 rounded-full bg-brand/30 blur-3xl" />
+      {/* Hero: bright, the offer first - Stamford Hill, free, limited time */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#effdf7] via-white to-[#d7faec]">
+        <div className="pointer-events-none absolute -top-32 -right-20 h-96 w-96 rounded-full bg-brand-light/35 blur-3xl" />
+        <div className="pointer-events-none absolute top-1/2 -left-32 h-80 w-80 rounded-full bg-sky-200/50 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 right-1/3 h-64 w-64 rounded-full bg-yellow-100/70 blur-3xl" />
         <FloatingButterflies
           flock={[
-            { top: "8%", left: "4%", size: 18, duration: 9, delay: 0.3, xDrift: [0, 10, -4, 0], yDrift: [0, -6, 4, 0], rotate: [-8, 10, -4, -8], opacity: 0.45 },
-            { top: "88%", left: "46%", size: 15, duration: 10, delay: 1, xDrift: [0, -8, 4, 0], yDrift: [0, 6, -4, 0], rotate: [10, -6, 8, 10], opacity: 0.35 },
+            { top: "8%", left: "4%", size: 18, duration: 9, delay: 0.3, xDrift: [0, 10, -4, 0], yDrift: [0, -6, 4, 0], rotate: [-8, 10, -4, -8], opacity: 0.6 },
+            { top: "86%", left: "44%", size: 15, duration: 10, delay: 1, xDrift: [0, -8, 4, 0], yDrift: [0, 6, -4, 0], rotate: [10, -6, 8, 10], opacity: 0.5 },
           ]}
         />
-        <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 pt-12 pb-14 sm:px-6 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:py-20">
+        <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 pt-10 pb-14 sm:px-6 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:py-20">
           <FadeIn className="text-center lg:text-left">
-            <p className="inline-flex items-center gap-2 rounded-full border border-brand-light/40 bg-white/5 px-4 py-1.5 text-sm font-semibold text-brand-light">
-              <PinIcon />
-              For {inspectionPromo.area} homes · {running ? inspectionPromoLabel() : "Offer ended"}
-            </p>
-            <h1 className="mt-6 text-4xl leading-[1.05] font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Are your gutters <span className="text-brand-light">blocked?</span>
+            <div className="flex flex-wrap justify-center gap-2 lg:justify-start">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-dark px-3.5 py-1.5 text-sm font-bold text-white shadow-md shadow-brand-dark/20">
+                <PinIcon />
+                {inspectionPromo.area} only
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-sm font-bold text-brand-dark shadow-md ring-1 ring-brand/15">
+                <span className="relative flex h-2.5 w-2.5" aria-hidden="true">
+                  {running && <span className="absolute inline-flex h-full w-full rounded-full bg-[#ff6b4a] opacity-75 motion-safe:animate-ping" />}
+                  <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${running ? "bg-[#ff6b4a]" : "bg-foreground/30"}`} />
+                </span>
+                {running ? (inspectionPromo.until ? inspectionPromoLabel() : "Limited-time offer") : "Offer ended"}
+              </span>
+            </div>
+            <h1 className="mt-6 text-4xl leading-[1.05] font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+              Your gutters, checked by drone -{" "}
+              <span className="relative inline-block text-brand-dark">
+                <span className="relative z-10">free</span>
+                <span className="absolute inset-x-[-0.15em] bottom-[0.08em] z-0 h-[0.38em] -rotate-1 rounded-full bg-brand-light/70" aria-hidden="true" />
+              </span>
             </h1>
-            <p className="mx-auto mt-5 max-w-lg text-lg text-white/80 lg:mx-0">
-              You can&apos;t see inside them from the ground. Our drone can. We check your gutters
-              and downpipes and email you the photos - free.
+            <p className="mx-auto mt-5 max-w-lg text-lg text-foreground/70 lg:mx-0">
+              For a limited time, we&apos;re checking gutters and downpipes across {inspectionPromo.area}{" "}
+              at no cost. Our drone does the climbing - you get the photos by email.
             </p>
             <ul className="mt-7 flex flex-wrap justify-center gap-2 lg:justify-start">
               {heroFacts.map((fact) => (
-                <li key={fact} className="flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-sm font-medium text-white/90">
-                  <span className="text-brand-light">
+                <li key={fact} className="flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5 text-sm font-semibold text-foreground/80 shadow-sm ring-1 ring-black/5">
+                  <span className="text-brand">
                     <TickIcon small />
                   </span>
                   {fact}
@@ -121,63 +140,101 @@ export default async function FreeInspectionPage() {
           </FadeIn>
           <FadeIn delay={0.15}>
             <div className="relative">
-              <div className="absolute -inset-3 rounded-[2.2rem] bg-brand-light/15 blur-xl" aria-hidden="true" />
-              <DroneScanScene className="relative w-full drop-shadow-2xl" />
+              <div className="absolute -inset-4 rounded-[2.4rem] bg-gradient-to-br from-brand-light/40 to-sky-200/40 blur-2xl" aria-hidden="true" />
+              <div className="relative overflow-hidden rounded-[1.6rem] shadow-2xl shadow-brand/25 ring-1 ring-white">
+                <DroneScanScene className="block w-full" />
+              </div>
+              {running && (
+                <div
+                  className="animate-float absolute -top-5 left-1 flex h-24 w-24 flex-col items-center justify-center rounded-full bg-gradient-to-br from-[#ffd84d] to-[#ffb020] text-center shadow-xl shadow-amber-500/30 ring-4 ring-white sm:-left-6 sm:h-28 sm:w-28"
+                  style={{ "--float-rotate": "-12deg" } as React.CSSProperties}
+                >
+                  <span className="text-2xl leading-none font-black text-brand-dark sm:text-3xl">FREE</span>
+                  <span className="mt-1 text-[10px] font-bold tracking-wide text-brand-dark/80 uppercase sm:text-xs">limited time</span>
+                </div>
+              )}
             </div>
           </FadeIn>
         </div>
       </section>
 
+      {/* Ticker */}
+      <div className="overflow-hidden bg-brand-light py-3 text-brand-dark" aria-hidden="true">
+        <div className="animate-marquee flex w-max">
+          {[0, 1].map((copy) => (
+            <div key={copy} className="flex shrink-0 items-center">
+              {[...ticker, ...ticker].map((item, i) => (
+                <span key={`${copy}-${i}`} className="flex items-center gap-6 px-3 text-sm font-bold tracking-wide whitespace-nowrap uppercase sm:text-base">
+                  {item}
+                  <SparkIcon />
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* The offer, and the Book button - the middle of the page */}
-      <section id="book" className="relative overflow-hidden bg-gradient-to-b from-brand-light/30 via-brand-light/15 to-background">
-        <div className="pointer-events-none absolute top-10 -left-20 h-64 w-64 rounded-full bg-brand-light/40 blur-3xl" />
-        <div className="pointer-events-none absolute -right-16 bottom-0 h-72 w-72 rounded-full bg-brand/20 blur-3xl" />
+      <section id="book" className="relative overflow-hidden bg-white">
+        <div className="pointer-events-none absolute top-16 -left-24 h-72 w-72 rounded-full bg-brand-light/25 blur-3xl" />
+        <div className="pointer-events-none absolute -right-20 bottom-4 h-72 w-72 rounded-full bg-sky-200/40 blur-3xl" />
         <div className="relative mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:py-20">
           {running ? (
-            <FadeIn className="rounded-[2rem] border border-brand/20 bg-white/80 px-6 py-10 text-center shadow-xl shadow-brand-dark/5 backdrop-blur sm:px-12 sm:py-14">
-              <p className="text-sm font-bold tracking-[0.2em] text-brand uppercase">Free · no obligation</p>
-              <h2 className="mx-auto mt-3 max-w-2xl text-3xl leading-tight font-bold text-brand-dark sm:text-4xl">
-                A free drone inspection of your gutters &amp; downpipes
-              </h2>
-              <ul className="mt-8 flex flex-wrap justify-center gap-2.5">
-                {perks.map((perk, i) => (
-                  <li key={perk}>
-                    <FadeIn delay={0.1 + i * 0.08} y={10} className="flex items-center gap-2 rounded-full bg-brand/10 px-4 py-2 text-sm font-semibold text-brand-dark">
-                      <TickIcon small />
-                      {perk}
-                    </FadeIn>
-                  </li>
-                ))}
-              </ul>
+            <FadeIn className="rounded-[2.1rem] bg-gradient-to-br from-brand-light via-brand to-sky-300 p-[3px] shadow-2xl shadow-brand/20">
+              <div className="rounded-[2rem] bg-white px-6 py-10 text-center sm:px-12 sm:py-14">
+                <p className="inline-flex items-center gap-2 rounded-full bg-[#fff4e5] px-4 py-1.5 text-sm font-bold text-[#c2410c]">
+                  <ClockIcon />
+                  {inspectionPromo.until ? `${inspectionPromoLabel()} · ` : "Limited time · "}
+                  {inspectionPromo.area} only
+                </p>
+                <h2 className="mx-auto mt-5 max-w-2xl text-3xl leading-tight font-bold text-foreground sm:text-4xl">
+                  The leaves are down.{" "}
+                  <span className="text-brand">Is your gutter full?</span>
+                </h2>
+                <p className="mx-auto mt-4 max-w-xl text-foreground/70">
+                  Book your free drone inspection while the offer runs. We&apos;ll show you exactly
+                  what&apos;s up there - and you decide what, if anything, happens next.
+                </p>
+                <ul className="mt-8 flex flex-wrap justify-center gap-2.5">
+                  {perks.map((perk, i) => (
+                    <li key={perk}>
+                      <FadeIn delay={0.1 + i * 0.08} y={10} className="flex items-center gap-2 rounded-full bg-brand/10 px-4 py-2 text-sm font-semibold text-brand-dark">
+                        <TickIcon small />
+                        {perk}
+                      </FadeIn>
+                    </li>
+                  ))}
+                </ul>
 
-              <div className="mt-10">
-                <a
-                  href={inspectionBookingUrl()}
-                  className="group relative inline-flex items-center gap-3 rounded-full bg-brand-dark px-10 py-5 text-xl font-bold text-white shadow-xl shadow-brand-dark/30 transition-transform hover:-translate-y-0.5 sm:px-14 sm:text-2xl"
-                >
-                  <span className="absolute inset-0 rounded-full bg-brand-light/50 motion-safe:animate-ping" style={{ animationDuration: "2.4s" }} aria-hidden="true" />
-                  <span className="relative">Book my free inspection</span>
-                  <span className="relative">
-                    <ArrowIcon />
-                  </span>
-                </a>
+                <div className="mt-10">
+                  <a
+                    href={inspectionBookingUrl()}
+                    className="group relative inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-brand-light to-[#7df5ca] px-10 py-5 text-xl font-bold text-brand-dark shadow-xl shadow-brand/35 transition-transform hover:-translate-y-0.5 sm:px-14 sm:text-2xl"
+                  >
+                    <span className="animate-pulse-ring absolute inset-0 rounded-full bg-brand-light" aria-hidden="true" />
+                    <span className="relative">Book my free inspection</span>
+                    <span className="relative">
+                      <ArrowIcon />
+                    </span>
+                  </a>
+                </div>
+                <p className="mt-5 text-sm font-medium text-foreground/60">
+                  Takes about a minute. No payment details.
+                </p>
+                <p className="mt-4 text-sm text-foreground/70">
+                  Rather talk?{" "}
+                  <a href={telHref()} className="font-bold text-brand-dark underline underline-offset-2">
+                    Call {siteConfig.phoneDisplay}
+                  </a>{" "}
+                  or{" "}
+                  <a href={wa} target="_blank" rel="noopener noreferrer" className="font-bold text-brand-dark underline underline-offset-2">
+                    WhatsApp us
+                  </a>
+                </p>
               </div>
-              <p className="mt-5 text-sm font-medium text-foreground/60">
-                Takes about a minute. No payment details.
-              </p>
-              <p className="mt-4 text-sm text-foreground/70">
-                Rather talk?{" "}
-                <a href={telHref()} className="font-bold text-brand-dark underline underline-offset-2">
-                  Call {siteConfig.phoneDisplay}
-                </a>{" "}
-                or{" "}
-                <a href={wa} target="_blank" rel="noopener noreferrer" className="font-bold text-brand-dark underline underline-offset-2">
-                  WhatsApp us
-                </a>
-              </p>
             </FadeIn>
           ) : (
-            <FadeIn className="mx-auto max-w-xl rounded-[2rem] bg-white px-6 py-10 text-center shadow-xl">
+            <FadeIn className="mx-auto max-w-xl rounded-[2rem] bg-white px-6 py-10 text-center shadow-xl ring-1 ring-black/5">
               <h2 className="text-2xl font-bold text-brand-dark">This offer has ended</h2>
               <p className="mt-2 text-foreground/70">We still inspect gutters - message us and we&apos;ll help.</p>
               <div className="mt-6 flex flex-wrap justify-center gap-3">
@@ -338,8 +395,8 @@ export default async function FreeInspectionPage() {
       {/* Small print */}
       <section className="mx-auto max-w-3xl px-4 py-10 text-center sm:px-6">
         <p className="text-sm text-foreground/60">
-          Limited-time offer for {inspectionPromo.area} and nearby postcodes - the booking form
-          checks yours. One inspection per home. No obligation and nothing to pay.{" "}
+          Limited-time offer, {inspectionPromo.area} only - the booking form checks your postcode.
+          One inspection per home. No obligation and nothing to pay.{" "}
           <Link href="/terms" className="underline underline-offset-2 hover:text-foreground">
             Terms
           </Link>
@@ -354,6 +411,23 @@ function PinIcon() {
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11Z" />
       <circle cx="12" cy="10" r="2.5" />
+    </svg>
+  );
+}
+
+function ClockIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
+    </svg>
+  );
+}
+
+function SparkIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2Z" />
     </svg>
   );
 }
