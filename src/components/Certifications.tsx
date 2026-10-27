@@ -67,18 +67,21 @@ export default function Certifications() {
             <div className="relative flex h-full items-center gap-5 rounded-2xl border border-border-subtle bg-white p-5 shadow-sm">
               <VerifiedTick delay={0.45} />
               <div className="flex h-20 w-28 shrink-0 flex-col items-center justify-center rounded-xl bg-muted-bg p-2 text-brand-dark">
-                <DroneIcon />
-                <span className="mt-1 text-[10px] font-bold tracking-wide uppercase">CAA registered</span>
+                {caa.logo ? (
+                  <Image src={caa.logo.src} alt="UK Civil Aviation Authority" width={caa.logo.width} height={caa.logo.height} className="h-auto max-h-16 w-auto" />
+                ) : (
+                  <>
+                    <DroneIcon />
+                    <span className="mt-1 text-[10px] font-bold tracking-wide uppercase">CAA certified</span>
+                  </>
+                )}
               </div>
               <div>
-                <h3 className="font-bold text-foreground">CAA-registered drone operator</h3>
+                <h3 className="font-bold text-foreground">CAA certified</h3>
                 <p className="mt-1 text-sm text-foreground/70">
-                  Our drone inspections are registered with the UK Civil Aviation Authority and flown
-                  under its rules.
+                  Our drone pilots are certified with the UK Civil Aviation Authority, and every
+                  inspection is flown under its rules.
                 </p>
-                {caa.operatorId && (
-                  <p className="mt-2 font-mono text-xs font-semibold text-foreground/60">Operator ID {caa.operatorId}</p>
-                )}
               </div>
             </div>
           </FadeIn>

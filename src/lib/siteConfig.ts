@@ -89,24 +89,18 @@ export function inspectionPromoLabel(): string {
 
 /**
  * Accreditations shown on the homepage (the owner, 27 Oct 2026: CHAS
- * accredited, and CAA for the drone flying).
+ * accredited, and CAA certified for the drone flying - no ID number).
  *
- * chas.logo: CHAS issues its logo to accredited members on request
- * (admin@chas.co.uk), one version per membership level. Put the file
- * CHAS sends in public/accreditations/ and set the path here; until then
- * the badge is set in Cleano's own type, never a copy of CHAS's mark.
- *
- * caa: shown as words, not the CAA's emblem - nothing from the CAA lets
- * operators use it. operatorId is the ID on the drone's label (public by
- * design); set NEXT_PUBLIC_CAA_OPERATOR_ID to print it.
+ * logo: the badge image, once supplied. CHAS sends its logo to members on
+ * request (requested); the owner is supplying the CAA one too. Put each
+ * file in public/accreditations/ and set { src, width, height } here -
+ * until then each badge is set in Cleano's own type.
  */
-export const accreditations = {
-  chas: {
-    logo: null as null | { src: string; width: number; height: number },
-  },
-  caa: {
-    operatorId: process.env.NEXT_PUBLIC_CAA_OPERATOR_ID?.trim() || null,
-  },
+type BadgeLogo = null | { src: string; width: number; height: number };
+
+export const accreditations: { chas: { logo: BadgeLogo }; caa: { logo: BadgeLogo } } = {
+  chas: { logo: null },
+  caa: { logo: null },
 };
 
 export function telHref(): string {
