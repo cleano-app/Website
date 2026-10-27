@@ -9,25 +9,35 @@ import { inspectionPromo } from "@/lib/siteConfig";
 // runs. A card that drops in under the header rather than a full-screen
 // popup: Google demotes pages whose content is covered on arrival from a
 // search, and the offer isn't worth the homepage's ranking. Closing it
-// sticks for this browser; after the last day it never appears.
+// sticks for this browser; once the offer ends it never appears.
 
 // Pages where it would be in the way: the policies (read by Stripe and by
 // customers looking for something specific) and the quote form, where the
 // visitor is already mid-enquiry.
 const HIDDEN_ON = ["/terms", "/privacy", "/cancellation", "/refunds", "/quote"];
 
-const DISMISS_KEY = `cleano-promo-inspection-${inspectionPromo.until}`;
+// Not tied to the end date: moving the date must not bring the card back
+// for everyone who already closed it.
+const DISMISS_KEY = "cleano-promo-inspection";
 
 function ukToday(): string {
   // en-CA gives YYYY-MM-DD, which compares correctly as a string.
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/London" }).format(new Date());
 }
 
+function promoRunning(): boolean {
+  const { until } = inspectionPromo;
+  return until !== "off" && (until === null || ukToday() <= until);
+}
+
 function untilLabel(): string {
-  const [y, m, d] = inspectionPromo.until.split("-").map(Number);
-  return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "UTC" }).format(
+  const { until } = inspectionPromo;
+  if (until === null || until === "off") return "Limited time";
+  const [y, m, d] = until.split("-").map(Number);
+  const date = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "UTC" }).format(
     new Date(Date.UTC(y, m - 1, d))
   );
+  return `Free until ${date}`;
 }
 
 export default function PromoDropdown() {
@@ -38,7 +48,7 @@ export default function PromoDropdown() {
   useEffect(() => {
     // Decided in the browser only: the date and the "closed it already"
     // flag are both per-visitor, and the server render must not guess.
-    if (hidden || ukToday() > inspectionPromo.until) return;
+    if (hidden || !promoRunning()) return;
     try {
       if (localStorage.getItem(DISMISS_KEY)) return;
     } catch {
@@ -90,7 +100,7 @@ export default function PromoDropdown() {
 
           <div className="px-5 pt-4 pb-5">
             <p className="text-xs font-semibold text-brand-light">
-              For {inspectionPromo.area} homes · Free until {untilLabel()}
+              For {inspectionPromo.area} homes · {untilLabel()}
             </p>
             <h2 id="promo-title" className="mt-1.5 pr-6 text-xl leading-tight font-bold">
               Free drone roof &amp; gutter inspection

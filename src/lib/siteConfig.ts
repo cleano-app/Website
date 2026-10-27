@@ -41,15 +41,23 @@ export const siteConfig = {
  * bookings itself. It only sends people there: by redirect from the short
  * URLs in next.config.ts, and by the drop-down card in PromoDropdown.
  *
- * `until` is the last day (UK date, inclusive), the same default as Ops'
- * app_settings.inspection_offer_until. If the office changes the date in
- * Ops, set NEXT_PUBLIC_INSPECTION_PROMO_UNTIL in Vercel to match - after
- * it the card stops appearing, and Ops shows "This offer has ended" to
- * anyone who still follows a short link.
+ * Runs until further notice (the owner, 27 Oct 2026: not tied to
+ * Chanukah for now) - matching Ops when its "Ends" date is left empty.
+ * NEXT_PUBLIC_INSPECTION_PROMO_UNTIL in Vercel changes that: a date
+ * (YYYY-MM-DD, UK, last day inclusive) ends it then, "off" ends it now.
+ * Once it has ended the card stops appearing, and Ops shows "This offer
+ * has ended" to anyone who still follows a short link.
  */
+function promoUntil(): string | null | "off" {
+  const raw = process.env.NEXT_PUBLIC_INSPECTION_PROMO_UNTIL?.trim().toLowerCase();
+  if (raw === "off") return "off";
+  return raw && /^\d{4}-\d{2}-\d{2}$/.test(raw) ? raw : null;
+}
+
 export const inspectionPromo = {
   path: "/inspection",
-  until: process.env.NEXT_PUBLIC_INSPECTION_PROMO_UNTIL || "2026-12-04",
+  /** null = until further notice. */
+  until: promoUntil(),
   area: "Stamford Hill",
 };
 
