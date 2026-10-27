@@ -33,6 +33,26 @@ export const siteConfig = {
   whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "442033704040",
 };
 
+/**
+ * The free drone roof & gutter inspection (Ops migration 0250, flyer
+ * "Cleano-Free-Drone-Inspection-Flyer-A4"). The booking itself lives in
+ * Ops at /inspection - postcode coverage, duplicate check, the visit and
+ * the office task are all there - so the website never takes these
+ * bookings itself. It only sends people there: by redirect from the short
+ * URLs in next.config.ts, and by the drop-down card in PromoDropdown.
+ *
+ * `until` is the last day (UK date, inclusive), the same default as Ops'
+ * app_settings.inspection_offer_until. If the office changes the date in
+ * Ops, set NEXT_PUBLIC_INSPECTION_PROMO_UNTIL in Vercel to match - after
+ * it the card stops appearing, and Ops shows "This offer has ended" to
+ * anyone who still follows a short link.
+ */
+export const inspectionPromo = {
+  path: "/inspection",
+  until: process.env.NEXT_PUBLIC_INSPECTION_PROMO_UNTIL || "2026-12-04",
+  area: "Stamford Hill",
+};
+
 export function telHref(): string {
   return `tel:${siteConfig.phone}`;
 }
