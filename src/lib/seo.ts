@@ -25,12 +25,15 @@ export function pageMetadata({
   title,
   description,
   path,
+  image = OG_IMAGE,
 }: {
   /** Plain string gets the root "%s | Cleano" template; `{ absolute }` is used verbatim (the homepage). */
   title: string | { absolute: string };
   description: string;
   /** Route path starting with "/" - e.g. "/about". */
   path: string;
+  /** Share image, when the page has one of its own. Same 1200x630 shape. */
+  image?: { url: string; width: number; height: number; alt: string };
 }): Metadata {
   const socialTitle = typeof title === "string" ? `${title} | ${siteConfig.name}` : title.absolute;
   return {
@@ -44,13 +47,13 @@ export function pageMetadata({
       siteName: siteConfig.name,
       type: "website",
       locale: "en_GB",
-      images: [OG_IMAGE],
+      images: [image],
     },
     twitter: {
       card: "summary_large_image",
       title: socialTitle,
       description,
-      images: [OG_IMAGE.url],
+      images: [image.url],
     },
   };
 }

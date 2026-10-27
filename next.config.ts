@@ -62,18 +62,14 @@ const nextConfig: NextConfig = {
     // Add real remote hosts here (e.g. Supabase Storage) once photos are uploaded there.
     remotePatterns: [],
   },
-  // Short, unlisted links for the free drone inspection offer. None of these
-  // is a page here and none is in the sitemap or the nav - they exist only
-  // for people who have the link (flyer, WhatsApp, the drop-down card).
-  // They all land on the Ops booking page, which is the landing page and
-  // the booking form in one, so the customer is one tap from booking.
-  // 307 (permanent: false) because the offer ends: nothing should cache
-  // these, so each one can later point somewhere else.
+  // Other words for the free drone inspection page (/inspection), for
+  // anyone who remembers the offer but not the exact link. None of these
+  // is in the sitemap or the nav. 307 (permanent: false) because the offer
+  // ends: nothing should cache them, so each can later point elsewhere.
   async redirects() {
-    const destination = `${process.env.NEXT_PUBLIC_OPS_APP_URL || "https://ops.cleano.services"}/inspection`;
-    return ["/inspection", "/free", "/free-inspection", "/drone", "/promo", "/promotion"].map((source) => ({
+    return ["/free", "/free-inspection", "/drone", "/promo", "/promotion"].map((source) => ({
       source,
-      destination,
+      destination: "/inspection",
       permanent: false,
     }));
   },

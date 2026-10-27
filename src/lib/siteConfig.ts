@@ -35,11 +35,11 @@ export const siteConfig = {
 
 /**
  * The free drone roof & gutter inspection (Ops migration 0250, flyer
- * "Cleano-Free-Drone-Inspection-Flyer-A4"). The booking itself lives in
- * Ops at /inspection - postcode coverage, duplicate check, the visit and
- * the office task are all there - so the website never takes these
- * bookings itself. It only sends people there: by redirect from the short
- * URLs in next.config.ts, and by the drop-down card in PromoDropdown.
+ * "Cleano-Free-Drone-Inspection-Flyer-A4"). The offer page is /inspection
+ * on this site; the booking itself lives in Ops at /inspection - postcode
+ * coverage, duplicate check, the visit and the office task are all there -
+ * so this site never takes these bookings itself. It sends people to the
+ * Ops form from the page's Book button and from the drop-down card.
  *
  * Runs until further notice (the owner, 27 Oct 2026: not tied to
  * Chanukah for now) - matching Ops when its "Ends" date is left empty.
@@ -60,6 +60,32 @@ export const inspectionPromo = {
   until: promoUntil(),
   area: "Stamford Hill",
 };
+
+/** The Ops booking form the Book buttons go to. */
+export function inspectionBookingUrl(): string {
+  return `${siteConfig.opsAppUrl}/inspection`;
+}
+
+/** Today's date in the UK as YYYY-MM-DD, which compares correctly as a string. */
+export function ukToday(): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/London" }).format(new Date());
+}
+
+export function inspectionPromoRunning(): boolean {
+  const { until } = inspectionPromo;
+  return until !== "off" && (until === null || ukToday() <= until);
+}
+
+/** "Limited time", or "Free until 30 Nov" once an end date is set. */
+export function inspectionPromoLabel(): string {
+  const { until } = inspectionPromo;
+  if (until === null || until === "off") return "Limited time";
+  const [y, m, d] = until.split("-").map(Number);
+  const date = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "UTC" }).format(
+    new Date(Date.UTC(y, m - 1, d))
+  );
+  return `Free until ${date}`;
+}
 
 export function telHref(): string {
   return `tel:${siteConfig.phone}`;

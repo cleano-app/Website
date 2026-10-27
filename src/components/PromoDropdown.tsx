@@ -3,7 +3,12 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { inspectionPromo } from "@/lib/siteConfig";
+import {
+  inspectionBookingUrl,
+  inspectionPromo,
+  inspectionPromoLabel,
+  inspectionPromoRunning,
+} from "@/lib/siteConfig";
 
 // The free drone inspection, announced to everyone who visits while it
 // runs. A card that drops in under the header rather than a full-screen
@@ -11,34 +16,14 @@ import { inspectionPromo } from "@/lib/siteConfig";
 // search, and the offer isn't worth the homepage's ranking. Closing it
 // sticks for this browser; once the offer ends it never appears.
 
-// Pages where it would be in the way: the policies (read by Stripe and by
-// customers looking for something specific) and the quote form, where the
-// visitor is already mid-enquiry.
-const HIDDEN_ON = ["/terms", "/privacy", "/cancellation", "/refunds", "/quote"];
+// Pages where it would be in the way: the offer page itself, the policies
+// (read by Stripe and by customers looking for something specific) and the
+// quote form, where the visitor is already mid-enquiry.
+const HIDDEN_ON = ["/inspection", "/terms", "/privacy", "/cancellation", "/refunds", "/quote"];
 
 // Not tied to the end date: moving the date must not bring the card back
 // for everyone who already closed it.
 const DISMISS_KEY = "cleano-promo-inspection";
-
-function ukToday(): string {
-  // en-CA gives YYYY-MM-DD, which compares correctly as a string.
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/London" }).format(new Date());
-}
-
-function promoRunning(): boolean {
-  const { until } = inspectionPromo;
-  return until !== "off" && (until === null || ukToday() <= until);
-}
-
-function untilLabel(): string {
-  const { until } = inspectionPromo;
-  if (until === null || until === "off") return "Limited time";
-  const [y, m, d] = until.split("-").map(Number);
-  const date = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "UTC" }).format(
-    new Date(Date.UTC(y, m - 1, d))
-  );
-  return `Free until ${date}`;
-}
 
 export default function PromoDropdown() {
   const pathname = usePathname();
@@ -48,7 +33,7 @@ export default function PromoDropdown() {
   useEffect(() => {
     // Decided in the browser only: the date and the "closed it already"
     // flag are both per-visitor, and the server render must not guess.
-    if (hidden || !promoRunning()) return;
+    if (hidden || !inspectionPromoRunning()) return;
     try {
       if (localStorage.getItem(DISMISS_KEY)) return;
     } catch {
@@ -100,17 +85,19 @@ export default function PromoDropdown() {
 
           <div className="px-5 pt-4 pb-5">
             <p className="text-xs font-semibold text-brand-light">
-              For {inspectionPromo.area} homes · {untilLabel()}
+              For {inspectionPromo.area} homes · {inspectionPromoLabel()}
             </p>
             <h2 id="promo-title" className="mt-1.5 pr-6 text-xl leading-tight font-bold">
-              Free drone roof &amp; gutter inspection
+              Free drone gutter inspection
             </h2>
             <p className="mt-1.5 text-sm text-white/80">
-              Full photo report by email. No need to be home, no obligation.
+              We check your gutters and downpipes and email you the photos. No need to be home, no obligation.
             </p>
             <div className="mt-4 flex items-center gap-3">
+              {/* Straight to the booking form - the card has already said what
+                  the offer is, so the offer page would only be a tap more. */}
               <a
-                href={inspectionPromo.path}
+                href={inspectionBookingUrl()}
                 onClick={close}
                 className="flex-1 rounded-full bg-brand-light px-4 py-2.5 text-center text-sm font-bold text-brand-dark transition-colors hover:bg-white"
               >

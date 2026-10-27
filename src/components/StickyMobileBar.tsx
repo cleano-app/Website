@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { siteConfig, telHref, whatsappHref } from "@/lib/siteConfig";
+import {
+  inspectionBookingUrl,
+  inspectionPromo,
+  inspectionPromoRunning,
+  siteConfig,
+  telHref,
+  whatsappHref,
+} from "@/lib/siteConfig";
 
 // Per the V1 build plan: mobile visitors should always have Call, WhatsApp
 // and Get Quote within reach - a sticky bar rather than just a floating
@@ -12,6 +19,9 @@ export default function StickyMobileBar() {
   // tapped from - this bar is the likeliest WhatsApp entry point on a phone,
   // so that attribution is worth the few KB.
   const pathname = usePathname();
+  // On the free inspection page the third button books the inspection
+  // instead - a quote is for cleaning, which that page isn't about.
+  const onOffer = pathname === inspectionPromo.path && inspectionPromoRunning();
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 flex border-t border-border-subtle bg-background shadow-[0_-2px_10px_rgba(0,0,0,0.06)] lg:hidden">
@@ -24,7 +34,10 @@ export default function StickyMobileBar() {
         <span className="text-[11px] font-medium">Call</span>
       </a>
       <a
-        href={whatsappHref("Hi Cleano, I'd like a quote for...", pathname)}
+        href={whatsappHref(
+          onOffer ? "Hi Cleano, I'd like the free drone gutter inspection." : "Hi Cleano, I'd like a quote for...",
+          pathname
+        )}
         target="_blank"
         rel="noopener noreferrer"
         className="flex flex-1 flex-col items-center justify-center gap-0.5 border-x border-border-subtle py-2.5 text-foreground/80"
@@ -33,13 +46,23 @@ export default function StickyMobileBar() {
         <WhatsAppIcon />
         <span className="text-[11px] font-medium">WhatsApp</span>
       </a>
-      <Link
-        href="/quote"
-        className="flex flex-1 flex-col items-center justify-center gap-0.5 bg-brand py-2.5 text-white"
-      >
-        <QuoteIcon />
-        <span className="text-[11px] font-semibold">Get Quote</span>
-      </Link>
+      {onOffer ? (
+        <a
+          href={inspectionBookingUrl()}
+          className="flex flex-1 flex-col items-center justify-center gap-0.5 bg-brand-dark py-2.5 text-white"
+        >
+          <QuoteIcon />
+          <span className="text-[11px] font-semibold">Book Free</span>
+        </a>
+      ) : (
+        <Link
+          href="/quote"
+          className="flex flex-1 flex-col items-center justify-center gap-0.5 bg-brand py-2.5 text-white"
+        >
+          <QuoteIcon />
+          <span className="text-[11px] font-semibold">Get Quote</span>
+        </Link>
+      )}
     </div>
   );
 }
