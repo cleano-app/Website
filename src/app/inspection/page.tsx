@@ -2,14 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
 import CheckScene from "@/components/inspection/CheckScene";
-import DroneScanScene from "@/components/inspection/DroneScanScene";
+import BookButton from "@/components/inspection/BookButton";
+import FloatingBook from "@/components/inspection/FloatingBook";
+import OfferVideo from "@/components/inspection/OfferVideo";
 import MarkedPhoto from "@/components/inspection/MarkedPhoto";
 import ReportArrival from "@/components/inspection/ReportArrival";
 import FadeIn from "@/components/motion/FadeIn";
 import FloatingButterflies from "@/components/motion/FloatingButterflies";
 import { pageMetadata } from "@/lib/seo";
 import {
-  inspectionBookingUrl,
   inspectionPromo,
   inspectionPromoLabel,
   inspectionPromoRunning,
@@ -101,7 +102,7 @@ export default async function FreeInspectionPage() {
             { top: "86%", left: "44%", size: 15, duration: 10, delay: 1, xDrift: [0, -8, 4, 0], yDrift: [0, 6, -4, 0], rotate: [10, -6, 8, 10], opacity: 0.5 },
           ]}
         />
-        <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 pt-10 pb-14 sm:px-6 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:py-20">
+        <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 pt-10 pb-14 sm:px-6 lg:grid-cols-[1.25fr_1fr] lg:gap-12 lg:py-16">
           <FadeIn className="text-center lg:text-left">
             <div className="flex flex-wrap justify-center gap-2 lg:justify-start">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-dark px-3.5 py-1.5 text-sm font-bold text-white shadow-md shadow-brand-dark/20">
@@ -137,16 +138,20 @@ export default async function FreeInspectionPage() {
                 </li>
               ))}
             </ul>
+            {running && (
+              <div className="mt-8">
+                <BookButton />
+                <p className="mt-3 text-sm font-medium text-foreground/60">Takes about a minute. No payment details.</p>
+              </div>
+            )}
           </FadeIn>
           <FadeIn delay={0.15}>
-            <div className="relative">
-              <div className="absolute -inset-4 rounded-[2.4rem] bg-gradient-to-br from-brand-light/40 to-sky-200/40 blur-2xl" aria-hidden="true" />
-              <div className="relative overflow-hidden rounded-[1.6rem] shadow-2xl shadow-brand/25 ring-1 ring-white">
-                <DroneScanScene className="block w-full" />
-              </div>
+            <div className="relative mx-auto w-full max-w-[17rem] sm:max-w-[19rem]">
+              <div className="absolute -inset-6 rounded-[3rem] bg-gradient-to-br from-brand-light/50 to-sky-200/50 blur-2xl" aria-hidden="true" />
+              <OfferVideo className="relative" />
               {running && (
                 <div
-                  className="animate-float absolute -top-5 left-1 flex h-24 w-24 flex-col items-center justify-center rounded-full bg-gradient-to-br from-[#ffd84d] to-[#ffb020] text-center shadow-xl shadow-amber-500/30 ring-4 ring-white sm:-left-6 sm:h-28 sm:w-28"
+                  className="animate-float absolute -top-5 -left-8 flex h-24 w-24 flex-col items-center justify-center rounded-full bg-gradient-to-br from-[#ffd84d] to-[#ffb020] text-center shadow-xl shadow-amber-500/30 ring-4 ring-white sm:-left-6 sm:h-28 sm:w-28"
                   style={{ "--float-rotate": "-12deg" } as React.CSSProperties}
                 >
                   <span className="text-2xl leading-none font-black text-brand-dark sm:text-3xl">FREE</span>
@@ -157,6 +162,8 @@ export default async function FreeInspectionPage() {
           </FadeIn>
         </div>
       </section>
+
+      {running && <FloatingBook />}
 
       {/* Ticker */}
       <div className="overflow-hidden bg-brand-light py-3 text-brand-dark" aria-hidden="true">
@@ -207,16 +214,7 @@ export default async function FreeInspectionPage() {
                 </ul>
 
                 <div className="mt-10">
-                  <a
-                    href={inspectionBookingUrl()}
-                    className="group relative inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-brand-light to-[#7df5ca] px-10 py-5 text-xl font-bold text-brand-dark shadow-xl shadow-brand/35 transition-transform hover:-translate-y-0.5 sm:px-14 sm:text-2xl"
-                  >
-                    <span className="animate-pulse-ring absolute inset-0 rounded-full bg-brand-light" aria-hidden="true" />
-                    <span className="relative">Book my free inspection</span>
-                    <span className="relative">
-                      <ArrowIcon />
-                    </span>
-                  </a>
+                  <BookButton />
                 </div>
                 <p className="mt-5 text-sm font-medium text-foreground/60">
                   Takes about a minute. No payment details.

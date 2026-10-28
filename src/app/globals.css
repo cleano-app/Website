@@ -133,3 +133,15 @@ textarea:focus-visible,
 @media (prefers-reduced-motion: reduce) {
   .animate-shine { animation: none; opacity: 0; }
 }
+
+/* A band of light that keeps sweeping across a button, every few seconds. */
+@keyframes shine-loop {
+  0%, 60% { transform: translateX(-120%) skewX(-15deg); }
+  100% { transform: translateX(420%) skewX(-15deg); }
+}
+.animate-shine-loop {
+  animation: shine-loop 3.2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-shine-loop { animation: none; opacity: 0; }
+}
