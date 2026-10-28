@@ -6,6 +6,7 @@ import CleanoStandard from "@/components/CleanoStandard";
 import HowItWorks from "@/components/HowItWorks";
 import ResidentialCommercialSplit from "@/components/ResidentialCommercialSplit";
 import FinalCTA from "@/components/FinalCTA";
+import PortfolioOffer from "@/components/PortfolioOffer";
 import FadeIn from "@/components/motion/FadeIn";
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
@@ -23,6 +24,7 @@ export default function HomePage() {
       <Hero />
       <Certifications />
       <ServicesGrid />
+      <PortfolioOffer />
 
       {/* Before & after */}
       <section className="bg-muted-bg py-12 sm:py-20">

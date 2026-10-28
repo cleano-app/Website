@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import FloatingButterflies from "@/components/motion/FloatingButterflies";
 import { pageMetadata } from "@/lib/seo";
+import { portfolioPath } from "@/lib/portfolio";
 import { mailtoHref, siteConfig, telHref, whatsappHref } from "@/lib/siteConfig";
 
 export const metadata: Metadata = pageMetadata({
@@ -106,7 +107,22 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-4 py-10 sm:py-14 sm:px-6">
+      <section className="mx-auto max-w-4xl space-y-4 px-4 py-10 sm:py-14 sm:px-6">
+        <div className="rounded-2xl border-2 border-brand/30 bg-gradient-to-br from-[#effdf7] to-white p-6 sm:flex sm:items-center sm:justify-between sm:gap-6">
+          <div>
+            <h2 className="text-lg font-bold text-foreground">Landlord or property manager?</h2>
+            <p className="mt-1 text-sm text-foreground/70">
+              Our Portfolio Gutter Care Scheme inspects every property by drone and cleans only where
+              it&apos;s needed. Where the gutters are clear, the report is free.
+            </p>
+          </div>
+          <Link
+            href={portfolioPath}
+            className="mt-4 inline-flex shrink-0 items-center justify-center rounded-full bg-brand px-6 py-3 text-sm font-bold text-white shadow-md shadow-brand/25 transition-all hover:-translate-y-0.5 hover:bg-brand-dark sm:mt-0"
+          >
+            See the Scheme
+          </Link>
+        </div>
         <div className="rounded-2xl border border-border-subtle p-6 sm:flex sm:items-center sm:justify-between sm:gap-6">
           <div>
             <h2 className="text-lg font-bold text-foreground">Already a customer?</h2>

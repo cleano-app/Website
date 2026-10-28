@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BusinessScene, HomeVisitScene } from "./scenes/MoreScenes";
 import { StaggerGrid, StaggerItem } from "./motion/StaggerGrid";
+import { portfolioPath } from "@/lib/portfolio";
 import FloatingButterflies from "./motion/FloatingButterflies";
 
 const panelButterflies = [
@@ -45,10 +46,16 @@ export default function ResidentialCommercialSplit() {
               <p className="mt-2 flex-1 text-sm text-foreground/70">
                 Scheduled cleaning for commercial properties, landlords, property managers and organisations.
               </p>
-              <Link href="/quote" className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-dark hover:underline">
-                Get a Quote
-                <ArrowIcon />
-              </Link>
+              <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
+                <Link href={portfolioPath} className="inline-flex items-center gap-1 text-sm font-semibold text-brand-dark hover:underline">
+                  Portfolio Gutter Care Scheme
+                  <ArrowIcon />
+                </Link>
+                <Link href="/quote" className="inline-flex items-center gap-1 text-sm font-semibold text-brand-dark hover:underline">
+                  Get a Quote
+                  <ArrowIcon />
+                </Link>
+              </div>
             </div>
           </div>
         </StaggerItem>

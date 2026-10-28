@@ -150,7 +150,7 @@ export function mailtoHref(options?: { subject?: string; body?: string }): strin
 
 // Short forms for the header nav specifically - the full service names
 // live on their own pages (<h1>, <title>, cardBlurb etc.); the nav just
-// needs to fit seven items across the header without wrapping.
+// needs to fit nine items across the header without wrapping.
 export const mainNav: { label: string; href: string }[] = [
   { label: "Gutters", href: "/gutter-cleaning" },
   { label: "Rooftop", href: "/rooftop-cleaning" },
@@ -158,6 +158,8 @@ export const mainNav: { label: string; href: string }[] = [
   { label: "Windows", href: "/window-cleaning" },
   { label: "Pressure", href: "/pressure-washing" },
   { label: "Graffiti", href: "/graffiti-removal" },
+  // The Portfolio Gutter Care Scheme, under the name its customers call themselves.
+  { label: "Landlords", href: "/gutter-cleaning/portfolio" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];

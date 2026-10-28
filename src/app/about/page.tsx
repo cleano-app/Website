@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { pageMetadata } from "@/lib/seo";
 import FloatingButterflies from "@/components/motion/FloatingButterflies";
+import PortfolioOffer from "@/components/PortfolioOffer";
 
 export const metadata: Metadata = pageMetadata({
   title: "About Cleano",
@@ -112,6 +113,8 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      <PortfolioOffer />
     </>
   );
 }

@@ -4,7 +4,9 @@ import { ReportStoryScene } from "@/components/scenes/MoreScenes";
 import FadeIn from "@/components/motion/FadeIn";
 import { StaggerGrid, StaggerItem } from "@/components/motion/StaggerGrid";
 import FloatingButterflies from "@/components/motion/FloatingButterflies";
-import { mailtoHref, telHref, whatsappHref, siteConfig } from "@/lib/siteConfig";
+import { telHref, siteConfig } from "@/lib/siteConfig";
+import { portfolioMailto, portfolioWhatsapp } from "@/lib/portfolio";
+import PortfolioScene from "@/components/scenes/PortfolioScene";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -14,9 +16,7 @@ export const metadata: Metadata = pageMetadata({
   path: "/gutter-cleaning/portfolio",
 });
 
-// This hero is centred text running close to full width at every line, so
-// butterflies are confined to the top/bottom padding bands only - never
-// beside the copy itself.
+// Butterflies are confined to the corners - never beside the copy.
 const heroButterflies = [
   { top: "1%", left: "4%", size: 20, duration: 9, delay: 0, xDrift: [0, 10, -4, 0], yDrift: [0, -6, 4, 0], rotate: [-8, 10, -4, -8] },
   { top: "2%", left: "88%", size: 16, duration: 10, delay: 0.8, xDrift: [0, -8, 4, 0], yDrift: [0, 6, -4, 0], rotate: [10, -6, 8, 10] },
@@ -86,11 +86,6 @@ const benefits = [
   },
 ];
 
-const enquiryMailto = mailtoHref({
-  subject: "Portfolio Gutter Care Scheme enquiry",
-  body: "Hi Cleano,\n\nHere's our property portfolio for the Portfolio Gutter Care Scheme:\n\nNumber of properties: \nAddresses / list attached: \nOne-off inspection or ongoing programme: \n\nThanks,",
-});
-
 export default function PortfolioGutterCarePage() {
   return (
     <>
@@ -98,26 +93,51 @@ export default function PortfolioGutterCarePage() {
       <section className="bg-grain relative overflow-hidden border-b border-border-subtle bg-gradient-to-br from-muted-bg via-muted-bg to-brand-light/15">
         <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-brand-light/30 blur-3xl" />
         <FloatingButterflies flock={heroButterflies} />
-        <div className="mx-auto max-w-4xl px-4 py-8 text-center sm:px-6 lg:py-12">
-          <FadeIn>
+        {/* Headline, the animation, then the buttons. */}
+        <div className="relative mx-auto grid max-w-6xl items-center gap-x-10 gap-y-6 px-4 pt-6 pb-8 sm:px-6 lg:grid-cols-2 lg:pt-10 lg:pb-12">
+          <FadeIn className="lg:row-span-2">
             <p className="inline-flex items-center gap-2 rounded-full bg-brand/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-brand-dark uppercase">
               For Landlords, Property Managers &amp; Portfolios
             </p>
             <h1 className="mt-4 text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
               Portfolio Gutter Care Scheme
             </h1>
-            <p className="mt-4 text-lg text-foreground/70">
+            <p className="mt-3 text-base text-foreground/70 sm:text-lg">
               We drone-inspect every gutter across your portfolio, report on every property with
               photographic evidence, and only clean where the inspection shows it&apos;s required.
             </p>
             <a
               href="#the-problem"
-              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-brand-dark hover:underline"
+              className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-dark hover:underline"
             >
               See how it works
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
                 <path d="M12 5v14M5 12l7 7 7-7" />
               </svg>
+            </a>
+          </FadeIn>
+          <FadeIn delay={0.15}>
+            <div className="relative mx-auto max-w-xl">
+              <div className="absolute -inset-4 rounded-[2.4rem] bg-gradient-to-br from-brand-light/40 to-sky-200/40 blur-2xl" aria-hidden="true" />
+              <div className="relative overflow-hidden rounded-[1.6rem] shadow-2xl shadow-brand/25 ring-1 ring-white">
+                <PortfolioScene className="block w-full" />
+              </div>
+            </div>
+          </FadeIn>
+          <FadeIn delay={0.2} className="flex flex-wrap gap-3 lg:col-start-2 lg:justify-center">
+            <a
+              href={portfolioMailto}
+              className="rounded-full bg-brand px-6 py-3 text-center text-sm font-bold text-white shadow-md shadow-brand/25 transition-all hover:-translate-y-0.5 hover:bg-brand-dark hover:shadow-lg"
+            >
+              Email Us Your Portfolio
+            </a>
+            <a
+              href={portfolioWhatsapp()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border border-brand/40 bg-white px-6 py-3 text-center text-sm font-bold text-brand-dark transition-all hover:-translate-y-0.5 hover:border-brand hover:shadow-sm"
+            >
+              WhatsApp Us
             </a>
           </FadeIn>
         </div>
@@ -277,16 +297,13 @@ export default function PortfolioGutterCarePage() {
               </p>
               <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
                 <a
-                  href={enquiryMailto}
+                  href={portfolioMailto}
                   className="rounded-full bg-white px-4 py-2 text-xs font-semibold text-brand-dark shadow-sm transition-all hover:-translate-y-0.5 hover:bg-white/90 sm:text-sm"
                 >
                   Email Us Your Portfolio
                 </a>
                 <a
-                  href={whatsappHref(
-                    "Hi Cleano, I'd like to discuss the Portfolio Gutter Care Scheme for our properties",
-                    "/gutter-cleaning/portfolio"
-                  )}
+                  href={portfolioWhatsapp()}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="rounded-full border border-white/60 px-4 py-2 text-xs font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-white/10 sm:text-sm"

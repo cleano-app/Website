@@ -27,6 +27,7 @@ export default function ServicePageLayout({
   service,
   afterHero,
   feature,
+  beforeFaqs,
   secondaryCta,
   realPhotos,
 }: {
@@ -34,6 +35,8 @@ export default function ServicePageLayout({
   /** A full-width feature shown at the top, straight under the headline,
    * in place of the hero's small scene - e.g. the gutter story. */
   feature?: ReactNode;
+  /** A full-width section before the FAQs - e.g. the Portfolio scheme offer. */
+  beforeFaqs?: ReactNode;
   /** Optional extra content rendered right after the hero, before "What's Included". */
   afterHero?: ReactNode;
   /** Overrides the hero's second button (defaults to WhatsApp) - e.g. a
@@ -178,6 +181,8 @@ export default function ServicePageLayout({
           </FadeIn>
         </section>
       )}
+
+      {beforeFaqs}
 
       {/* FAQs */}
       <section className="mx-auto max-w-3xl px-4 py-10 sm:py-16 sm:px-6">
