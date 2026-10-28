@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import type { Service } from "@/lib/content/services";
 import ServiceIcon from "./illustrations/ServiceIcon";
 import ServiceScene from "./scenes/ServiceScenes";
-import BeforeAfterSlider from "./BeforeAfterSlider";
+import BeforeAfter from "./BeforeAfterSlider";
 import FAQAccordion from "./FAQAccordion";
 import QuoteForm from "./QuoteForm";
 import FadeIn from "./motion/FadeIn";
@@ -152,17 +152,11 @@ export default function ServicePageLayout({
             <h2 className="mt-2 text-2xl font-bold text-foreground sm:text-3xl">Before &amp; After</h2>
             <p className="mt-2 text-sm text-foreground/60">Real {service.name.toLowerCase()} jobs.</p>
           </FadeIn>
-          <StaggerGrid className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <StaggerItem>
-              <BeforeAfterSlider label={`${service.name} job 1`} icon={icon} photos={realPhotos?.[0]} />
-            </StaggerItem>
-            <StaggerItem>
-              <BeforeAfterSlider label={`${service.name} job 2`} icon={icon} photos={realPhotos?.[1]} />
-            </StaggerItem>
-            <StaggerItem>
-              <BeforeAfterSlider label={`${service.name} job 3`} icon={icon} photos={realPhotos?.[2]} />
-            </StaggerItem>
-          </StaggerGrid>
+          {realPhotos && realPhotos.length > 0 && (
+            <div className="mt-6">
+              <BeforeAfter jobs={realPhotos.map((photos, i) => ({ label: `Job ${i + 1}`, ...photos }))} />
+            </div>
+          )}
         </div>
       </section>
 
