@@ -99,7 +99,10 @@ export function inspectionPromoLabel(): string {
 type BadgeLogo = null | { src: string; width: number; height: number };
 
 export const accreditations: { chas: { logo: BadgeLogo }; caa: { logo: BadgeLogo } } = {
-  chas: { logo: null },
+  // Supplied by CHAS, 28 Oct 2026 (Standard). CHAS: the shape may be
+  // altered, the colour may not - this is their file, only its white
+  // margin trimmed.
+  chas: { logo: { src: "/accreditations/chas-standard.png", width: 399, height: 400 } },
   caa: { logo: null },
 };
 

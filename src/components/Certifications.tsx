@@ -43,9 +43,9 @@ export default function Certifications() {
           <FadeIn>
             <div className="relative flex h-full items-center gap-5 rounded-2xl border border-border-subtle bg-white p-5 shadow-sm">
               <VerifiedTick delay={0.3} />
-              <div className="flex h-20 w-28 shrink-0 items-center justify-center rounded-xl bg-muted-bg p-2">
+              <div className={`flex h-20 w-28 shrink-0 items-center justify-center rounded-xl p-2 ${chas.logo ? "bg-white" : "bg-muted-bg"}`}>
                 {chas.logo ? (
-                  <Image src={chas.logo.src} alt="CHAS accredited contractor" width={chas.logo.width} height={chas.logo.height} className="h-auto max-h-16 w-auto" />
+                  <Image src={chas.logo.src} alt="Veriforce CHAS Standard accredited contractor" width={chas.logo.width} height={chas.logo.height} className="h-[4.5rem] w-auto" />
                 ) : (
                   <span className="text-center leading-none">
                     <span className="block text-2xl font-black tracking-tight text-foreground">CHAS</span>
