@@ -186,10 +186,10 @@ export default async function FreeInspectionPage() {
       <section id="book" className="relative overflow-hidden bg-white">
         <div className="pointer-events-none absolute top-16 -left-24 h-72 w-72 rounded-full bg-brand-light/25 blur-3xl" />
         <div className="pointer-events-none absolute -right-20 bottom-4 h-72 w-72 rounded-full bg-sky-200/40 blur-3xl" />
-        <div className="relative mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:py-20">
+        <div className="relative mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-16 lg:py-20">
           {running ? (
             <FadeIn className="rounded-[2.1rem] bg-gradient-to-br from-brand-light via-brand to-sky-300 p-[3px] shadow-2xl shadow-brand/20">
-              <div className="rounded-[2rem] bg-white px-6 py-10 text-center sm:px-12 sm:py-14">
+              <div className="rounded-[2rem] bg-white px-4 py-10 text-center sm:px-12 sm:py-14">
                 <p className="inline-flex items-center gap-2 rounded-full bg-[#fff4e5] px-4 py-1.5 text-sm font-bold text-[#c2410c]">
                   <ClockIcon />
                   {inspectionPromo.until ? `${inspectionPromoLabel()} · ` : "Limited time · "}
@@ -250,7 +250,7 @@ export default async function FreeInspectionPage() {
       </section>
 
       {/* What we check */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
+      <section className="mx-auto max-w-6xl px-4 py-10 sm:py-16 sm:px-6 lg:py-20">
         <FadeIn className="text-center">
           <p className="text-sm font-semibold tracking-wide text-brand uppercase">What we check</p>
           <h2 className="mt-2 text-3xl font-bold text-foreground sm:text-4xl">Follow the water</h2>
@@ -279,7 +279,7 @@ export default async function FreeInspectionPage() {
       </section>
 
       {/* Real photos, marked up live */}
-      <section className="bg-muted-bg py-16 lg:py-20">
+      <section className="bg-muted-bg py-10 sm:py-16 lg:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <FadeIn className="text-center">
             <p className="text-sm font-semibold tracking-wide text-brand uppercase">Real photos, as we find them</p>
@@ -332,7 +332,7 @@ export default async function FreeInspectionPage() {
       </section>
 
       {/* The report */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
+      <section className="mx-auto max-w-6xl px-4 py-10 sm:py-16 sm:px-6 lg:py-20">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <FadeIn>
             <p className="text-sm font-semibold tracking-wide text-brand uppercase">Your photo report</p>
@@ -358,7 +358,7 @@ export default async function FreeInspectionPage() {
       </section>
 
       {/* How it works */}
-      <section className="bg-muted-bg py-16 lg:py-20">
+      <section className="bg-muted-bg py-10 sm:py-16 lg:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <FadeIn className="text-center">
             <p className="text-sm font-semibold tracking-wide text-brand uppercase">How it works</p>

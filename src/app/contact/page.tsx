@@ -61,7 +61,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-4 py-14 sm:px-6">
+      <section className="mx-auto max-w-4xl px-4 py-10 sm:py-14 sm:px-6">
         <div className="grid gap-4 sm:grid-cols-3">
           {ways.map((way) => (
             <a
@@ -96,7 +96,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="bg-muted-bg py-14">
+      <section className="bg-muted-bg py-10 sm:py-14">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
           <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Where we work</h2>
           <p className="mx-auto mt-3 max-w-xl text-foreground/75">
@@ -106,7 +106,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-4 py-14 sm:px-6">
+      <section className="mx-auto max-w-4xl px-4 py-10 sm:py-14 sm:px-6">
         <div className="rounded-2xl border border-border-subtle p-6 sm:flex sm:items-center sm:justify-between sm:gap-6">
           <div>
             <h2 className="text-lg font-bold text-foreground">Already a customer?</h2>

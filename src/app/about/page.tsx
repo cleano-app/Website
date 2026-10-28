@@ -27,7 +27,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-4 py-14 sm:px-6">
+      <section className="mx-auto max-w-4xl px-4 py-10 sm:py-14 sm:px-6">
         <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Who We Are</h2>
         <p className="mt-4 text-foreground/70">
           Cleano is a professional exterior cleaning company serving homes and businesses across
@@ -38,7 +38,7 @@ export default function AboutPage() {
         </p>
       </section>
 
-      <section className="bg-muted-bg py-14">
+      <section className="bg-muted-bg py-10 sm:py-14">
         <div className="mx-auto max-w-4xl px-4 sm:px-6">
           <h2 className="text-2xl font-bold text-foreground sm:text-3xl">The Cleano Standard</h2>
           <p className="mt-4 text-foreground/70">
@@ -50,7 +50,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-4 py-14 sm:px-6">
+      <section className="mx-auto max-w-4xl px-4 py-10 sm:py-14 sm:px-6">
         <div className="grid items-center gap-10 md:grid-cols-2">
           <div>
             <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Photo Reports</h2>
@@ -84,7 +84,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-muted-bg py-14">
+      <section className="bg-muted-bg py-10 sm:py-14">
         <div className="mx-auto grid max-w-4xl gap-6 px-4 sm:grid-cols-3 sm:px-6">
           <div className="relative aspect-square overflow-hidden rounded-2xl border border-border-subtle shadow-sm">
             <Image

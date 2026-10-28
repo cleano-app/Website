@@ -10,7 +10,7 @@ export default function BookButton({ size = "lg", className = "" }: { size?: "md
   return (
     <a
       href={inspectionBookingUrl()}
-      className={`group relative inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-brand-dark via-[#15803d] to-[#16a34a] font-extrabold text-white shadow-[0_14px_34px_-10px_rgba(21,128,61,0.75)] ring-4 ring-white transition-transform hover:-translate-y-0.5 hover:scale-[1.02] ${big ? "gap-2 py-3.5 pr-3.5 pl-3.5 text-base sm:gap-3 sm:py-5 sm:pr-5 sm:pl-4 sm:text-xl" : "py-3 pr-3 pl-3 text-base"} ${className}`}
+      className={`group relative inline-flex max-w-full items-center gap-3 rounded-full bg-gradient-to-r from-brand-dark via-[#15803d] to-[#16a34a] font-extrabold text-white shadow-[0_14px_34px_-10px_rgba(21,128,61,0.75)] ring-4 ring-white transition-transform hover:-translate-y-0.5 hover:scale-[1.02] ${big ? "gap-2 py-3.5 pr-3.5 pl-3.5 text-base sm:gap-3 sm:py-5 sm:pr-5 sm:pl-4 sm:text-xl" : "py-3 pr-3 pl-3 text-base"} ${className}`}
     >
       <span className="animate-pulse-ring absolute inset-0 rounded-full bg-[#16a34a]" aria-hidden="true" />
       <span className="absolute inset-0 overflow-hidden rounded-full" aria-hidden="true">
@@ -27,7 +27,7 @@ export default function BookButton({ size = "lg", className = "" }: { size?: "md
         <span className="hidden sm:inline">Book my free inspection</span>
       </span>
       <span className="relative rounded-full bg-[#ffd84d] px-2.5 py-1 text-xs font-black tracking-wide text-brand-dark">FREE</span>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" className="relative mr-1 hidden transition-transform group-hover:translate-x-1 min-[380px]:block" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" className="relative mr-1 hidden transition-transform group-hover:translate-x-1 sm:block" aria-hidden="true">
         <path d="M5 12h14M13 6l6 6-6 6" />
       </svg>
     </a>

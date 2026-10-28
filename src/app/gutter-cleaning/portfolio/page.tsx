@@ -124,7 +124,7 @@ export default function PortfolioGutterCarePage() {
       </section>
 
       {/* The problem */}
-      <section id="the-problem" className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
+      <section id="the-problem" className="mx-auto max-w-3xl px-4 py-10 sm:py-16 sm:px-6">
         <FadeIn>
           <p className="text-sm font-semibold uppercase tracking-wide text-brand">The Problem</p>
           <p className="mt-3 text-lg text-foreground/80">
@@ -136,7 +136,7 @@ export default function PortfolioGutterCarePage() {
       </section>
 
       {/* Our approach */}
-      <section className="bg-muted-bg py-16">
+      <section className="bg-muted-bg py-10 sm:py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <FadeIn className="rounded-2xl border border-brand/25 bg-white p-8 text-center shadow-sm">
             <p className="text-sm font-semibold uppercase tracking-wide text-brand">Our Approach</p>
@@ -148,7 +148,7 @@ export default function PortfolioGutterCarePage() {
       </section>
 
       {/* How it works */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <section className="mx-auto max-w-6xl px-4 py-10 sm:py-16 sm:px-6">
         <FadeIn className="text-center">
           <p className="text-sm font-semibold uppercase tracking-wide text-brand">How It Works</p>
           <h2 className="mt-2 text-3xl font-bold text-foreground sm:text-4xl">The Programme</h2>
@@ -174,7 +174,7 @@ export default function PortfolioGutterCarePage() {
       </section>
 
       {/* What you receive */}
-      <section className="bg-muted-bg py-16">
+      <section className="bg-muted-bg py-10 sm:py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <FadeIn>
@@ -207,7 +207,7 @@ export default function PortfolioGutterCarePage() {
       </section>
 
       {/* Roof-level observations */}
-      <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
+      <section className="mx-auto max-w-3xl px-4 py-10 sm:py-16 sm:px-6">
         <FadeIn>
           <p className="text-sm font-semibold uppercase tracking-wide text-brand">Included</p>
           <h2 className="mt-2 text-2xl font-bold text-foreground sm:text-3xl">
@@ -239,7 +239,7 @@ export default function PortfolioGutterCarePage() {
       </section>
 
       {/* Why it works */}
-      <section className="bg-muted-bg py-16">
+      <section className="bg-muted-bg py-10 sm:py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <FadeIn className="text-center">
             <p className="text-sm font-semibold uppercase tracking-wide text-brand">
@@ -264,7 +264,7 @@ export default function PortfolioGutterCarePage() {
       </section>
 
       {/* Next step */}
-      <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+      <section className="mx-auto max-w-6xl px-4 py-12 sm:py-20 sm:px-6">
         <FadeIn>
           <div className="bg-grain relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand to-brand-dark px-6 py-16 text-center text-white sm:px-12">
             <div className="pointer-events-none absolute -top-20 -left-16 h-56 w-56 rounded-full bg-white/10" />

@@ -12,7 +12,7 @@ const ctaButterflies = [
 
 export default function FinalCTA() {
   return (
-    <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+    <section className="mx-auto max-w-6xl px-4 py-12 sm:py-20 sm:px-6">
       <FadeIn>
         <div className="bg-grain relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand via-brand to-brand-dark px-6 py-16 text-center text-white sm:px-12">
           <div className="pointer-events-none absolute -top-20 -left-16 h-56 w-56 rounded-full bg-white/15" />

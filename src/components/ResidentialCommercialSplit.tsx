@@ -9,7 +9,7 @@ const panelButterflies = [
 
 export default function ResidentialCommercialSplit() {
   return (
-    <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+    <section className="mx-auto max-w-6xl px-4 py-12 sm:py-20 sm:px-6">
       <StaggerGrid className="grid gap-6 md:grid-cols-2">
         <StaggerItem>
           <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border-subtle bg-white transition-shadow hover:shadow-lg">

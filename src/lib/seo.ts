@@ -57,3 +57,11 @@ export function pageMetadata({
     },
   };
 }
+
+/**
+ * A service page's search description: its subhead, plus where we work -
+ * which is what people search with ("gutter cleaning london").
+ */
+export function serviceDescription(service: { heroSubhead: string }): string {
+  return `${service.heroSubhead} Serving London and the surrounding areas. Free quotes.`;
+}

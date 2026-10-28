@@ -43,7 +43,7 @@ export default function HowItWorks() {
   }
 
   return (
-    <section className="bg-muted-bg py-20">
+    <section className="bg-muted-bg py-12 sm:py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <FadeIn className="text-center">
           <p className="text-sm font-semibold uppercase tracking-wide text-brand">

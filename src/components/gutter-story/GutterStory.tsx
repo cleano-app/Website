@@ -113,7 +113,7 @@ export default function GutterStory() {
           </div>
 
           {/* chapters, progress, pause */}
-          <div className="flex items-center gap-2 overflow-x-auto px-3 py-3 [scrollbar-width:none] sm:px-5">
+          <div className="flex flex-wrap items-center gap-2 px-3 py-3 sm:px-5">
             <button
               type="button"
               onClick={() => setPlaying((p) => !p)}

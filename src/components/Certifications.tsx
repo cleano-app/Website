@@ -37,8 +37,8 @@ export default function Certifications() {
     <section className="border-t border-border-subtle bg-white py-10">
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         <FadeIn className="text-center">
-          <p className="text-sm font-semibold tracking-wide text-brand uppercase">Accredited, insured &amp; registered</p>
-          <h2 className="mt-2 text-2xl font-bold text-foreground sm:text-3xl">Checked before we arrive</h2>
+          <p className="text-sm font-semibold tracking-wide text-brand uppercase">Accreditations</p>
+          <h2 className="mt-2 text-2xl font-bold text-foreground sm:text-3xl">Certified, insured and registered</h2>
         </FadeIn>
 
         <div className="mt-6 grid gap-5 sm:grid-cols-2">

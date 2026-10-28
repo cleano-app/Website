@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import ServicePageLayout from "@/components/ServicePageLayout";
 import { getServiceBySlug } from "@/lib/content/services";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadata, serviceDescription } from "@/lib/seo";
 
 const service = getServiceBySlug("window-cleaning")!;
 
 export const metadata: Metadata = pageMetadata({
   title: service.name,
-  description: service.heroSubhead,
+  description: serviceDescription(service),
   path: `/${service.slug}`,
 });
 

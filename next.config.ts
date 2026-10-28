@@ -66,12 +66,19 @@ const nextConfig: NextConfig = {
   // anyone who remembers the offer but not the exact link. None of these
   // is in the sitemap or the nav. 307 (permanent: false) because the offer
   // ends: nothing should cache them, so each can later point elsewhere.
+  //
+  // /gutters (and /gutter) is the gutter page's short link, for saying on
+  // the phone, the van, flyers and QR codes. That one is for good, so it's
+  // permanent.
   async redirects() {
-    return ["/free", "/free-inspection", "/drone", "/promo", "/promotion"].map((source) => ({
-      source,
-      destination: "/inspection",
-      permanent: false,
-    }));
+    return [
+      ...["/free", "/free-inspection", "/drone", "/promo", "/promotion"].map((source) => ({
+        source,
+        destination: "/inspection",
+        permanent: false,
+      })),
+      ...["/gutters", "/gutter"].map((source) => ({ source, destination: "/gutter-cleaning", permanent: true })),
+    ];
   },
   async headers() {
     return [

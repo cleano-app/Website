@@ -58,7 +58,7 @@ export default function Hero() {
           </h1>
           <p className="mt-4 max-w-lg text-base sm:text-lg text-foreground/70">
             Cleano provides professional exterior cleaning for homes and businesses across London
-            and the surrounding areas — gutters, roofs, windows, driveways and bins.
+            and the surrounding areas: gutters, roofs, windows, driveways, bins and graffiti.
           </p>
         </motion.div>
 

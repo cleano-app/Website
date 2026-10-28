@@ -101,7 +101,7 @@ export default function ServicePageLayout({
 
       {/* Service options (bin cleaning: one-off vs regular) */}
       {service.serviceOptions && (
-        <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+        <section className="mx-auto max-w-6xl px-4 py-10 sm:py-16 sm:px-6">
           <StaggerGrid className="grid gap-6 sm:grid-cols-2">
             {service.serviceOptions.map((option) => (
               <StaggerItem key={option.title}>
@@ -116,7 +116,7 @@ export default function ServicePageLayout({
       )}
 
       {/* What's included */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <section className="mx-auto max-w-6xl px-4 py-10 sm:py-16 sm:px-6">
         <FadeIn>
           <p className="text-sm font-semibold uppercase tracking-wide text-brand">Included</p>
           <h2 className="mt-2 text-2xl font-bold text-foreground sm:text-3xl">What&apos;s Included</h2>
@@ -132,7 +132,7 @@ export default function ServicePageLayout({
       </section>
 
       {/* Before & after */}
-      <section className="bg-muted-bg py-16">
+      <section className="bg-muted-bg py-10 sm:py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <FadeIn>
             <p className="text-sm font-semibold uppercase tracking-wide text-brand">Real Results</p>
@@ -148,7 +148,7 @@ export default function ServicePageLayout({
       </section>
 
       {/* Why this matters */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <section className="mx-auto max-w-6xl px-4 py-10 sm:py-16 sm:px-6">
         <FadeIn>
           <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
             Why {service.name}?
@@ -168,7 +168,7 @@ export default function ServicePageLayout({
 
       {/* Pricing - only shown where we have real, confirmed pricing */}
       {!service.hidePricing && (
-        <section className="bg-muted-bg py-16">
+        <section className="bg-muted-bg py-10 sm:py-16">
           <FadeIn className="mx-auto max-w-6xl px-4 text-center sm:px-6">
             <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Pricing</h2>
             <p className="mt-3 text-3xl font-bold text-brand-dark">
@@ -180,7 +180,7 @@ export default function ServicePageLayout({
       )}
 
       {/* FAQs */}
-      <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
+      <section className="mx-auto max-w-3xl px-4 py-10 sm:py-16 sm:px-6">
         <FadeIn>
           <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
             Frequently Asked Questions
@@ -192,7 +192,7 @@ export default function ServicePageLayout({
       </section>
 
       {/* Quote form */}
-      <section id="quote" className="bg-muted-bg py-16">
+      <section id="quote" className="bg-muted-bg py-10 sm:py-16">
         <div className="mx-auto max-w-2xl px-4 sm:px-6">
           <h2 className="text-center text-2xl font-bold text-foreground sm:text-3xl">
             Get a Free Quote

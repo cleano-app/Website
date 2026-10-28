@@ -139,7 +139,7 @@ export default function ServicesGrid() {
   }, []);
 
   return (
-    <section className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6">
+    <section className="relative mx-auto max-w-6xl px-4 py-10 sm:py-16 sm:px-6">
       <FloatingButterflies flock={sectionButterflies} />
       <FadeIn className="text-center">
         <p className="text-sm font-semibold uppercase tracking-wide text-brand">What We Do</p>

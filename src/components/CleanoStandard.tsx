@@ -20,7 +20,7 @@ const points = [
 // introduced and it's echoed on every service page's "What's Included".
 export default function CleanoStandard() {
   return (
-    <section className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6">
+    <section className="relative mx-auto max-w-6xl px-4 py-12 sm:py-20 sm:px-6">
       <FloatingButterflies
         flock={[
           { top: "2%", left: "94%", size: 18, duration: 10, delay: 0.4, xDrift: [0, -8, 4, 0], yDrift: [0, 6, -4, 0], rotate: [8, -10, 6, 8], opacity: 0.4 },
