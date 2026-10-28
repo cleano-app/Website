@@ -6,9 +6,11 @@ import { accreditations } from "@/lib/siteConfig";
 import FadeIn from "./motion/FadeIn";
 
 // Who has checked Cleano: CHAS for health and safety, the CAA for the
-// drone. Straight under the trust strip on the homepage, because both are
-// what a council, landlord or business checks before booking a contractor.
-// Each card gets the site's green tick, popping in as it comes into view.
+// drone, plus insured and VAT registered underneath - straight under the
+// homepage hero, because it's what a council, landlord or business checks
+// before booking a contractor. (This took over the old trust strip, which
+// said the same things just above it.) Each card gets the site's green
+// tick, popping in as it comes into view.
 
 function VerifiedTick({ delay }: { delay: number }) {
   const still = useReducedMotion() ?? false;
@@ -32,14 +34,14 @@ export default function Certifications() {
   const { chas, caa } = accreditations;
 
   return (
-    <section className="bg-white py-12">
+    <section className="border-t border-border-subtle bg-white py-10">
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         <FadeIn className="text-center">
-          <p className="text-sm font-semibold tracking-wide text-brand uppercase">Accredited &amp; registered</p>
+          <p className="text-sm font-semibold tracking-wide text-brand uppercase">Accredited, insured &amp; registered</p>
           <h2 className="mt-2 text-2xl font-bold text-foreground sm:text-3xl">Checked before we arrive</h2>
         </FadeIn>
 
-        <div className="mt-8 grid gap-5 sm:grid-cols-2">
+        <div className="mt-6 grid gap-5 sm:grid-cols-2">
           <FadeIn>
             <div className="relative flex h-full items-center gap-5 rounded-2xl border border-border-subtle bg-white p-5 shadow-sm">
               <VerifiedTick delay={0.3} />
@@ -86,10 +88,34 @@ export default function Certifications() {
             </div>
           </FadeIn>
         </div>
+
+        <ul className="mt-5 flex flex-wrap items-center justify-center gap-2 text-sm font-semibold text-brand-dark">
+          {extras.map((item) => (
+            <li key={item.label} className="flex items-center gap-2 rounded-full bg-muted-bg px-4 py-2">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                {item.icon}
+              </svg>
+              {item.label}
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
 }
+
+const extras = [
+  { label: "Fully insured", icon: <path d="M12 3l8 3v6c0 4.5-3.2 8.2-8 9-4.8-.8-8-4.5-8-9V6l8-3Z" /> },
+  {
+    label: "VAT registered",
+    icon: (
+      <>
+        <rect x="4" y="4" width="16" height="16" rx="2" />
+        <path d="M9 9h6M9 13h6M9 17h3" />
+      </>
+    ),
+  },
+];
 
 function DroneIcon() {
   return (

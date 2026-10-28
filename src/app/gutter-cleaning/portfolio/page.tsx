@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import ServiceIcon from "@/components/illustrations/ServiceIcon";
 import { ReportStoryScene } from "@/components/scenes/MoreScenes";
 import FadeIn from "@/components/motion/FadeIn";
 import { StaggerGrid, StaggerItem } from "@/components/motion/StaggerGrid";
@@ -99,13 +98,12 @@ export default function PortfolioGutterCarePage() {
       <section className="bg-grain relative overflow-hidden border-b border-border-subtle bg-gradient-to-br from-muted-bg via-muted-bg to-brand-light/15">
         <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-brand-light/30 blur-3xl" />
         <FloatingButterflies flock={heroButterflies} />
-        <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:py-20">
+        <div className="mx-auto max-w-4xl px-4 py-8 text-center sm:px-6 lg:py-12">
           <FadeIn>
-            <ServiceIcon type="gutter" idle className="mx-auto h-14 w-14" />
-            <p className="mt-5 inline-flex items-center gap-2 rounded-full bg-brand/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-brand-dark uppercase">
+            <p className="inline-flex items-center gap-2 rounded-full bg-brand/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-brand-dark uppercase">
               For Landlords, Property Managers &amp; Portfolios
             </p>
-            <h1 className="mt-5 text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
+            <h1 className="mt-4 text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
               Portfolio Gutter Care Scheme
             </h1>
             <p className="mt-4 text-lg text-foreground/70">
@@ -114,7 +112,7 @@ export default function PortfolioGutterCarePage() {
             </p>
             <a
               href="#the-problem"
-              className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-brand-dark hover:underline"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-brand-dark hover:underline"
             >
               See how it works
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">

@@ -102,8 +102,8 @@ export default async function FreeInspectionPage() {
             { top: "86%", left: "44%", size: 15, duration: 10, delay: 1, xDrift: [0, -8, 4, 0], yDrift: [0, 6, -4, 0], rotate: [10, -6, 8, 10], opacity: 0.5 },
           ]}
         />
-        <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 pt-10 pb-14 sm:px-6 lg:grid-cols-[1.25fr_1fr] lg:gap-12 lg:py-16">
-          <FadeIn className="text-center lg:text-left">
+        <div className="relative mx-auto grid max-w-6xl items-center gap-x-12 gap-y-8 px-4 pt-6 pb-10 sm:px-6 lg:grid-cols-[1.25fr_1fr] lg:py-12">
+          <FadeIn className="text-center lg:col-start-1 lg:row-start-1 lg:text-left">
             <div className="flex flex-wrap justify-center gap-2 lg:justify-start">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-dark px-3.5 py-1.5 text-sm font-bold text-white shadow-md shadow-brand-dark/20">
                 <PinIcon />
@@ -117,18 +117,18 @@ export default async function FreeInspectionPage() {
                 {running ? (inspectionPromo.until ? inspectionPromoLabel() : "Limited-time offer") : "Offer ended"}
               </span>
             </div>
-            <h1 className="mt-6 text-4xl leading-[1.05] font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+            <h1 className="mt-4 text-4xl leading-[1.05] font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               Your gutters, checked by drone -{" "}
               <span className="relative inline-block text-brand-dark">
                 <span className="relative z-10">free</span>
                 <span className="absolute inset-x-[-0.15em] bottom-[0.08em] z-0 h-[0.38em] -rotate-1 rounded-full bg-brand-light/70" aria-hidden="true" />
               </span>
             </h1>
-            <p className="mx-auto mt-5 max-w-lg text-lg text-foreground/70 lg:mx-0">
+            <p className="mx-auto mt-4 max-w-lg text-base text-foreground/70 sm:text-lg lg:mx-0">
               For a limited time, we&apos;re checking gutters and downpipes across {inspectionPromo.area}{" "}
               at no cost. Our drone does the climbing - you get the photos by email.
             </p>
-            <ul className="mt-7 flex flex-wrap justify-center gap-2 lg:justify-start">
+            <ul className="mt-5 flex flex-wrap justify-center gap-2 lg:justify-start">
               {heroFacts.map((fact) => (
                 <li key={fact} className="flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5 text-sm font-semibold text-foreground/80 shadow-sm ring-1 ring-black/5">
                   <span className="text-brand">
@@ -138,14 +138,8 @@ export default async function FreeInspectionPage() {
                 </li>
               ))}
             </ul>
-            {running && (
-              <div className="mt-8">
-                <BookButton />
-                <p className="mt-3 text-sm font-medium text-foreground/60">Takes about a minute. No payment details.</p>
-              </div>
-            )}
           </FadeIn>
-          <FadeIn delay={0.15}>
+          <FadeIn delay={0.15} className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
             <div className="relative mx-auto w-full max-w-[17rem] sm:max-w-[19rem]">
               <div className="absolute -inset-6 rounded-[3rem] bg-gradient-to-br from-brand-light/50 to-sky-200/50 blur-2xl" aria-hidden="true" />
               <OfferVideo className="relative" />
@@ -160,6 +154,13 @@ export default async function FreeInspectionPage() {
               )}
             </div>
           </FadeIn>
+          {/* After the video on phones; under the headline on wide screens. */}
+          {running && (
+            <FadeIn delay={0.2} className="text-center lg:col-start-1 lg:row-start-2 lg:self-start lg:text-left">
+              <BookButton />
+              <p className="mt-3 text-sm font-medium text-foreground/60">Takes about a minute. No payment details.</p>
+            </FadeIn>
+          )}
         </div>
       </section>
 

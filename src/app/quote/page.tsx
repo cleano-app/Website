@@ -11,7 +11,7 @@ export const metadata: Metadata = pageMetadata({
 
 export default function QuotePage() {
   return (
-    <section className="relative mx-auto max-w-2xl px-4 py-14 sm:px-6 lg:py-20">
+    <section className="relative mx-auto max-w-2xl px-4 pt-8 pb-14 sm:px-6 lg:pt-12 lg:pb-20">
       <FloatingButterflies
         flock={[
           { top: "0%", left: "4%", size: 18, duration: 9, delay: 0.2, xDrift: [0, 10, -6, 0], yDrift: [0, -10, 6, 0], rotate: [-8, 10, -4, -8], opacity: 0.4 },
@@ -24,7 +24,7 @@ export default function QuotePage() {
           Takes under a minute. Add a photo or two and we can often quote without a site visit.
         </p>
       </div>
-      <div className="mt-8">
+      <div className="mt-6">
         <QuoteForm sourcePage="/quote" />
       </div>
     </section>

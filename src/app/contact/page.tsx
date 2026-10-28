@@ -52,7 +52,7 @@ export default function ContactPage() {
             { top: "70%", left: "88%", size: 16, duration: 10, delay: 1, xDrift: [0, -8, 6, 0], yDrift: [0, 8, -6, 0], rotate: [8, -10, 6, 8], opacity: 0.4 },
           ]}
         />
-        <div className="relative mx-auto max-w-4xl px-4 py-14 text-center sm:px-6 lg:py-20">
+        <div className="relative mx-auto max-w-4xl px-4 py-8 text-center sm:px-6 lg:py-12">
           <h1 className="text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">Contact Us</h1>
           <p className="mx-auto mt-3 max-w-xl text-foreground/70">
             Call, message or email — whichever suits you. For a price, the quote form takes under a

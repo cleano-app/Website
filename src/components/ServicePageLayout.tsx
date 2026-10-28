@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Service } from "@/lib/content/services";
-import ServiceIcon from "./illustrations/ServiceIcon";
 import ServiceScene from "./scenes/ServiceScenes";
 import BeforeAfter from "./BeforeAfterSlider";
 import FAQAccordion from "./FAQAccordion";
@@ -66,42 +65,17 @@ export default function ServicePageLayout({
         <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-brand-light/30 blur-3xl" />
         <FloatingButterflies
           flock={[
-            { top: "14%", left: "6%", size: 20, duration: 9, delay: 0, xDrift: [0, 12, -6, 0], yDrift: [0, -12, 6, 0], rotate: [-8, 10, -4, -8], opacity: 0.55 },
-            { top: "70%", left: "42%", size: 16, duration: 11, delay: 1.4, xDrift: [0, -10, 8, 0], yDrift: [0, 10, -8, 0], rotate: [8, -10, 6, 8], opacity: 0.4 },
+            // Kept to the corners, clear of the headline and the buttons.
+            { top: "1%", left: "90%", size: 18, duration: 9, delay: 0, xDrift: [0, -8, 4, 0], yDrift: [0, 6, -4, 0], rotate: [-8, 10, -4, -8], opacity: 0.55 },
+            { top: "96%", left: "2%", size: 16, duration: 11, delay: 1.4, xDrift: [0, 8, -4, 0], yDrift: [0, -6, 4, 0], rotate: [8, -10, 6, 8], opacity: 0.4 },
           ]}
         />
-        <div className={`mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 ${feature ? "pt-10 pb-6 lg:grid-cols-[1.4fr_1fr] lg:items-end lg:pt-12" : "py-14 lg:grid-cols-2 lg:py-20"}`}>
-          <FadeIn className="relative">
-            <ServiceIcon type={icon} idle className="h-14 w-14" />
-            <h1 className="mt-5 text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
-              {service.heroHeadline}
-            </h1>
-            <p className="mt-4 text-lg text-foreground/70">{service.heroSubhead}</p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              <Link
-                href="#quote"
-                className="rounded-full bg-brand px-4 py-2 text-center text-xs font-semibold text-white shadow-sm shadow-brand/25 transition-all hover:-translate-y-0.5 hover:bg-brand-dark hover:shadow-md sm:text-sm"
-              >
-                Get a Free Quote
-              </Link>
-              {secondaryCta ? (
-                <Link
-                  href={secondaryCta.href}
-                  className="rounded-full border border-brand/40 bg-white px-4 py-2 text-center text-xs font-semibold text-brand-dark transition-all hover:-translate-y-0.5 hover:border-brand hover:shadow-sm sm:text-sm"
-                >
-                  {secondaryCta.label}
-                </Link>
-              ) : (
-                <a
-                  href={whatsappHref(`Hi Cleano, I'd like a quote for ${service.name}`, `/${service.slug}`)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-full border border-brand/40 bg-white px-4 py-2 text-center text-xs font-semibold text-brand-dark transition-all hover:-translate-y-0.5 hover:border-brand hover:shadow-sm sm:text-sm"
-                >
-                  WhatsApp Us
-                </a>
-              )}
-            </div>
+        {/* Headline, then the animation, then the buttons - on every
+            screen size the call to action comes after the animation. */}
+        <div className={`relative mx-auto max-w-6xl px-4 sm:px-6 ${feature ? "pt-6 lg:pt-8" : "grid items-center gap-x-10 gap-y-6 pt-6 pb-8 lg:grid-cols-2 lg:pt-10 lg:pb-12"}`}>
+          <FadeIn className="relative lg:row-span-2">
+            <h1 className="text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">{service.heroHeadline}</h1>
+            <p className="mt-3 text-base text-foreground/70 sm:text-lg">{service.heroSubhead}</p>
           </FadeIn>
           {!feature && (
             <FadeIn delay={0.15} className="relative">
@@ -113,8 +87,14 @@ export default function ServicePageLayout({
               </div>
             </FadeIn>
           )}
+          {!feature && <HeroButtons service={service} secondaryCta={secondaryCta} className="lg:col-start-2 lg:justify-center" />}
         </div>
-        {feature && <div className="relative pb-6">{feature}</div>}
+        {feature && (
+          <div className="relative pt-4 pb-8">
+            {feature}
+            <HeroButtons service={service} secondaryCta={secondaryCta} className="mt-1 justify-center px-4" />
+          </div>
+        )}
       </section>
 
       {afterHero}
@@ -243,5 +223,27 @@ function CheckIcon() {
         <path d="M5 13l4 4L19 7" />
       </svg>
     </span>
+  );
+}
+
+/** "Get a Free Quote" and a second way to get in touch, under the hero's animation. */
+function HeroButtons({ service, secondaryCta, className = "" }: { service: Service; secondaryCta?: { href: string; label: string }; className?: string }) {
+  const solid = "rounded-full bg-brand px-6 py-3 text-center text-sm font-bold text-white shadow-md shadow-brand/25 transition-all hover:-translate-y-0.5 hover:bg-brand-dark hover:shadow-lg";
+  const outline = "rounded-full border border-brand/40 bg-white px-6 py-3 text-center text-sm font-bold text-brand-dark transition-all hover:-translate-y-0.5 hover:border-brand hover:shadow-sm";
+  return (
+    <div className={`relative flex flex-wrap gap-3 ${className}`}>
+      <Link href="#quote" className={solid}>
+        Get a Free Quote
+      </Link>
+      {secondaryCta ? (
+        <Link href={secondaryCta.href} className={outline}>
+          {secondaryCta.label}
+        </Link>
+      ) : (
+        <a href={whatsappHref(`Hi Cleano, I'd like a quote for ${service.name}`, `/${service.slug}`)} target="_blank" rel="noopener noreferrer" className={outline}>
+          WhatsApp Us
+        </a>
+      )}
+    </div>
   );
 }

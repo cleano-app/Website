@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import HomeHeroScene from "./scenes/HomeHeroScene";
 import FloatingButterflies from "./motion/FloatingButterflies";
@@ -39,8 +40,10 @@ export default function Hero() {
 
       <FloatingButterflies flock={heroButterflies} />
 
-      <div className="relative mx-auto grid max-w-6xl items-center gap-2 px-4 py-10 sm:px-6 lg:grid-cols-2 lg:gap-10 lg:py-24">
+      {/* Headline, the animation, then the buttons - after the animation on every screen size. */}
+      <div className="relative mx-auto grid max-w-6xl items-center gap-x-10 gap-y-6 px-4 pt-6 pb-8 sm:px-6 lg:grid-cols-2 lg:pt-12 lg:pb-14">
         <motion.div
+          className="lg:row-span-2"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
@@ -48,12 +51,12 @@ export default function Hero() {
           <p className="inline-flex items-center gap-2 rounded-full bg-brand/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-brand-dark uppercase">
             Exterior Cleaning Company · London &amp; Surrounding Areas
           </p>
-          <h1 className="mt-5 text-4xl font-bold leading-[1.05] text-foreground sm:text-5xl lg:text-6xl">
+          <h1 className="mt-4 text-4xl font-bold leading-[1.05] text-foreground sm:text-5xl lg:text-6xl">
             Clean places.
             <br />
             <span className="text-brand-dark">Better spaces.</span>
           </h1>
-          <p className="mt-5 max-w-lg text-lg text-foreground/70">
+          <p className="mt-4 max-w-lg text-base sm:text-lg text-foreground/70">
             Cleano provides professional exterior cleaning for homes and businesses across London
             and the surrounding areas — gutters, roofs, windows, driveways and bins.
           </p>
@@ -66,12 +69,32 @@ export default function Hero() {
           className="relative"
         >
           <FloatingButterflies flock={illustrationButterflies} />
-          <div className="relative mx-auto mt-6 max-w-xl lg:mt-0">
+          <div className="relative mx-auto max-w-xl">
             <div className="absolute -inset-4 rounded-[2.4rem] bg-gradient-to-br from-brand-light/40 to-sky-200/40 blur-2xl" aria-hidden="true" />
             <div className="relative overflow-hidden rounded-[1.6rem] shadow-2xl shadow-brand/25 ring-1 ring-white">
               <HomeHeroScene className="block w-full" />
             </div>
           </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
+          className="flex flex-wrap gap-3 lg:col-start-2 lg:justify-center"
+        >
+          <Link
+            href="/quote"
+            className="rounded-full bg-brand px-6 py-3 text-center text-sm font-bold text-white shadow-md shadow-brand/25 transition-all hover:-translate-y-0.5 hover:bg-brand-dark hover:shadow-lg"
+          >
+            Get a Free Quote
+          </Link>
+          <Link
+            href="/contact"
+            className="rounded-full border border-brand/40 bg-white px-6 py-3 text-center text-sm font-bold text-brand-dark transition-all hover:-translate-y-0.5 hover:border-brand hover:shadow-sm"
+          >
+            Contact Us
+          </Link>
         </motion.div>
       </div>
     </section>

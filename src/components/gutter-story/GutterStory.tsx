@@ -1,9 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { AnimatePresence, MotionConfig, motion, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { whatsappHref } from "@/lib/siteConfig";
 import { ClearChapter, EndChapter, InspectChapter, IntroChapter, ReportChapter } from "./chapters";
 import { AfterPhotosChapter, DampChapter, DownpipeChapter, FasciaChapter, FlowTestChapter, FoundationsChapter, OutletChapter, RoofLeakChapter, WallsChapter } from "./chapters2";
 
@@ -84,7 +82,7 @@ export default function GutterStory() {
   const fillTo = `${((before + ch.ms) / groupMs) * 100}%`;
 
   return (
-    <section className="mx-auto max-w-5xl px-4 pt-2 pb-8 sm:px-6">
+    <section className="mx-auto max-w-5xl px-4 pb-5 sm:px-6">
       <MotionConfig reducedMotion="user">
         <div ref={ref} className="overflow-hidden rounded-[1.6rem] bg-white shadow-2xl shadow-brand/15 ring-1 ring-black/5">
           {/* title for the chapter showing */}
@@ -157,19 +155,6 @@ export default function GutterStory() {
         </div>
       </MotionConfig>
 
-      <div className="mt-6 flex flex-wrap justify-center gap-3">
-        <Link href="#quote" className="rounded-full bg-brand px-6 py-3 text-sm font-bold text-white shadow-md shadow-brand/25 transition-transform hover:-translate-y-0.5">
-          Get a quote
-        </Link>
-        <a
-          href={whatsappHref("Hi Cleano, I'd like a quote for gutter cleaning.", "/gutter-cleaning")}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="rounded-full border border-brand/40 bg-white px-6 py-3 text-sm font-bold text-brand-dark transition-transform hover:-translate-y-0.5"
-        >
-          WhatsApp us
-        </a>
-      </div>
     </section>
   );
 }

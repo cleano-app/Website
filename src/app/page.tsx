@@ -1,5 +1,4 @@
 import Hero from "@/components/Hero";
-import TrustStrip from "@/components/TrustStrip";
 import Certifications from "@/components/Certifications";
 import ServicesGrid from "@/components/ServicesGrid";
 import BeforeAfter from "@/components/BeforeAfterSlider";
@@ -22,7 +21,6 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <TrustStrip />
       <Certifications />
       <ServicesGrid />
 
