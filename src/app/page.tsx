@@ -6,7 +6,6 @@ import BeforeAfterSlider from "@/components/BeforeAfterSlider";
 import CleanoStandard from "@/components/CleanoStandard";
 import HowItWorks from "@/components/HowItWorks";
 import ResidentialCommercialSplit from "@/components/ResidentialCommercialSplit";
-import Reviews from "@/components/Reviews";
 import FinalCTA from "@/components/FinalCTA";
 import FadeIn from "@/components/motion/FadeIn";
 import { StaggerGrid, StaggerItem } from "@/components/motion/StaggerGrid";
@@ -71,7 +70,6 @@ export default function HomePage() {
       <CleanoStandard />
       <HowItWorks />
       <ResidentialCommercialSplit />
-      <Reviews />
       <FinalCTA />
     </>
   );

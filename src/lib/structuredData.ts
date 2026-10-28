@@ -10,11 +10,11 @@ import { services, type Service } from "@/lib/content/services";
 // performs six services in named areas - not seven unrelated businesses.
 // That entity is also what a "what is Cleano" answer is built from.
 //
-// What is deliberately absent: AggregateRating. The homepage testimonials
-// are collected and displayed by us, and Google disallows self-serving
-// review markup for a LocalBusiness - it risks a manual action, and the
-// reviews belong on the Google Business Profile where they also count
-// towards local ranking.
+// What is deliberately absent: AggregateRating. Google disallows
+// self-serving review markup for a LocalBusiness - it risks a manual
+// action - and reviews belong on the Google Business Profile, where they
+// also count towards local ranking. (The site has no testimonials: the
+// ones it used to show were placeholders, removed 28 Oct 2026.)
 
 const BUSINESS_ID = `${siteConfig.url}/#business`;
 
