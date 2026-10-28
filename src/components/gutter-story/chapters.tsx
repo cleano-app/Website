@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Appear, BRAND, DARK, Debris, Drone, Flash, Mark, Rain, SANS, Tag, Tiles, WATER } from "./parts";
+import { Appear, BRAND, DARK, Debris, Drone, Flash, Mark, SANS, Tag, Tiles, WATER } from "./parts";
 
 // The chapters of the gutter story, each drawn in a 960 x 540 frame. Every
 // chapter is one-shot: it mounts, plays on its delays, and is replaced.
@@ -10,8 +10,8 @@ import { Appear, BRAND, DARK, Debris, Drone, Flash, Mark, Rain, SANS, Tag, Tiles
 /* ------------------------------------------------------------------ */
 /* Close-ups the drone photographs - each drawn in 600 x 492           */
 
-const SHOT_W = 600;
-const SHOT_H = 492;
+export const SHOT_W = 600;
+export const SHOT_H = 492;
 
 function Wall({ y, h }: { y: number; h: number }) {
   return (
@@ -24,18 +24,19 @@ function Wall({ y, h }: { y: number; h: number }) {
   );
 }
 
-function FrontGutterShot() {
+export function FrontGutterShot({ clean = false }: { clean?: boolean }) {
   return (
     <g>
       <rect width={SHOT_W} height={SHOT_H} fill="#dfe8ec" />
       <Tiles x={0} y={0} w={SHOT_W} h={250} />
-      {[[90, 200], [250, 226], [430, 210], [530, 232]].map(([x, y]) => (
-        <ellipse key={x} cx={x} cy={y} rx="34" ry="11" fill="#4d7c0f" opacity="0.85" />
-      ))}
+      {!clean &&
+        [[90, 200], [250, 226], [430, 210], [530, 232]].map(([x, y]) => (
+          <ellipse key={x} cx={x} cy={y} rx="34" ry="11" fill="#4d7c0f" opacity="0.85" />
+        ))}
       <Wall y={296} h={196} />
       <rect y="248" width={SHOT_W} height="50" rx="6" fill="#111827" />
       <rect y="248" width={SHOT_W} height="8" fill="#374151" />
-      <Debris x0={10} x1={590} y={262} density={1.3} />
+      {!clean && <Debris x0={10} x1={590} y={262} density={1.3} />}
     </g>
   );
 }
@@ -294,56 +295,6 @@ export function InspectChapter() {
 }
 
 /* ------------------------------------------------------------------ */
-/* 3. What blocked gutters cause                                        */
-
-export function CausesChapter() {
-  return (
-    <g>
-      <rect width="960" height="540" fill="#94a3b8" />
-      <Tiles x={0} y={0} w={960} h={92} colour="#6b5b50" line="#4a3d35" />
-      <rect y="88" width="960" height="44" fill="#d6c3a5" />
-      {/* rot spreading in the fascia */}
-      <Appear at={7.8} rise={0} dur={1.2}>
-        {[[140, 106, 50], [300, 112, 34], [520, 104, 44], [760, 110, 38]].map(([x, y, rx]) => (
-          <ellipse key={x} cx={x} cy={y} rx={rx} ry="12" fill="#57534e" opacity="0.75" />
-        ))}
-      </Appear>
-      <rect y="150" width="960" height="390" fill="#f1ece4" />
-      <rect x="620" y="250" width="180" height="170" rx="4" fill="#bfdbfe" stroke="white" strokeWidth="8" />
-      <path d="M710 250 V420 M620 335 H800" stroke="white" strokeWidth="6" />
-
-      {/* the gutter: the right half sags later */}
-      <rect x="40" y="114" width="560" height="38" rx="8" fill="#111827" />
-      <Debris x0={60} x1={590} y={122} density={0.9} size={0.8} />
-      <motion.g initial={{ rotate: 0 }} animate={{ rotate: 7 }} transition={{ delay: 6.2, duration: 0.9, type: "spring", stiffness: 80, damping: 9 }} style={{ originX: 0, originY: 0.5 }}>
-        <rect x="596" y="114" width="330" height="38" rx="8" fill="#111827" />
-        <Debris x0={610} x1={910} y={122} density={0.9} size={0.8} />
-      </motion.g>
-      {/* water backing up in it */}
-      <motion.rect x="48" y="122" width="540" height="26" fill={WATER} opacity="0.7" initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1, duration: 1 }} style={{ originY: 1 }} />
-
-      <Rain w={960} h={540} from={0.2} />
-
-      {/* overflow, down the wall */}
-      <motion.g initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 2.1, duration: 1.4, ease: "easeIn" }} style={{ originY: 0 }}>
-        <rect x="300" y="150" width="120" height="390" fill={WATER} opacity="0.55" />
-        <path d="M320 150 V540 M352 150 V540 M392 150 V540" stroke="white" strokeWidth="3" opacity="0.6" />
-      </motion.g>
-      <Tag x={360} y={262} text="Overflow down your walls" at={2.9} />
-
-      {/* damp and mould */}
-      <motion.ellipse cx="360" cy="390" rx="150" ry="100" fill="#78716c" initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 0.32 }} transition={{ delay: 4.2, duration: 1.4 }} style={{ originX: 0.5, originY: 0.5 }} />
-      {[[628, 262], [640, 280], [790, 262], [780, 404], [632, 408], [656, 252], [794, 290]].map(([x, y], k) => (
-        <motion.circle key={k} cx={x} cy={y} r={7 + (k % 3) * 3} fill="#1c1917" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 4.6 + k * 0.12, type: "spring", stiffness: 300 }} style={{ originX: 0.5, originY: 0.5 }} />
-      ))}
-      <Tag x={710} y={448} text="Damp & mould" at={5.1} />
-      <Tag x={790} y={190} text="Gutters bend & break" at={6.8} />
-      <Tag x={170} y={172} text="Rotten fascia boards" at={8.3} />
-    </g>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 /* 4. Then we clear it                                                  */
 
 export function ClearChapter() {
@@ -379,7 +330,7 @@ export function ClearChapter() {
         <motion.path d="M30 288 H880" stroke={WATER} strokeWidth="10" strokeLinecap="round" strokeDasharray="26 22" animate={{ strokeDashoffset: [0, -96] }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }} />
         <motion.path d="M891 300 V540" stroke={WATER} strokeWidth="12" strokeLinecap="round" strokeDasharray="26 22" animate={{ strokeDashoffset: [0, -96] }} transition={{ duration: 0.6, repeat: Infinity, ease: "linear" }} />
       </Appear>
-      <Tag x={440} y={390} text="Flowing freely" at={from + dur + 0.6} fill="#16a34a" ink="white" size={26} />
+      <Tag x={440} y={390} text="Gutters cleared" at={from + dur + 0.6} fill="#16a34a" ink="white" size={26} />
     </g>
   );
 }
