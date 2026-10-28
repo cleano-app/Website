@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Cue, DARK, Done, Drips, Flag, Leaves, Path, Scene, Sparkle, Wipe, While, shownWhenStill, useLoopSeconds, useStill, useSvgId } from "./kit";
+import { Cue, DARK, Done, Drips, Flag, Leaves, Path, Scene, Sparkle, Wipe, While, shownWhenStill, useLoopSeconds, useStill, useStillAt, useSvgId } from "./kit";
 
 // One story per service, in the inspection page's style: the problem is
 // flagged, the work sweeps across and clears it exactly where it passes,
@@ -64,7 +64,8 @@ function Vanish({ at, children }: { at: number; children: React.ReactNode }) {
   // Present from the start of the loop until the work reaches it.
   const still = useStill();
   const seconds = useLoopSeconds();
-  if (still) return shownWhenStill(0, at) ? <g>{children}</g> : null;
+  const stillAt = useStillAt();
+  if (still) return shownWhenStill(0, at, stillAt) ? <g>{children}</g> : null;
   return (
     <motion.g
       initial={{ opacity: 0 }}
@@ -377,10 +378,22 @@ const scenes: Record<ServiceSceneType, { Story: () => React.ReactElement; label:
   graffiti: { Story: GraffitiScene, label: "Animation: graffiti and paint drips on a brick wall are flagged, then a remover spray clears the wall" },
 };
 
-export default function ServiceScene({ type, className = "", startAfter = 0 }: { type: ServiceSceneType; className?: string; startAfter?: number }) {
+export default function ServiceScene({
+  type,
+  className = "",
+  ...look
+}: {
+  type: ServiceSceneType;
+  className?: string;
+  startAfter?: number;
+  tone?: "bold" | "soft";
+  labels?: boolean;
+  play?: boolean;
+  stillAt?: number;
+}) {
   const { Story, label } = scenes[type];
   return (
-    <Scene label={label} className={className} startAfter={startAfter}>
+    <Scene label={label} className={className} {...look}>
       <Story />
     </Scene>
   );

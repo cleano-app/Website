@@ -30,10 +30,29 @@ export function valueAt(tr: { values: number[]; times: number[] }, t: number): n
 }
 
 /** Whether something shown from `from` to `to` is there at the still moment. */
-export const shownWhenStill = (from: number, to: number) => from <= STILL_T && STILL_T <= to;
+export const shownWhenStill = (from: number, to: number, t: number = STILL_T) => from <= t && t <= to;
 
 const StillContext = createContext(false);
 const LoopContext = createContext(LOOP);
+
+/**
+ * How a scene looks. "soft" flags (the homepage): a light orange ring and
+ * a pale label instead of strong red. labels=false drops the text pills
+ * altogether, for scenes shown small. stillAt is the moment a still
+ * frame shows - mid-job by default, or the dirty start for a scene that
+ * is waiting to play.
+ */
+type Look = { tone: "bold" | "soft"; labels: boolean; stillAt: number };
+const LookContext = createContext<Look>({ tone: "bold", labels: true, stillAt: STILL_T });
+
+function useLook() {
+  return useContext(LookContext);
+}
+
+/** The moment this scene's still frame shows. */
+export function useStillAt() {
+  return useContext(LookContext).stillAt;
+}
 
 /** This scene's loop length in seconds (LOOP unless the Scene sets one). */
 export function useLoopSeconds() {
@@ -70,6 +89,7 @@ export function useSvgId(prefix: string) {
 }
 
 const RED = "#e53935";
+const SOFT_RING = "#fb923c";
 const GREEN = "#16a34a";
 
 /**
@@ -82,6 +102,10 @@ export function Scene({
   className = "",
   startAfter = 0,
   loop = LOOP,
+  tone = "bold",
+  labels = true,
+  play = true,
+  stillAt = STILL_T,
 }: {
   label: string;
   children: ReactNode;
@@ -91,6 +115,11 @@ export function Scene({
   startAfter?: number;
   /** Loop length in seconds - longer for a scene with more to show. */
   loop?: number;
+  tone?: "bold" | "soft";
+  labels?: boolean;
+  /** false holds the still frame until the parent says go. */
+  play?: boolean;
+  stillAt?: number;
 }) {
   // Read after mount, not during render: the server can't know the
   // visitor's setting, so the first client render must match its HTML.
@@ -111,11 +140,14 @@ export function Scene({
     const timer = setTimeout(() => setStarted(true), startAfter);
     return () => clearTimeout(timer);
   }, [startAfter]);
-  const still = reduced || !started;
+  const still = reduced || !started || !play;
+  // With reduced motion, always the mid-job still; otherwise the parent's.
+  const look = { tone, labels, stillAt: reduced ? STILL_T : stillAt };
   const clip = useSvgId("frame");
   const sky = useSvgId("sky");
   return (
     <LoopContext.Provider value={loop}>
+    <LookContext.Provider value={look}>
     <StillContext.Provider value={still}>
       <svg viewBox="0 0 600 400" className={className} role="img" aria-label={label}>
         <defs>
@@ -136,6 +168,7 @@ export function Scene({
         </g>
       </svg>
     </StillContext.Provider>
+    </LookContext.Provider>
     </LoopContext.Provider>
   );
 }
@@ -144,7 +177,8 @@ export function Scene({
 export function Cue({ from, to = 0.96, children, rise = 0 }: { from: number; to?: number; children: ReactNode; rise?: number }) {
   const onLoop = useOnLoop();
   const still = useStill();
-  if (still) return shownWhenStill(from, to) ? <g>{children}</g> : null;
+  const stillAt = useStillAt();
+  if (still) return shownWhenStill(from, to, stillAt) ? <g>{children}</g> : null;
   const o = track<number>([[from, 0], [from + 0.03, 1], [to, 1], [Math.min(to + 0.03, 1), 0]]);
   const y = track<number>([[from, rise], [from + 0.03, 0], [to, 0], [Math.min(to + 0.03, 1), rise]]);
   return (
@@ -154,12 +188,30 @@ export function Cue({ from, to = 0.96, children, rise = 0 }: { from: number; to?
   );
 }
 
-export function Pill({ x, y, text, fill, anchor = "middle", icon }: { x: number; y: number; text: string; fill: string; anchor?: "start" | "middle" | "end"; icon?: ReactNode }) {
+export function Pill({
+  x,
+  y,
+  text,
+  fill,
+  anchor = "middle",
+  icon,
+  textFill = "white",
+  stroke,
+}: {
+  x: number;
+  y: number;
+  text: string;
+  fill: string;
+  anchor?: "start" | "middle" | "end";
+  icon?: ReactNode;
+  textFill?: string;
+  stroke?: string;
+}) {
   const w = text.length * 8.4 + (icon ? 40 : 22);
   const left = anchor === "middle" ? x - w / 2 : anchor === "end" ? x - w : x;
   return (
     <g>
-      <rect x={left} y={y} width={w} height={26} rx={8} fill={fill} />
+      <rect x={left} y={y} width={w} height={26} rx={8} fill={fill} stroke={stroke} strokeWidth={stroke ? 1.5 : 0} />
       {icon && <g transform={`translate(${left + 9} ${y + 5})`}>{icon}</g>}
       <text
         x={icon ? left + 31 : left + w / 2}
@@ -167,7 +219,7 @@ export function Pill({ x, y, text, fill, anchor = "middle", icon }: { x: number;
         textAnchor={icon ? "start" : "middle"}
         fontSize="14"
         fontWeight="700"
-        fill="white"
+        fill={textFill}
         fontFamily="var(--font-sans), system-ui, sans-serif"
       >
         {text}
@@ -204,14 +256,16 @@ export function Flag({
 }) {
   const onLoop = useOnLoop();
   const still = useStill();
-  if (still && !shownWhenStill(at, until)) return null;
+  const { tone, labels, stillAt } = useLook();
+  if (still && !shownWhenStill(at, until, stillAt)) return null;
+  const soft = tone === "soft";
   const ly = labelY ?? y + r + 8;
   const ring = track<number>([[at, 0], [at + 0.06, 1], [until, 1], [Math.min(until + 0.03, 1), 0]]);
   const burstO = track<number>([[at, 0], [at + 0.01, 0.9], [at + 0.09, 0]]);
   const burstS = track<number>([[at, 0.4], [at + 0.01, 0.6], [at + 0.09, 2.4]]);
   return (
     <g>
-      {!still && (
+      {!still && !soft && (
         <motion.circle
           cx={x}
           cy={y}
@@ -228,15 +282,21 @@ export function Flag({
         cy={y}
         r={r}
         fill="none"
-        stroke={RED}
-        strokeWidth={3.5}
+        stroke={soft ? SOFT_RING : RED}
+        strokeWidth={soft ? 2.5 : 3.5}
         initial={{ pathLength: still ? 1 : 0, opacity: still ? 1 : 0 }}
         animate={still ? {} : { pathLength: ring.values, opacity: ring.values.map((v) => (v > 0 ? 1 : 0)) }}
         transition={still ? { duration: 0 } : { pathLength: onLoop(ring.times), opacity: onLoop(ring.times) }}
       />
-      <Cue from={at + 0.02} to={until} rise={6}>
-        <Pill x={labelX ?? x} y={ly} text={label} fill={RED} anchor={anchor} />
-      </Cue>
+      {labels && (
+        <Cue from={at + 0.02} to={until} rise={6}>
+          {soft ? (
+            <Pill x={labelX ?? x} y={ly} text={label} fill="#fff7ed" stroke="#fdba74" textFill="#c2410c" anchor={anchor} />
+          ) : (
+            <Pill x={labelX ?? x} y={ly} text={label} fill={RED} anchor={anchor} />
+          )}
+        </Cue>
+      )}
     </g>
   );
 }
@@ -245,13 +305,15 @@ export function Flag({
 export function Done({ x, y, label, at, anchor = "middle" }: { x: number; y: number; label: string; at: number; anchor?: "start" | "middle" | "end" }) {
   const onLoop = useOnLoop();
   const still = useStill();
+  const { tone, labels, stillAt } = useLook();
   const s = track<number>([[at, 0.6], [at + 0.025, 1.08], [at + 0.045, 1], [0.96, 1], [0.99, 0.6]]);
-  if (still && !shownWhenStill(at, 0.96)) return null;
+  if (still && !shownWhenStill(at, 0.96, stillAt)) return null;
+  const soft = tone === "soft";
   const o = track<number>([[at, 0], [at + 0.02, 1], [0.96, 1], [0.99, 0]]);
   const tick = (
     <g>
-      <circle cx="8" cy="8" r="8" fill="white" />
-      <path d="M4.5 8.3l2.4 2.4 4.7-5" fill="none" stroke={GREEN} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="8" cy="8" r="8" fill={soft ? GREEN : "white"} />
+      <path d="M4.5 8.3l2.4 2.4 4.7-5" fill="none" stroke={soft ? "white" : GREEN} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
     </g>
   );
   return (
@@ -261,7 +323,13 @@ export function Done({ x, y, label, at, anchor = "middle" }: { x: number; y: num
       transition={still ? { duration: 0 } : { opacity: onLoop(o.times), scale: onLoop(s.times) }}
       style={{ transformOrigin: `${x}px ${y + 13}px` }}
     >
-      <Pill x={x} y={y} text={label} fill={GREEN} anchor={anchor} icon={tick} />
+      {!labels ? (
+        <g transform={`translate(${anchor === "middle" ? x - 13 : anchor === "end" ? x - 26 : x} ${y}) scale(1.6)`}>{tick}</g>
+      ) : soft ? (
+        <Pill x={x} y={y} text={label} fill="white" stroke="#86efac" textFill="#15803d" anchor={anchor} icon={tick} />
+      ) : (
+        <Pill x={x} y={y} text={label} fill={GREEN} anchor={anchor} icon={tick} />
+      )}
     </motion.g>
   );
 }
@@ -310,11 +378,12 @@ export function Wipe({
   children: ReactNode;
 }) {
   const onLoop = useOnLoop();
+  const stillAt = useStillAt();
   const still = useStill();
   const id = useSvgId("wipe");
   const edge = track<number>([[from, start], [to, end], [0.97, end], [0.99, start]]);
   const o = track<number>([[0, 0], [0.04, 1], [0.96, 1], [0.97, 0]]);
-  const mid = valueAt(edge, STILL_T);
+  const mid = valueAt(edge, stillAt);
   const rect = vertical
     ? { x: 0, width: 600, height: 400 }
     : { y: 0, height: 400, width: 600 };
@@ -355,11 +424,12 @@ export function Path({
   ease?: "linear" | "easeInOut";
 }) {
   const onLoop = useOnLoop();
+  const stillAt = useStillAt();
   const still = useStill();
   const x = track<number>(points.map(([t, px]) => [t, px] as [number, number]));
   const y = track<number>(points.map(([t, , py]) => [t, py] as [number, number]));
-  const stillX = valueAt(x, STILL_T);
-  const stillY = valueAt(y, STILL_T);
+  const stillX = valueAt(x, stillAt);
+  const stillY = valueAt(y, stillAt);
   return (
     <motion.g
       initial={{ x: still ? stillX : points[0][1], y: still ? stillY : points[0][2] }}
@@ -374,8 +444,9 @@ export function Path({
 /** A spray or jet that runs only while the work is happening. */
 export function While({ from, to, children }: { from: number; to: number; children: ReactNode }) {
   const onLoop = useOnLoop();
+  const stillAt = useStillAt();
   const still = useStill();
-  if (still) return shownWhenStill(from, to) ? <g>{children}</g> : null;
+  if (still) return shownWhenStill(from, to, stillAt) ? <g>{children}</g> : null;
   const o = track<number>([[from - 0.01, 0], [from, 1], [to, 1], [to + 0.01, 0]]);
   return (
     <motion.g initial={{ opacity: 0 }} animate={{ opacity: o.values }} transition={onLoop(o.times)}>

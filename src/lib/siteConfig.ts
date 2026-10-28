@@ -23,7 +23,7 @@ export const siteConfig = {
   // is. "Minor gutter repairs" goes last and qualified, as on the gutter
   // cleaning FAQ - a headline "gutter repairs" invites re-fit enquiries.
   description:
-    "Cleano provides professional exterior cleaning for residential and commercial properties across London and the surrounding areas: gutter cleaning, roof cleaning, pressure washing, window cleaning, bin cleaning, graffiti removal and minor gutter repairs.",
+    "Cleano provides professional exterior cleaning for residential and commercial properties across London and the surrounding areas: gutter cleaning, roof cleaning, pressure washing, window cleaning, wheelie bin cleaning, graffiti removal and minor gutter repairs.",
   url: canonicalSiteUrl(),
   opsAppUrl: process.env.NEXT_PUBLIC_OPS_APP_URL || "https://ops.cleano.services",
 

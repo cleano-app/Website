@@ -32,7 +32,7 @@ export default function AboutPage() {
         <p className="mt-4 text-foreground/70">
           Cleano is a professional exterior cleaning company serving homes and businesses across
           London and the surrounding areas - gutter cleaning, rooftop cleaning, window cleaning,
-          pressure washing, bin cleaning and graffiti removal. We built Cleano around one idea:
+          pressure washing, wheelie bin cleaning and graffiti removal. We built Cleano around one idea:
           cleaning should be done properly, by a professional team, with the equipment to do it
           right.
         </p>

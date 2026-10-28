@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { HouseFront } from "./ServiceScenes";
-import { Cue, DARK, Done, Flag, Leaves, Path, Pill, Scene, Sparkle, Wipe, shownWhenStill, track, useLoopSeconds, useStill } from "./kit";
+import { Cue, DARK, Done, Flag, Leaves, Path, Pill, Scene, Sparkle, Wipe, shownWhenStill, track, useLoopSeconds, useStill, useStillAt } from "./kit";
 
 // The remaining scenes, in the same language: a home visit from arrival to
 // report, a commercial building cleaned floor by floor on a schedule, and
@@ -13,7 +13,8 @@ const SANS = "var(--font-sans), system-ui, sans-serif";
 function Vanish({ at, children }: { at: number; children: React.ReactNode }) {
   const still = useStill();
   const seconds = useLoopSeconds();
-  if (still) return shownWhenStill(0, at) ? <g>{children}</g> : null;
+  const stillAt = useStillAt();
+  if (still) return shownWhenStill(0, at, stillAt) ? <g>{children}</g> : null;
   return (
     <motion.g
       initial={{ opacity: 0 }}
@@ -55,9 +56,9 @@ function Van() {
 }
 
 /** For Your Home: the visit, from the van pulling up to the report. */
-export function HomeVisitScene({ className = "" }: { className?: string }) {
+export function HomeVisitScene({ className = "", tone = "bold" }: { className?: string; tone?: "bold" | "soft" }) {
   return (
-    <Scene className={className} label="Animation: the Cleano van pulls up at a house, takes before photos, cleans the gutter and windows, takes after photos, sends the report and drives off">
+    <Scene className={className} tone={tone} label="Animation: the Cleano van pulls up at a house, takes before photos, cleans the gutter and windows, takes after photos, sends the report and drives off">
       <g transform="translate(225 140) scale(0.62)">
         <HouseFront />
         {[150, 260, 370, 476].map((x, i) => (
@@ -93,13 +94,13 @@ export function HomeVisitScene({ className = "" }: { className?: string }) {
 }
 
 /** For Your Business: a block cleaned floor by floor, on a schedule. */
-export function BusinessScene({ className = "" }: { className?: string }) {
+export function BusinessScene({ className = "", tone = "bold" }: { className?: string; tone?: "bold" | "soft" }) {
   const floors = [62, 138, 214, 290];
   const cols = [175, 243, 311, 379];
   const [from, to, start, end] = [0.18, 0.7, 50, 360];
   const pass = (y: number) => from + ((to - from) * (y - start)) / (end - start);
   return (
-    <Scene className={className} label="Animation: dirty windows on a commercial building are flagged, a cleaning cradle works down it floor by floor, and it's marked on schedule">
+    <Scene className={className} tone={tone} label="Animation: dirty windows on a commercial building are flagged, a cleaning cradle works down it floor by floor, and it's marked on schedule">
       <rect x="150" y="40" width="300" height="332" fill="white" stroke={DARK} strokeWidth="3" />
       <rect x="140" y="30" width="320" height="14" rx="3" fill={DARK} />
       {floors.map((y, f) =>
@@ -149,9 +150,9 @@ export function BusinessScene({ className = "" }: { className?: string }) {
 }
 
 /** The Photo Report, putting itself together and going out. */
-export function ReportStoryScene({ className = "" }: { className?: string }) {
+export function ReportStoryScene({ className = "", tone = "bold" }: { className?: string; tone?: "bold" | "soft" }) {
   return (
-    <Scene className={className} label="Animation: a Cleano Photo Report fills in - a before photo with the problem circled, an after photo ticked, a checklist ticking off - and is sent">
+    <Scene className={className} tone={tone} label="Animation: a Cleano Photo Report fills in - a before photo with the problem circled, an after photo ticked, a checklist ticking off - and is sent">
       <rect x="140" y="22" width="320" height="356" rx="16" fill="white" stroke={DARK} strokeWidth="3" />
       <path d="M140 38 a16 16 0 0 1 16 -16 H444 a16 16 0 0 1 16 16 V62 H140 Z" fill="var(--color-brand)" />
       <text x="160" y="49" fontSize="17" fontWeight="800" fill="white" fontFamily={SANS}>

@@ -90,11 +90,11 @@ export const services: Service[] = [
   },
   {
     slug: "bin-cleaning",
-    name: "Bin Cleaning",
+    name: "Wheelie Bin Cleaning",
     shortName: "Bins",
     cardBlurb: "No grime, smells or flies - one-off or on a schedule.",
-    heroHeadline: "Clean bins. No grime, smells or flies.",
-    heroSubhead: "Professional bin cleaning for homes and businesses.",
+    heroHeadline: "Clean wheelie bins. No grime, smells or flies.",
+    heroSubhead: "Professional wheelie bin cleaning for homes and businesses.",
     included: [
       "Full bin washing, inside and outside",
       "Dirt and residue removal",

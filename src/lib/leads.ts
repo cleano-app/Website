@@ -12,7 +12,7 @@ export type LeadService = (typeof LEAD_SERVICES)[number];
 
 export const LEAD_SERVICE_LABELS: Record<LeadService, string> = {
   gutter_cleaning: "Gutter Cleaning",
-  bin_cleaning: "Bin Cleaning",
+  bin_cleaning: "Wheelie Bin Cleaning",
   window_cleaning: "Window Cleaning",
   pressure_washing: "Pressure Washing",
   graffiti_removal: "Graffiti Removal",

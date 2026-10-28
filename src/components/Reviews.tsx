@@ -15,7 +15,7 @@ const sampleReviews = [
     quote:
       "The bins were in a terrible state and came back looking and smelling completely different. Great job and very easy to arrange.",
     name: "Sarah Collins",
-    context: "Bin Cleaning · Enfield",
+    context: "Wheelie Bin Cleaning · Enfield",
   },
   {
     quote:

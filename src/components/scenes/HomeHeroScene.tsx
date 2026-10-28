@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { HouseFront } from "./ServiceScenes";
-import { Cue, DARK, Done, Drips, Flag, Leaves, Path, Scene, Sparkle, Wipe, While, shownWhenStill, useLoopSeconds, useStill } from "./kit";
+import { Cue, DARK, Done, Drips, Flag, Leaves, Path, Scene, Sparkle, Wipe, While, shownWhenStill, useLoopSeconds, useStill, useStillAt } from "./kit";
 
 // The homepage hero: one property, all six services in a row - gutters,
 // the roof, windows, the driveway, the bin and graffiti on the garden
@@ -38,7 +38,8 @@ const found = (job: Job) => Math.max(0.02, job.from - 0.05);
 function Vanish({ at, children }: { at: number; children: React.ReactNode }) {
   const still = useStill();
   const seconds = useLoopSeconds();
-  if (still) return shownWhenStill(0, at) ? <g>{children}</g> : null;
+  const stillAt = useStillAt();
+  if (still) return shownWhenStill(0, at, stillAt) ? <g>{children}</g> : null;
   return (
     <motion.g
       initial={{ opacity: 0 }}
@@ -72,6 +73,7 @@ export default function HomeHeroScene({ className = "" }: { className?: string }
     <Scene
       className={className}
       loop={HERO_LOOP}
+      tone="soft"
       label="Animation: on one property a blocked gutter, a mossy roof, dirty windows, a stained driveway, a grimy bin and graffiti on the garden wall are each flagged, cleaned and ticked off, then a Cleano Photo Report arrives"
     >
       {/* the driveway, the garden wall, the bin */}
@@ -204,7 +206,7 @@ export default function HomeHeroScene({ className = "" }: { className?: string }
       <Done x={14} y={44} label="Roof" at={ROOF.to + 0.01} anchor="start" />
       <Done x={14} y={74} label="Windows" at={WINDOWS.to + 0.01} anchor="start" />
       <Done x={122} y={14} label="Driveway" at={DRIVE.to + 0.01} anchor="start" />
-      <Done x={122} y={44} label="Bin" at={BIN.to + 0.01} anchor="start" />
+      <Done x={122} y={44} label="Wheelie bin" at={BIN.to + 0.01} anchor="start" />
       <Done x={122} y={74} label="Graffiti" at={GRAFFITI.to + 0.01} anchor="start" />
 
       <Sparkle x={sx(260)} y={sy(178)} at={GUTTER.to + 0.01} />

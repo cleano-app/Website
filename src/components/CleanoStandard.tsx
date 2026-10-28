@@ -47,7 +47,7 @@ export default function CleanoStandard() {
         </FadeIn>
         <FadeIn delay={0.15}>
           <div className="mx-auto w-full max-w-sm overflow-hidden rounded-[1.4rem] shadow-xl shadow-brand/20 ring-1 ring-white">
-            <ReportStoryScene className="block w-full" />
+            <ReportStoryScene className="block w-full" tone="soft" />
           </div>
         </FadeIn>
       </div>

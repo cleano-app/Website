@@ -16,7 +16,7 @@ export default function ResidentialCommercialSplit() {
             <div className="relative flex items-center justify-center bg-muted-bg px-5 py-6 sm:px-8 sm:py-8">
               <FloatingButterflies flock={panelButterflies} />
               <div className="w-full max-w-md overflow-hidden rounded-[1.2rem] shadow-lg shadow-brand/15 ring-1 ring-white transition-transform duration-300 group-hover:scale-[1.02]">
-                <HomeVisitScene className="block w-full" />
+                <HomeVisitScene className="block w-full" tone="soft" />
               </div>
             </div>
             <div className="flex flex-1 flex-col p-6">
@@ -37,7 +37,7 @@ export default function ResidentialCommercialSplit() {
             <div className="relative flex items-center justify-center bg-muted-bg px-5 py-6 sm:px-8 sm:py-8">
               <FloatingButterflies flock={panelButterflies} />
               <div className="w-full max-w-md overflow-hidden rounded-[1.2rem] shadow-lg shadow-brand/15 ring-1 ring-white transition-transform duration-300 group-hover:scale-[1.02]">
-                <BusinessScene className="block w-full" />
+                <BusinessScene className="block w-full" tone="soft" />
               </div>
             </div>
             <div className="flex flex-1 flex-col p-6">
