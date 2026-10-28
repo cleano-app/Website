@@ -33,6 +33,18 @@ export function valueAt(tr: { values: number[]; times: number[] }, t: number): n
 export const shownWhenStill = (from: number, to: number) => from <= STILL_T && STILL_T <= to;
 
 const StillContext = createContext(false);
+const LoopContext = createContext(LOOP);
+
+/** This scene's loop length in seconds (LOOP unless the Scene sets one). */
+export function useLoopSeconds() {
+  return useContext(LoopContext);
+}
+
+/** onLoop, on this scene's own clock. */
+function useOnLoop() {
+  const seconds = useContext(LoopContext);
+  return (times: number[], ease: "linear" | "easeInOut" | "easeOut" = "linear") => ({ duration: seconds, repeat: Infinity, ease, times });
+}
 
 /** True when the visitor asked for reduced motion - render a still. */
 export function useStill() {
@@ -69,6 +81,7 @@ export function Scene({
   children,
   className = "",
   startAfter = 0,
+  loop = LOOP,
 }: {
   label: string;
   children: ReactNode;
@@ -76,6 +89,8 @@ export function Scene({
   /** Milliseconds to hold a still before the loop starts - staggers scenes
    * shown side by side, so a grid of them doesn't move in lockstep. */
   startAfter?: number;
+  /** Loop length in seconds - longer for a scene with more to show. */
+  loop?: number;
 }) {
   // Read after mount, not during render: the server can't know the
   // visitor's setting, so the first client render must match its HTML.
@@ -100,6 +115,7 @@ export function Scene({
   const clip = useSvgId("frame");
   const sky = useSvgId("sky");
   return (
+    <LoopContext.Provider value={loop}>
     <StillContext.Provider value={still}>
       <svg viewBox="0 0 600 400" className={className} role="img" aria-label={label}>
         <defs>
@@ -120,11 +136,13 @@ export function Scene({
         </g>
       </svg>
     </StillContext.Provider>
+    </LoopContext.Provider>
   );
 }
 
 /** Appears at `from`, holds, and leaves at `to` (shares of the loop). */
 export function Cue({ from, to = 0.96, children, rise = 0 }: { from: number; to?: number; children: ReactNode; rise?: number }) {
+  const onLoop = useOnLoop();
   const still = useStill();
   if (still) return shownWhenStill(from, to) ? <g>{children}</g> : null;
   const o = track<number>([[from, 0], [from + 0.03, 1], [to, 1], [Math.min(to + 0.03, 1), 0]]);
@@ -184,6 +202,7 @@ export function Flag({
   anchor?: "start" | "middle" | "end";
   labelX?: number;
 }) {
+  const onLoop = useOnLoop();
   const still = useStill();
   if (still && !shownWhenStill(at, until)) return null;
   const ly = labelY ?? y + r + 8;
@@ -224,6 +243,7 @@ export function Flag({
 
 /** The green tick the story ends on. */
 export function Done({ x, y, label, at, anchor = "middle" }: { x: number; y: number; label: string; at: number; anchor?: "start" | "middle" | "end" }) {
+  const onLoop = useOnLoop();
   const still = useStill();
   const s = track<number>([[at, 0.6], [at + 0.025, 1.08], [at + 0.045, 1], [0.96, 1], [0.99, 0.6]]);
   if (still && !shownWhenStill(at, 0.96)) return null;
@@ -248,6 +268,7 @@ export function Done({ x, y, label, at, anchor = "middle" }: { x: number; y: num
 
 /** A four-point glint that pops around `at`. */
 export function Sparkle({ x, y, at, size = 12 }: { x: number; y: number; at: number; size?: number }) {
+  const onLoop = useOnLoop();
   const still = useStill();
   if (still) return null;
   const s = track<number>([[at, 0], [at + 0.03, 1], [at + 0.07, 0]]);
@@ -261,7 +282,7 @@ export function Sparkle({ x, y, at, size = 12 }: { x: number; y: number; at: num
       strokeWidth={1.5}
       initial={{ scale: 0 }}
       animate={{ scale: s.values, rotate: [0, 45] }}
-      transition={{ scale: onLoop(s.times), rotate: { duration: LOOP, repeat: Infinity, ease: "linear" } }}
+      transition={{ scale: onLoop(s.times), rotate: { ...onLoop([0, 1]), times: undefined } }}
       style={{ transformBox: "fill-box", transformOrigin: "center" }}
     />
   );
@@ -288,6 +309,7 @@ export function Wipe({
   vertical?: boolean;
   children: ReactNode;
 }) {
+  const onLoop = useOnLoop();
   const still = useStill();
   const id = useSvgId("wipe");
   const edge = track<number>([[from, start], [to, end], [0.97, end], [0.99, start]]);
@@ -332,6 +354,7 @@ export function Path({
   /** "linear" for a steady sweep, so whatever it passes changes on cue. */
   ease?: "linear" | "easeInOut";
 }) {
+  const onLoop = useOnLoop();
   const still = useStill();
   const x = track<number>(points.map(([t, px]) => [t, px] as [number, number]));
   const y = track<number>(points.map(([t, , py]) => [t, py] as [number, number]));
@@ -350,6 +373,7 @@ export function Path({
 
 /** A spray or jet that runs only while the work is happening. */
 export function While({ from, to, children }: { from: number; to: number; children: ReactNode }) {
+  const onLoop = useOnLoop();
   const still = useStill();
   if (still) return shownWhenStill(from, to) ? <g>{children}</g> : null;
   const o = track<number>([[from - 0.01, 0], [from, 1], [to, 1], [to + 0.01, 0]]);

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { HouseFront } from "./ServiceScenes";
-import { Cue, DARK, Done, Flag, LOOP, Leaves, Path, Pill, Scene, Sparkle, Wipe, onLoop, shownWhenStill, track, useStill } from "./kit";
+import { Cue, DARK, Done, Flag, Leaves, Path, Pill, Scene, Sparkle, Wipe, shownWhenStill, track, useLoopSeconds, useStill } from "./kit";
 
 // The remaining scenes, in the same language: a home visit from arrival to
 // report, a commercial building cleaned floor by floor on a schedule, and
@@ -12,12 +12,13 @@ const SANS = "var(--font-sans), system-ui, sans-serif";
 
 function Vanish({ at, children }: { at: number; children: React.ReactNode }) {
   const still = useStill();
+  const seconds = useLoopSeconds();
   if (still) return shownWhenStill(0, at) ? <g>{children}</g> : null;
   return (
     <motion.g
       initial={{ opacity: 0 }}
       animate={{ opacity: [0, 1, 1, 0, 0] }}
-      transition={{ duration: LOOP, repeat: Infinity, ease: "linear", times: [0, 0.03, at, at + 0.03, 1] }}
+      transition={{ duration: seconds, repeat: Infinity, ease: "linear", times: [0, 0.03, at, at + 0.03, 1] }}
     >
       {children}
     </motion.g>
@@ -27,9 +28,10 @@ function Vanish({ at, children }: { at: number; children: React.ReactNode }) {
 /** A camera flash over the whole scene at `at`. */
 function Flash({ at }: { at: number }) {
   const still = useStill();
+  const seconds = useLoopSeconds();
   if (still) return null;
   const o = track<number>([[at, 0], [at + 0.006, 0.7], [at + 0.04, 0]]);
-  return <motion.rect width="600" height="400" fill="white" initial={{ opacity: 0 }} animate={{ opacity: o.values }} transition={onLoop(o.times)} />;
+  return <motion.rect width="600" height="400" fill="white" initial={{ opacity: 0 }} animate={{ opacity: o.values }} transition={{ duration: seconds, repeat: Infinity, ease: "linear", times: o.times }} />;
 }
 
 function Van() {

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { HouseFront } from "./ServiceScenes";
-import { Cue, DARK, Done, Drips, Flag, LOOP, Leaves, Path, Scene, Sparkle, Wipe, While, shownWhenStill, useStill } from "./kit";
+import { Cue, DARK, Done, Drips, Flag, Leaves, Path, Scene, Sparkle, Wipe, While, shownWhenStill, useLoopSeconds, useStill } from "./kit";
 
 // The homepage hero: one property, all six services in a row - gutters,
 // the roof, windows, the driveway, the bin and graffiti on the garden
@@ -25,6 +25,11 @@ const BIN = { from: 0.57, to: 0.63, start: 268, end: 332 };
 const GRAFFITI = { from: 0.66, to: 0.75, start: 425, end: 595 };
 const REPORT = 0.8;
 
+// Six jobs need far longer than a single-job scene's 9s - at 9s each one
+// was over in about a second (the owner: "flying too quick"). At 26s each
+// sweep takes ~2.5s, and the finished checklist and report hold ~4s.
+const HERO_LOOP = 26;
+
 type Job = typeof GUTTER;
 const pass = (job: Job, at: number) => job.from + ((job.to - job.from) * (at - job.start)) / (job.end - job.start);
 /** Each problem is flagged just before its job starts. */
@@ -32,12 +37,13 @@ const found = (job: Job) => Math.max(0.02, job.from - 0.05);
 
 function Vanish({ at, children }: { at: number; children: React.ReactNode }) {
   const still = useStill();
+  const seconds = useLoopSeconds();
   if (still) return shownWhenStill(0, at) ? <g>{children}</g> : null;
   return (
     <motion.g
       initial={{ opacity: 0 }}
       animate={{ opacity: [0, 1, 1, 0, 0] }}
-      transition={{ duration: LOOP, repeat: Infinity, ease: "linear", times: [0, 0.03, at, at + 0.02, 1] }}
+      transition={{ duration: seconds, repeat: Infinity, ease: "linear", times: [0, 0.03, at, at + 0.02, 1] }}
     >
       {children}
     </motion.g>
@@ -65,6 +71,7 @@ export default function HomeHeroScene({ className = "" }: { className?: string }
   return (
     <Scene
       className={className}
+      loop={HERO_LOOP}
       label="Animation: on one property a blocked gutter, a mossy roof, dirty windows, a stained driveway, a grimy bin and graffiti on the garden wall are each flagged, cleaned and ticked off, then a Cleano Photo Report arrives"
     >
       {/* the driveway, the garden wall, the bin */}

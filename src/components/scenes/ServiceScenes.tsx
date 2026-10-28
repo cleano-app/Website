@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Cue, DARK, Done, Drips, Flag, Leaves, LOOP, Path, Scene, Sparkle, Wipe, While, shownWhenStill, useStill, useSvgId } from "./kit";
+import { Cue, DARK, Done, Drips, Flag, Leaves, Path, Scene, Sparkle, Wipe, While, shownWhenStill, useLoopSeconds, useStill, useSvgId } from "./kit";
 
 // One story per service, in the inspection page's style: the problem is
 // flagged, the work sweeps across and clears it exactly where it passes,
@@ -63,12 +63,13 @@ export function HouseFront() {
 function Vanish({ at, children }: { at: number; children: React.ReactNode }) {
   // Present from the start of the loop until the work reaches it.
   const still = useStill();
+  const seconds = useLoopSeconds();
   if (still) return shownWhenStill(0, at) ? <g>{children}</g> : null;
   return (
     <motion.g
       initial={{ opacity: 0 }}
       animate={{ opacity: [0, 1, 1, 0, 0] }}
-      transition={{ duration: LOOP, repeat: Infinity, ease: "linear", times: [0, 0.03, at, at + 0.02, 1] }}
+      transition={{ duration: seconds, repeat: Infinity, ease: "linear", times: [0, 0.03, at, at + 0.02, 1] }}
     >
       {children}
     </motion.g>
