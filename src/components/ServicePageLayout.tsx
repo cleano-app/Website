@@ -27,10 +27,14 @@ const iconBySlug: Record<string, IconType> = {
 export default function ServicePageLayout({
   service,
   afterHero,
+  feature,
   secondaryCta,
   realPhotos,
 }: {
   service: Service;
+  /** A full-width feature shown at the top, straight under the headline,
+   * in place of the hero's small scene - e.g. the gutter story. */
+  feature?: ReactNode;
   /** Optional extra content rendered right after the hero, before "What's Included". */
   afterHero?: ReactNode;
   /** Overrides the hero's second button (defaults to WhatsApp) - e.g. a
@@ -66,7 +70,7 @@ export default function ServicePageLayout({
             { top: "70%", left: "42%", size: 16, duration: 11, delay: 1.4, xDrift: [0, -10, 8, 0], yDrift: [0, 10, -8, 0], rotate: [8, -10, 6, 8], opacity: 0.4 },
           ]}
         />
-        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:py-20">
+        <div className={`mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 ${feature ? "pt-10 pb-6 lg:grid-cols-[1.4fr_1fr] lg:items-end lg:pt-12" : "py-14 lg:grid-cols-2 lg:py-20"}`}>
           <FadeIn className="relative">
             <ServiceIcon type={icon} idle className="h-14 w-14" />
             <h1 className="mt-5 text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
@@ -99,15 +103,18 @@ export default function ServicePageLayout({
               )}
             </div>
           </FadeIn>
-          <FadeIn delay={0.15} className="relative">
-            <div className="relative mx-auto max-w-xl">
-              <div className="absolute -inset-4 rounded-[2.4rem] bg-gradient-to-br from-brand-light/40 to-sky-200/40 blur-2xl" aria-hidden="true" />
-              <div className="relative overflow-hidden rounded-[1.6rem] shadow-2xl shadow-brand/25 ring-1 ring-white">
-                <ServiceScene type={icon} className="block w-full" />
+          {!feature && (
+            <FadeIn delay={0.15} className="relative">
+              <div className="relative mx-auto max-w-xl">
+                <div className="absolute -inset-4 rounded-[2.4rem] bg-gradient-to-br from-brand-light/40 to-sky-200/40 blur-2xl" aria-hidden="true" />
+                <div className="relative overflow-hidden rounded-[1.6rem] shadow-2xl shadow-brand/25 ring-1 ring-white">
+                  <ServiceScene type={icon} className="block w-full" />
+                </div>
               </div>
-            </div>
-          </FadeIn>
+            </FadeIn>
+          )}
         </div>
+        {feature && <div className="relative pb-6">{feature}</div>}
       </section>
 
       {afterHero}

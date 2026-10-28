@@ -84,7 +84,7 @@ export default function GutterStory() {
   const fillTo = `${((before + ch.ms) / groupMs) * 100}%`;
 
   return (
-    <section className="mx-auto max-w-5xl px-4 py-14 sm:px-6">
+    <section className="mx-auto max-w-5xl px-4 pt-2 pb-8 sm:px-6">
       <MotionConfig reducedMotion="user">
         <div ref={ref} className="overflow-hidden rounded-[1.6rem] bg-white shadow-2xl shadow-brand/15 ring-1 ring-black/5">
           {/* title for the chapter showing */}
