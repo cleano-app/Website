@@ -2,21 +2,21 @@
 
 import Link from "next/link";
 import { useInView } from "framer-motion";
-import { useEffect, useRef, useState, type PointerEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import { services } from "@/lib/content/services";
 import ServiceScene, { type ServiceSceneType } from "./scenes/ServiceScenes";
-import { LOOP } from "./scenes/kit";
 import FadeIn from "./motion/FadeIn";
 import FloatingButterflies from "./motion/FloatingButterflies";
 
-// Our Services, as tiles that clean themselves. Each tile is its service's
-// scene, edge to edge, with the name on a frosted label - no box inside a
-// box. They wait dirty; when the section scrolls into view they play one
-// after another, a wave of cleaning across the grid, then rest clean on a
-// green tick so the section is calm once it's done. Pointing at a tile
-// (desktop) tilts it toward the pointer, runs a shine across its label and
-// plays its clean again. Small, so the scenes run without text labels and
-// with soft flags.
+// Our Services, as flip cards (the owner picked "flip cards", and asked
+// that they keep moving on their own). Each card is its service's scene,
+// dirty on the front and clean on the back. On their own they flip to
+// clean, hold, flip back, and go again - each a little after the one
+// before, so a slow ripple of flips keeps running across the grid. Each
+// landing on clean sends a band of light across it. Pointing at a card
+// (desktop) flips it to clean and holds it there. Flipping only runs
+// while the section is on screen; with reduced motion the cards simply
+// show their clean side.
 
 const sectionButterflies = [
   { top: "1%", left: "1%", size: 18, duration: 9, delay: 0.2, xDrift: [0, 8, -4, 0], yDrift: [0, -4, 2, 0], rotate: [-8, 10, -4, -8], opacity: 0.4 },
@@ -32,16 +32,9 @@ const sceneBySlug: Record<string, ServiceSceneType> = {
   "graffiti-removal": "graffiti",
 };
 
-// Gutters first and biggest; the order the wave runs in.
 const order = ["gutter-cleaning", "rooftop-cleaning", "window-cleaning", "pressure-washing", "bin-cleaning", "graffiti-removal"];
 
-// Bento layout on desktop: gutters spans two columns and two rows. On a
-// phone all six are equal, two by three.
-const span: Record<string, string> = {
-  "gutter-cleaning": "sm:col-span-2 sm:row-span-2",
-};
-
-// Tile labels are short - the full names truncate on a phone tile.
+// Short names - the full ones truncate on a phone card.
 const tileName: Record<string, string> = {
   "gutter-cleaning": "Gutters",
   "rooftop-cleaning": "Roofs",
@@ -51,79 +44,99 @@ const tileName: Record<string, string> = {
   "graffiti-removal": "Graffiti",
 };
 
-const WAVE_STEP = 650; // ms between tiles starting
-const RESTS_AT = 0.92; // share of the loop a tile plays before resting clean
+const FIRST_MS = 500; //   before the first card's first flip
+const STAGGER_MS = 900; // between neighbouring cards starting
+const DIRTY_MS = 2600; //  how long a card shows dirty
+const CLEAN_MS = 4800; //  ...and clean
 
-type Phase = "wait" | "play" | "rest";
+function Chip({ text, clean }: { text: string; clean: boolean }) {
+  return (
+    <span className="absolute bottom-2 left-2 flex max-w-[calc(100%-1rem)] items-center gap-1.5 rounded-full bg-white/80 py-1 pr-3 pl-2 text-[11px] font-bold text-brand-dark shadow-lg ring-1 ring-white/70 backdrop-blur-md sm:bottom-3 sm:left-3 sm:text-xs">
+      {clean ? (
+        <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#16a34a] text-white">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M5 13l4 4L19 7" />
+          </svg>
+        </span>
+      ) : (
+        <span className="h-2 w-2 shrink-0 rounded-full bg-[#fb923c]" />
+      )}
+      <span className="truncate">{text}</span>
+    </span>
+  );
+}
 
-function Tile({ slug, index, go }: { slug: string; index: number; go: boolean }) {
+function FlipCard({ slug, index, running, reduced }: { slug: string; index: number; running: boolean; reduced: boolean }) {
   const service = services.find((s) => s.slug === slug)!;
-  const [phase, setPhase] = useState<Phase>("wait");
-  const [run, setRun] = useState(0);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [clean, setClean] = useState(false);
+  const [flips, setFlips] = useState(0);
+  const [held, setHeld] = useState(false);
 
-  // Start in the wave once the section is on screen...
+  // The cycle: wait (staggered the first time), flip, wait, flip back...
   useEffect(() => {
-    if (!go || phase !== "wait") return;
-    const timer = setTimeout(() => setPhase("play"), index * WAVE_STEP);
+    if (!running || held || reduced) return;
+    const wait = flips === 0 ? FIRST_MS + index * STAGGER_MS : clean ? CLEAN_MS : DIRTY_MS;
+    const timer = setTimeout(() => {
+      setClean((c) => !c);
+      setFlips((n) => n + 1);
+    }, wait);
     return () => clearTimeout(timer);
-  }, [go, phase, index]);
+  }, [running, held, reduced, clean, flips, index]);
 
-  // ...and rest clean when the clean is done.
-  useEffect(() => {
-    if (phase !== "play") return;
-    const timer = setTimeout(() => setPhase("rest"), LOOP * 1000 * RESTS_AT);
-    return () => clearTimeout(timer);
-  }, [phase, run]);
-
-  function replay() {
-    if (phase !== "rest") return;
-    setRun((n) => n + 1);
-    setPhase("play");
-  }
-
-  function lean(e: PointerEvent<HTMLAnchorElement>) {
-    if (e.pointerType !== "mouse") return;
-    const box = e.currentTarget.getBoundingClientRect();
-    const px = (e.clientX - box.left) / box.width - 0.5;
-    const py = (e.clientY - box.top) / box.height - 0.5;
-    setTilt({ x: -py * 8, y: px * 10 });
-  }
+  const showClean = reduced || clean;
+  const face = "absolute inset-0 overflow-hidden rounded-[1.2rem] shadow-md shadow-brand/15 ring-1 ring-black/5 [backface-visibility:hidden]";
 
   return (
     <Link
       href={`/${slug}`}
       aria-label={service.name}
-      onPointerEnter={replay}
-      onPointerMove={lean}
-      onPointerLeave={() => setTilt({ x: 0, y: 0 })}
-      className={`group relative block overflow-hidden rounded-[1.4rem] bg-[#ecfdf5] shadow-md shadow-brand/15 ring-1 ring-black/5 transition-[transform,box-shadow] duration-200 ease-out hover:shadow-2xl hover:shadow-brand/25 ${span[slug] ?? ""}`}
-      style={{ transform: `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)` }}
+      onPointerEnter={(e) => {
+        if (e.pointerType !== "mouse") return;
+        setHeld(true);
+        if (!clean) {
+          setClean(true);
+          setFlips((n) => n + 1);
+        }
+      }}
+      onPointerLeave={() => setHeld(false)}
+      className="group relative block aspect-[3/2] [perspective:1000px]"
     >
-      <ServiceScene
-        key={run}
-        type={sceneBySlug[slug]}
-        className="block h-full w-full"
-        tone="soft"
-        labels={false}
-        play={phase === "play"}
-        stillAt={phase === "rest" ? 0.9 : 0.02}
-      />
-      {/* the frosted label, with a shine that runs across it on hover */}
-      <span className="absolute bottom-2.5 left-2.5 flex max-w-[calc(100%-1.25rem)] items-center gap-1.5 overflow-hidden rounded-full bg-white/75 py-1.5 pr-3 pl-3.5 text-[11px] font-bold text-brand-dark shadow-lg ring-1 ring-white/70 backdrop-blur-md sm:bottom-3.5 sm:left-3.5 sm:text-sm">
-        <span className="truncate">{tileName[slug]}</span>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="shrink-0 transition-transform group-hover:translate-x-0.5" aria-hidden="true">
-          <path d="M5 12h14M13 6l6 6-6 6" />
-        </svg>
-        <span className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 transition-none group-hover:left-[130%] group-hover:opacity-90 group-hover:transition-all group-hover:duration-700" aria-hidden="true" />
-      </span>
+      <div
+        className="relative h-full w-full transition-transform duration-700 ease-[cubic-bezier(0.3,1.4,0.5,1)] [transform-style:preserve-3d]"
+        style={{ transform: `rotateY(${showClean ? 180 : 0}deg)` }}
+      >
+        <div className={face} aria-hidden={showClean}>
+          <ServiceScene type={sceneBySlug[slug]} className="block h-full w-full" tone="soft" labels={false} play={false} stillAt={0.02} />
+          <Chip text={tileName[slug]} clean={false} />
+        </div>
+        <div className={`${face} [transform:rotateY(180deg)]`} aria-hidden={!showClean}>
+          <ServiceScene type={sceneBySlug[slug]} className="block h-full w-full" tone="soft" labels={false} play={false} stillAt={0.9} />
+          {/* light sweeping across each time it lands on clean */}
+          {clean && !reduced && (
+            <span key={flips} className="animate-shine pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-white/70 to-transparent" aria-hidden="true" />
+          )}
+          <Chip text={tileName[slug]} clean />
+        </div>
+      </div>
     </Link>
   );
 }
 
 export default function ServicesGrid() {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.25 });
+  // Not "once": the cards pause whenever the section is off screen.
+  const inView = useInView(ref, { amount: 0.2 });
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReduced(query.matches);
+    const frame = requestAnimationFrame(sync);
+    query.addEventListener("change", sync);
+    return () => {
+      cancelAnimationFrame(frame);
+      query.removeEventListener("change", sync);
+    };
+  }, []);
 
   return (
     <section className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6">
@@ -131,11 +144,11 @@ export default function ServicesGrid() {
       <FadeIn className="text-center">
         <p className="text-sm font-semibold uppercase tracking-wide text-brand">What We Do</p>
         <h2 className="mt-2 text-3xl font-bold text-foreground sm:text-4xl">Our Services</h2>
-        <p className="mx-auto mt-2 max-w-md text-sm text-foreground/60">Watch them clean - then tap one to see more.</p>
+        <p className="mx-auto mt-2 max-w-md text-sm text-foreground/60">Before and after - tap one to see more.</p>
       </FadeIn>
       <div ref={ref} className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
         {order.map((slug, i) => (
-          <Tile key={slug} slug={slug} index={i} go={inView} />
+          <FlipCard key={slug} slug={slug} index={i} running={inView} reduced={reduced} />
         ))}
       </div>
     </section>
