@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ServicePageLayout from "@/components/ServicePageLayout";
+import GutterStory from "@/components/gutter-story/GutterStory";
 import { getServiceBySlug } from "@/lib/content/services";
 import { pageMetadata } from "@/lib/seo";
 
@@ -16,6 +17,7 @@ export default function GutterCleaningPage() {
     <ServicePageLayout
       service={service}
       secondaryCta={{ label: "Managing a Portfolio?", href: "/gutter-cleaning/portfolio" }}
+      afterHero={<GutterStory />}
       realPhotos={[
         { before: "/photos/gutter-before.jpg", after: "/photos/gutter-after.jpg" },
         { before: "/photos/gutter2-before.jpg", after: "/photos/gutter2-after.jpg" },
