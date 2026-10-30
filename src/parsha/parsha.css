@@ -1,0 +1,111 @@
+/* The parsha sheets section (/parsha). Everything is scoped to .parsha so
+   none of it reaches the cleaning site, which has its own brand colours and
+   no dark mode. Imported from app/globals.css so @theme below is seen by
+   Tailwind. */
+
+@theme inline {
+  --color-p-bg: var(--p-bg);
+  --color-p-surface: var(--p-surface);
+  --color-p-ink: var(--p-ink);
+  --color-p-muted: var(--p-muted);
+  --color-p-line: var(--p-line);
+  --color-p-soft: var(--p-soft);
+  --color-p-brand: var(--p-brand);
+  --color-p-brand-ink: var(--p-brand-ink);
+  --font-p-heading: var(--font-fredoka), var(--font-varela), sans-serif;
+}
+
+.parsha {
+  --p-bg: #fffaf3;
+  --p-surface: #ffffff;
+  --p-ink: #1d1a17;
+  --p-muted: #5c554d;
+  --p-line: #2a2520;
+  --p-soft: #f1e7da;
+  --p-brand: #c2491c;
+  --p-brand-ink: #ffffff;
+  background: var(--p-bg);
+  color: var(--p-ink);
+  font-family: var(--font-varela), var(--font-fredoka), sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  .parsha:not([data-theme="light"]) {
+    --p-bg: #1a1714;
+    --p-surface: #24201c;
+    --p-ink: #f4ede4;
+    --p-muted: #b9afa3;
+    --p-line: #8a7f72;
+    --p-soft: #2f2924;
+    --p-brand: #f08a5d;
+    --p-brand-ink: #1a1714;
+  }
+}
+.parsha[data-theme="dark"] {
+  --p-bg: #1a1714;
+  --p-surface: #24201c;
+  --p-ink: #f4ede4;
+  --p-muted: #b9afa3;
+  --p-line: #8a7f72;
+  --p-soft: #2f2924;
+  --p-brand: #f08a5d;
+  --p-brand-ink: #1a1714;
+}
+
+/* The site sets every heading in Sora; the parsha pages use Fredoka. */
+.parsha :is(h1, h2, h3, h4) {
+  font-family: var(--font-fredoka), var(--font-varela), sans-serif;
+  letter-spacing: normal;
+}
+
+/* One A4 page. Sheets are always black on white, whatever the theme. */
+.parsha .sheet {
+  width: 210mm;
+  height: 297mm;
+  overflow: hidden;
+  color-scheme: light;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+  page: parsha-a4;
+}
+
+/* A named page, so the zero margin only applies to the sheets. */
+@page parsha-a4 {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  html:has(.parsha),
+  body:has(.parsha),
+  .parsha {
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+  }
+  .parsha .sheet-stack {
+    display: block !important;
+    gap: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .parsha .sheet-wrap {
+    width: auto !important;
+    height: auto !important;
+    position: static !important;
+    transform: none !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+  }
+  .parsha .sheet {
+    position: static !important;
+    transform: none !important;
+    break-inside: avoid;
+    break-after: page;
+  }
+  .parsha .sheet-wrap:last-child .sheet {
+    break-after: auto;
+  }
+}
