@@ -78,7 +78,7 @@ function Footer({ parsha, settings }: { parsha: Parsha; settings: Settings }) {
   return (
     <footer className="flex justify-between border-t-[0.5mm] border-[#222] pt-[2mm] text-[11pt]">
       <span>{SHEET.footer(titleOf(parsha), parsha.greeting)}</span>
-      <span>{settings.institution || BRAND}</span>
+      <span>{settings.institution || BRAND.yi}</span>
     </footer>
   );
 }

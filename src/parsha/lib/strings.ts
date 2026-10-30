@@ -16,14 +16,14 @@ export const SHEET = {
   logoPlaceholder: "[לאגא]",
 };
 
-export const ACTIVITY_LABELS: Record<Activity, string> = {
-  coloring: "קאלירן",
-  maze: "מעיז",
-  dots: "פארבינד די פינטלעך",
-  counting: "ציילן",
-  story: "מעשה'לע פאר די מורה",
-  parents: "בריוו פאר עלטערן",
-  craft: "קראפט",
+export const ACTIVITY_LABELS: Record<Activity, { yi: string; en: string }> = {
+  coloring: { yi: "קאלירן", en: "Colouring" },
+  maze: { yi: "מעיז", en: "Maze" },
+  dots: { yi: "פארבינד די פינטלעך", en: "Dot-to-dot" },
+  counting: { yi: "ציילן", en: "Counting" },
+  story: { yi: "מעשה'לע פאר די מורה", en: "Story for the morah" },
+  parents: { yi: "בריוו פאר עלטערן", en: "Note for parents" },
+  craft: { yi: "קראפט", en: "Craft" },
 };
 
 export const AGE_LABELS: Record<Age, string> = {
@@ -37,6 +37,6 @@ export const AGE_LABELS: Record<Age, string> = {
 export const SUBTITLES = {
   coloring: "קאלירן",
   note: "בריוו פאר עלטערן",
-  activities: "אקטיוויטעטן",
+  activities: "עקטיוויטיס",
   morah: "פאר די מורה",
 };

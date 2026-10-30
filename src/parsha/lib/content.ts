@@ -59,6 +59,8 @@ export type Parsha = {
   hebcal: string;
   /** Without "פרשת" - "וירא", "חנוכה". */
   name: string;
+  /** For the English side of the site - "Vayeira". */
+  nameEn: string;
   /** Footer wish; parshos say "א גוט שבת!". */
   greeting?: string;
   /** The line before the parents' questions, when it isn't the Shabbos table. */
@@ -95,5 +97,14 @@ export function titleOf(p: Parsha): string {
 }
 
 /** Shown as "coming soon" in the library. */
-export const COMING_SOON = ["ויחי", "שמות", "וארא", "בא"];
-export const COMING_SOON_YOMIM_TOVIM = ["פורים", "פסח", "שבועות"];
+export const COMING_SOON = [
+  { yi: "פרשת ויחי", en: "Vayechi" },
+  { yi: "פרשת שמות", en: "Shemos" },
+  { yi: "פרשת וארא", en: "Va'eira" },
+  { yi: "פרשת בא", en: "Bo" },
+];
+export const COMING_SOON_YOMIM_TOVIM = [
+  { yi: "פורים", en: "Purim" },
+  { yi: "פסח", en: "Pesach" },
+  { yi: "שבועות", en: "Shavuos" },
+];

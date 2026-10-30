@@ -109,3 +109,14 @@
     break-after: auto;
   }
 }
+
+/* Yiddish or English: see i18n.tsx. */
+.parsha .l-en {
+  display: none;
+}
+.parsha[data-lang="en"] .l-en {
+  display: inline;
+}
+.parsha[data-lang="en"] .l-yi {
+  display: none;
+}

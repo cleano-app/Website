@@ -20,18 +20,29 @@ import {
 } from "@/parsha/lib/settings";
 import { ACTIVITY_LABELS, AGE_LABELS } from "@/parsha/lib/strings";
 import { defaultParsha, yomTovThisWeek } from "@/parsha/lib/thisWeek";
+import { T, useLang, type Text } from "@/parsha/i18n";
 
-const ACCENT_NAMES: Record<string, string> = {
-  orange: "אראנזש",
-  teal: "גרין-בלוי",
-  blue: "בלוי",
-  black: "שווארץ",
+const ACCENT_NAMES: Record<string, Text> = {
+  orange: { yi: "אראנזש", en: "Orange" },
+  teal: { yi: "גרין-בלוי", en: "Teal" },
+  blue: { yi: "בלוי", en: "Blue" },
+  black: { yi: "שווארץ", en: "Black" },
 };
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+const NOTICES = {
+  notSaved: {
+    yi: "דער בראוזער האט נישט געסעיווט די סעטינגס, זיי וועלן פארלוירן גיין ווען איר מאכט ריפרעש.",
+    en: "This browser didn't save your settings; they'll be lost when you refresh.",
+  },
+  badLogo: { yi: "די לאגא האט זיך נישט אפגעלאודט. פרובירט א PNG אדער JPG.", en: "That logo didn't upload. Try a PNG or JPG." },
+} satisfies Record<string, Text>;
+
+function Section({ title, children }: { title: Text; children: React.ReactNode }) {
   return (
     <fieldset className="rounded-2xl border-2 border-p-line/25 bg-p-surface p-4">
-      <legend className="px-2 font-p-heading text-lg font-semibold">{title}</legend>
+      <legend className="px-2 font-p-heading text-lg font-semibold">
+        <T {...title} />
+      </legend>
       <div className="space-y-3">{children}</div>
     </fieldset>
   );
@@ -45,7 +56,8 @@ export function Builder() {
   const [weekId, setWeekId] = useState(PARSHOS[0].id);
   const [yomTov, setYomTov] = useState<Parsha | null>(null);
   const [ready, setReady] = useState(false);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [notice, setNotice] = useState<Text | null>(null);
+  const lang = useLang();
   const [pdfTip, setPdfTip] = useState(false);
 
   // Storage and today's date only exist in the browser, so read them after mount.
@@ -62,7 +74,7 @@ export function Builder() {
   useEffect(() => {
     if (!ready) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- reports whether the browser kept the save
-    setNotice(saveSettings(settings) ? null : "דער בראוזער האט נישט אויפגעהאלטן די סעטינגס; זיי וועלן פארלוירן גיין ביים איבערלאדן.");
+    setNotice(saveSettings(settings) ? null : NOTICES.notSaved);
   }, [settings, ready]);
 
   const update = (patch: Partial<Settings>) => setSettings((s) => ({ ...s, ...patch }));
@@ -82,20 +94,28 @@ export function Builder() {
     try {
       update({ logo: await shrinkLogo(file) });
     } catch {
-      setNotice("די לאגא האט נישט געקענט ארויפלאדן. פרובירט א PNG אדער JPG.");
+      setNotice(NOTICES.badLogo);
     }
   };
 
   const printNow = () => window.print();
 
+  const optionText = (p: Parsha, thisWeek: boolean) =>
+    lang === "en"
+      ? `${p.nameEn} · ${titleOf(p)}${thisWeek ? " (this week)" : ""}`
+      : `${titleOf(p)}${thisWeek ? " (די וואך)" : ""}`;
+
   return (
     <div className="mx-auto grid max-w-6xl gap-6 px-4 py-6 md:grid-cols-[22rem_1fr] print:block print:max-w-none print:p-0">
       <div className="space-y-4 print:hidden">
-        <Section title="פראפיל">
+        <Section title={{ yi: "פראפיל", en: "Profile" }}>
           <label className="block">
-            <span className="mb-1 block text-sm text-p-muted">נאמען פון פלעיגרופ / חדר</span>
+            <span className="mb-1 block text-sm text-p-muted">
+              <T yi="נאמען פון פלעיגרופ / חדר" en="Playgroup / cheder name" />
+            </span>
             <input
               className={input}
+              dir="auto"
               value={settings.institution}
               maxLength={80}
               onChange={(e) => update({ institution: e.target.value })}
@@ -103,7 +123,9 @@ export function Builder() {
           </label>
           <div className="grid grid-cols-[7rem_1fr] gap-2">
             <label className="block">
-              <span className="mb-1 block text-sm text-p-muted">טיטל</span>
+              <span className="mb-1 block text-sm text-p-muted">
+                <T yi="טיטל" en="Title" />
+              </span>
               <select
                 className={input}
                 value={settings.teacherTitle}
@@ -115,9 +137,12 @@ export function Builder() {
               </select>
             </label>
             <label className="block">
-              <span className="mb-1 block text-sm text-p-muted">נאמען</span>
+              <span className="mb-1 block text-sm text-p-muted">
+                <T yi="נאמען" en="Name" />
+              </span>
               <input
                 className={input}
+                dir="auto"
                 value={settings.teacherName}
                 maxLength={80}
                 onChange={(e) => update({ teacherName: e.target.value })}
@@ -126,7 +151,7 @@ export function Builder() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <label className="flex min-h-11 cursor-pointer items-center rounded-xl border-2 border-p-line/30 px-4 font-p-heading hover:bg-p-soft">
-              לאגא ארויפלאדן
+              <T yi="אפלאודט א לאגא" en="Upload logo" />
               <input
                 type="file"
                 accept="image/png,image/jpeg"
@@ -146,32 +171,30 @@ export function Builder() {
                   className="min-h-11 rounded-xl px-3 text-sm underline"
                   onClick={() => update({ logo: null })}
                 >
-                  אראפנעמען
+                  <T yi="אוועקנעמען" en="Remove" />
                 </button>
               </>
             )}
           </div>
         </Section>
 
-        <Section title="פרשה / יום טוב">
+        <Section title={{ yi: "פרשה / יום טוב", en: "Parsha / Yom Tov" }}>
           <select
             className={input}
             value={parsha.id}
             onChange={(e) => update({ parshaId: e.target.value === weekId ? null : e.target.value })}
           >
-            <optgroup label="פרשיות">
+            <optgroup label={lang === "en" ? "Parshiyos" : "פרשיות"}>
               {PARSHOS.map((p) => (
                 <option key={p.id} value={p.id}>
-                  {titleOf(p)}
-                  {p.id === weekId ? " (די וואך)" : ""}
+                  {optionText(p, p.id === weekId)}
                 </option>
               ))}
             </optgroup>
-            <optgroup label="יום טוב">
+            <optgroup label={lang === "en" ? "Yom Tov" : "יום טוב"}>
               {YOMIM_TOVIM.map((p) => (
                 <option key={p.id} value={p.id}>
-                  {titleOf(p)}
-                  {p.id === yomTov?.id ? " (די וואך)" : ""}
+                  {optionText(p, p.id === yomTov?.id)}
                 </option>
               ))}
             </optgroup>
@@ -182,12 +205,15 @@ export function Builder() {
               onClick={() => update({ parshaId: yomTov.id })}
               className="flex min-h-11 w-full items-center justify-center rounded-xl bg-p-soft px-3 font-p-heading"
             >
-              די וואך איז {yomTov.name}! מאכט {yomTov.name} בלעטער
+              <T
+                yi={`די וואך איז ${yomTov.name}! מאכט ${yomTov.name} שיטס`}
+                en={`It's ${yomTov.nameEn} this week! Make ${yomTov.nameEn} sheets`}
+              />
             </button>
           )}
         </Section>
 
-        <Section title="עלטער">
+        <Section title={{ yi: "עלטער", en: "Age" }}>
           <div className="grid grid-cols-4 gap-2" role="radiogroup">
             {AGES.map((a) => (
               <label
@@ -203,13 +229,13 @@ export function Builder() {
                   checked={settings.age === a}
                   onChange={() => update({ age: a })}
                 />
-                <span dir="ltr">{AGE_LABELS[a]}</span>&nbsp;יאר
+                <T yi={`${AGE_LABELS[a]} יאר`} en={`Age ${AGE_LABELS[a]}`} />
               </label>
             ))}
           </div>
         </Section>
 
-        <Section title="אקטיוויטעטן">
+        <Section title={{ yi: "עקטיוויטיס", en: "Activities" }}>
           {ACTIVITIES.filter((a) => a !== "craft" || parsha.craft).map((a) => (
             <label key={a} className="flex min-h-11 cursor-pointer items-center gap-3">
               <input
@@ -218,18 +244,18 @@ export function Builder() {
                 checked={settings.activities.includes(a)}
                 onChange={() => toggle(a)}
               />
-              {ACTIVITY_LABELS[a]}
+              <T {...ACTIVITY_LABELS[a]} />
             </label>
           ))}
         </Section>
 
-        <Section title="קאליר">
+        <Section title={{ yi: "קאליר", en: "Colour" }}>
           <div className="flex gap-3">
             {ACCENTS.map((c) => (
               <button
                 key={c.id}
                 type="button"
-                aria-label={ACCENT_NAMES[c.id]}
+                aria-label={ACCENT_NAMES[c.id][lang]}
                 aria-pressed={settings.accent === c.value}
                 onClick={() => update({ accent: c.value })}
                 className={`h-11 w-11 rounded-full border-4 ${
@@ -249,7 +275,7 @@ export function Builder() {
               disabled={!pages.length}
               className="min-h-12 flex-1 rounded-xl bg-p-brand font-p-heading text-lg font-semibold text-p-brand-ink disabled:opacity-50"
             >
-              דרוקן
+              <T yi="פרינט" en="Print" />
             </button>
             <button
               type="button"
@@ -263,18 +289,22 @@ export function Builder() {
               PDF
             </button>
           </div>
-          {pdfTip && <p className="text-sm text-p-muted">קלייבט &apos;Save as PDF&apos; אין די פרינטער ליסטע</p>}
+          {pdfTip && (
+            <p className="text-sm text-p-muted">
+              <T yi="קלייבט 'Save as PDF' ביי די פרינטער" en="Choose 'Save as PDF' as the printer" />
+            </p>
+          )}
           <a
             href={`https://wa.me/?text=${encodeURIComponent(`${SITE_URL}/builder`)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex min-h-11 items-center justify-center text-sm underline"
           >
-            שיקט אויף וואטסעפ
+            <T yi="שיקט אויף וואטסאפ" en="Share on WhatsApp" />
           </a>
           {notice && (
             <p role="status" className="text-sm text-p-brand">
-              {notice}
+              <T {...notice} />
             </p>
           )}
         </div>
@@ -283,12 +313,15 @@ export function Builder() {
       <div className="min-w-0">
         {!parsha.melamedChecked && (
           <p className="mb-3 rounded-xl bg-p-soft px-3 py-2 text-sm print:hidden">
-            דער טעקסט פון די פרשה איז נאך נישט דורכגעקוקט דורך א מלמד.
+            <T
+              yi="די טעקסט אויף די שיטס איז נאך נישט דורכגעקוקט דורך א מלמד."
+              en="The text on these sheets hasn't been checked by a melamed yet."
+            />
           </p>
         )}
         {!pages.length ? (
           <p className="rounded-2xl border-2 border-dashed border-p-line/30 p-8 text-center text-p-muted print:hidden">
-            קלייבט כאטש איין אקטיוויטעט.
+            <T yi="קלייבט כאטש איין עקטיוויטי." en="Pick at least one activity." />
           </p>
         ) : (
           <div className={ready ? "" : "invisible"}>
