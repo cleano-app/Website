@@ -153,7 +153,11 @@ function Body({ parsha, settings, page }: Props) {
       return (
         <>
           <Box title={SHEET.storyTitle} accent={accent}>
-            <p className="text-[15pt] leading-relaxed">{parsha.story}</p>
+            <div className="space-y-[3mm] text-[15pt] leading-relaxed">
+              {parsha.story.split("\n").map((para) => (
+                <p key={para}>{para}</p>
+              ))}
+            </div>
           </Box>
           <Box title={SHEET.questionsTitle} accent={accent}>
             <ol className="list-decimal space-y-[3mm] ps-[7mm] text-[14pt]">
