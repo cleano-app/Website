@@ -15,12 +15,14 @@ export const metadata: Metadata = {
   openGraph: { title: BRAND.en, url: "/parsha", type: "website" },
 };
 
+// The last two only show from tablet width up; on a phone they're in the footer,
+// so the menu stays on one line.
 const NAV = [
-  { href: "/parsha/builder", yi: "מאכט א שיט", en: "Make a sheet" },
-  { href: "/parsha/parshos", yi: "פרשיות", en: "Parshiyos" },
-  { href: "/parsha/yomim-tovim", yi: "יום טוב", en: "Yom Tov" },
-  { href: "/parsha/pricing", yi: "פרייזן", en: "Pricing" },
-  { href: "/parsha/about", yi: "וועגן אונז", en: "About" },
+  { href: "/parsha/builder", yi: "מאכט א שיט", en: "Make a sheet", always: true },
+  { href: "/parsha/parshos", yi: "פרשיות", en: "Parshiyos", always: true },
+  { href: "/parsha/yomim-tovim", yi: "יום טוב", en: "Yom Tov", always: true },
+  { href: "/parsha/pricing", yi: "פרייזן", en: "Pricing", always: false },
+  { href: "/parsha/about", yi: "וועגן אונז", en: "About", always: false },
 ];
 
 // The cleaning site's header, promo and footer are left out on these pages
@@ -36,10 +38,10 @@ export default function ParshaLayout({ children }: { children: React.ReactNode }
     >
       <script dangerouslySetInnerHTML={{ __html: LANG_SCRIPT }} />
       <header className="border-b-2 border-p-line/20 print:hidden">
-        <nav className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-1 gap-y-1 px-4 py-2">
-          <Link href="/parsha" className="me-auto flex min-h-11 items-center gap-2">
+        <nav className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-0.5 gap-y-1 px-3 py-2 sm:gap-x-1 sm:px-4">
+          <Link href="/parsha" className="me-auto flex min-h-11 items-center gap-2" aria-label={BRAND.en}>
             <LogoMark size={36} />
-            <span className="font-p-heading text-xl font-bold text-p-brand">
+            <span className="hidden font-p-heading text-xl font-bold text-p-brand sm:inline">
               <T {...BRAND} />
             </span>
           </Link>
@@ -47,7 +49,7 @@ export default function ParshaLayout({ children }: { children: React.ReactNode }
             <Link
               key={n.href}
               href={n.href}
-              className="flex min-h-11 items-center rounded-full px-3 font-p-heading font-medium hover:bg-p-soft"
+              className={`${n.always ? "flex" : "hidden sm:flex"} min-h-11 items-center rounded-full px-2 text-[15px] font-p-heading font-medium hover:bg-p-soft sm:px-2.5 sm:text-base`}
             >
               <T yi={n.yi} en={n.en} />
             </Link>
@@ -56,8 +58,16 @@ export default function ParshaLayout({ children }: { children: React.ReactNode }
         </nav>
       </header>
       {children}
-      <footer className="mx-auto max-w-6xl px-4 py-8 text-sm text-p-muted print:hidden">
-        <p className="flex items-center gap-2">
+      <footer className="mx-auto max-w-6xl space-y-2 px-4 py-8 text-sm text-p-muted print:hidden">
+        <p className="flex gap-4">
+          <Link href="/parsha/pricing" className="underline">
+            <T yi="פרייזן" en="Pricing" />
+          </Link>
+          <Link href="/parsha/about" className="underline">
+            <T yi="וועגן אונז" en="About" />
+          </Link>
+        </p>
+        <p className="flex flex-wrap items-center gap-2">
           <LogoMark size={20} />
           {BRAND.en} · {BRAND.yi} · <span dir="ltr">cleano.services/parsha</span>
         </p>

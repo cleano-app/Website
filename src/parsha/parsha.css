@@ -52,6 +52,16 @@
   --p-brand-ink: #1a1714;
 }
 
+/* The page behind the section, so nothing white shows past the footer. */
+body:has(.parsha) {
+  background: #fffaf3;
+}
+@media (prefers-color-scheme: dark) {
+  body:has(.parsha:not([data-theme="light"])) {
+    background: #1a1714;
+  }
+}
+
 /* The site sets every heading in Sora; the parsha pages use Fredoka. */
 .parsha :is(h1, h2, h3, h4) {
   font-family: var(--font-fredoka), var(--font-varela), sans-serif;

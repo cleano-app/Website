@@ -65,7 +65,7 @@ function Header({ parsha, settings, subtitle }: { parsha: Parsha; settings: Sett
             className="h-[22mm] w-[22mm] shrink-0 rounded-full border-[0.6mm] border-[#222] bg-white object-contain p-[1.5mm]"
           />
         ) : (
-          <div className="flex h-[22mm] w-[22mm] shrink-0 items-center justify-center rounded-full border-[0.6mm] border-dashed border-[#888] bg-white text-[10pt] text-[#777]">
+          <div className="flex h-[22mm] w-[22mm] shrink-0 items-center justify-center rounded-full border-[0.6mm] border-dashed border-[#888] bg-white text-[10pt] text-[#777] print:invisible">
             {SHEET.logoPlaceholder}
           </div>
         )}

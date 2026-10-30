@@ -68,7 +68,7 @@ export function LangToggle() {
     <button
       type="button"
       onClick={flip}
-      className="flex min-h-11 items-center rounded-full border-2 border-p-line/25 px-3 text-sm font-semibold hover:bg-p-soft"
+      className="flex min-h-11 items-center rounded-full border-2 border-p-line/25 px-2.5 text-sm font-semibold hover:bg-p-soft"
     >
       <T yi="English" en="אידיש" />
     </button>

@@ -25,6 +25,8 @@ export type Settings = {
   age: Age;
   activities: Activity[];
   accent: string;
+  /** The demo playgroup's id while "signed in" as it; null otherwise. */
+  account: "testy" | null;
 };
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -36,6 +38,7 @@ export const DEFAULT_SETTINGS: Settings = {
   age: "4",
   activities: [...ACTIVITIES],
   accent: ACCENTS[0].value,
+  account: null,
 };
 
 const KEY = "parsha-sheets:settings:v1";
@@ -77,5 +80,6 @@ export function sanitize(input: unknown): Settings {
       ? ACTIVITIES.filter((a) => s.activities!.includes(a))
       : DEFAULT_SETTINGS.activities,
     accent: ACCENTS.some((a) => a.value === s.accent) ? s.accent! : DEFAULT_SETTINGS.accent,
+    account: s.account === "testy" ? "testy" : null,
   };
 }

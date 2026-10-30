@@ -6,6 +6,7 @@ import { SITE_URL } from "@/parsha/config";
 import { AGES } from "@/parsha/lib/age";
 import { getParsha, PARSHOS, titleOf, YOMIM_TOVIM, type Parsha } from "@/parsha/lib/content";
 import { shrinkLogo } from "@/parsha/lib/logo";
+import { DEMO_ACCOUNT, demoSettings } from "@/parsha/lib/demo";
 import { planPages } from "@/parsha/lib/pages";
 import {
   ACCENTS,
@@ -63,12 +64,19 @@ export function Builder() {
   // Storage and today's date only exist in the browser, so read them after mount.
   useEffect(() => {
     const saved = loadSettings();
-    const fromLink = new URLSearchParams(window.location.search).get("p");
+    const params = new URLSearchParams(window.location.search);
+    const fromLink = params.get("p");
     // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time read of browser-only state
     setSettings(fromLink && getParsha(fromLink) ? { ...saved, parshaId: fromLink } : saved);
     setWeekId(defaultParsha().id);
     setYomTov(yomTovThisWeek());
     setReady(true);
+    // A "see it with a real logo" link signs straight in as the demo playgroup.
+    if (params.get("demo") === DEMO_ACCOUNT.id && saved.account !== DEMO_ACCOUNT.id) {
+      demoSettings()
+        .then((patch) => setSettings((s) => ({ ...s, ...patch })))
+        .catch(() => setNotice(NOTICES.badLogo));
+    }
   }, []);
 
   useEffect(() => {
@@ -99,6 +107,42 @@ export function Builder() {
   };
 
   const printNow = () => window.print();
+  const printPdf = () => {
+    setPdfTip(true);
+    setTimeout(printNow, 50);
+  };
+
+  const signIn = async () => {
+    try {
+      update(await demoSettings());
+    } catch {
+      setNotice(NOTICES.badLogo);
+    }
+  };
+  const signOut = () => update({ institution: "", teacherName: "", logo: null, account: null });
+
+  const seeSheets = () => document.getElementById("sheets")?.scrollIntoView({ behavior: "smooth" });
+
+  const printButtons = (
+    <>
+      <button
+        type="button"
+        onClick={printNow}
+        disabled={!pages.length}
+        className="min-h-12 flex-1 rounded-xl bg-p-brand px-4 font-p-heading text-lg font-semibold text-p-brand-ink disabled:opacity-50"
+      >
+        <T yi="פרינט" en="Print" />
+      </button>
+      <button
+        type="button"
+        onClick={printPdf}
+        disabled={!pages.length}
+        className="min-h-12 flex-1 rounded-xl border-2 border-p-brand px-4 font-p-heading text-lg font-semibold text-p-brand disabled:opacity-50"
+      >
+        PDF
+      </button>
+    </>
+  );
 
   const optionText = (p: Parsha, thisWeek: boolean) =>
     lang === "en"
@@ -108,6 +152,31 @@ export function Builder() {
   return (
     <div className="mx-auto grid max-w-6xl gap-6 px-4 py-6 md:grid-cols-[22rem_1fr] print:block print:max-w-none print:p-0">
       <div className="space-y-4 print:hidden">
+        {settings.account === DEMO_ACCOUNT.id ? (
+          <div className="flex items-center gap-3 rounded-2xl border-2 border-p-brand/50 bg-p-surface p-3">
+            {/* eslint-disable-next-line @next/next/no-img-element -- local data: URL */}
+            {settings.logo && <img src={settings.logo} alt="" className="h-12 w-12 shrink-0 rounded-full" />}
+            <div className="min-w-0 flex-1">
+              <p className="text-sm text-p-muted">
+                <T yi="איינגעשריבן אלס" en="Signed in as" />
+              </p>
+              <p className="font-p-heading font-semibold">
+                <T {...DEMO_ACCOUNT.name} /> <span className="text-sm font-normal text-p-muted">(<T yi="דעמא" en="demo" />)</span>
+              </p>
+            </div>
+            <button type="button" onClick={signOut} className="min-h-11 shrink-0 rounded-xl px-3 text-sm underline">
+              <T yi="ארויסשרייבן" en="Sign out" />
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={signIn}
+            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-p-line/40 px-3 font-p-heading hover:bg-p-soft"
+          >
+            <T yi="אריינשרייבן אלס טעסטי פלעיגרופ (דעמא)" en="Sign in as Testy Playgroup (demo)" />
+          </button>
+        )}
         <Section title={{ yi: "פראפיל", en: "Profile" }}>
           <label className="block">
             <span className="mb-1 block text-sm text-p-muted">
@@ -267,26 +336,25 @@ export function Builder() {
           </div>
         </Section>
 
-        <div className="sticky bottom-0 -mx-4 space-y-2 bg-p-bg/95 px-4 py-3 backdrop-blur md:static md:mx-0 md:bg-transparent md:p-0">
+        <a
+          href={`https://wa.me/?text=${encodeURIComponent(`${SITE_URL}/builder`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex min-h-11 items-center justify-center text-sm underline"
+        >
+          <T yi="שיקט אויף וואטסאפ" en="Share on WhatsApp" />
+        </a>
+
+        {/* On a phone the sheets are far below, so the buttons ride along at the bottom. */}
+        <div className="sticky bottom-0 z-10 -mx-4 space-y-2 border-t border-p-line/15 bg-p-bg/95 px-4 py-3 backdrop-blur md:hidden">
           <div className="flex gap-2">
+            {printButtons}
             <button
               type="button"
-              onClick={printNow}
-              disabled={!pages.length}
-              className="min-h-12 flex-1 rounded-xl bg-p-brand font-p-heading text-lg font-semibold text-p-brand-ink disabled:opacity-50"
+              onClick={seeSheets}
+              className="min-h-12 rounded-xl border-2 border-p-line/30 px-3 text-sm font-semibold"
             >
-              <T yi="פרינט" en="Print" />
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setPdfTip(true);
-                setTimeout(printNow, 50);
-              }}
-              disabled={!pages.length}
-              className="min-h-12 flex-1 rounded-xl border-2 border-p-brand font-p-heading text-lg font-semibold text-p-brand disabled:opacity-50"
-            >
-              PDF
+              <T yi="זעט די שיטס ↓" en="See sheets ↓" />
             </button>
           </div>
           {pdfTip && (
@@ -294,14 +362,6 @@ export function Builder() {
               <T yi="קלייבט 'Save as PDF' ביי די פרינטער" en="Choose 'Save as PDF' as the printer" />
             </p>
           )}
-          <a
-            href={`https://wa.me/?text=${encodeURIComponent(`${SITE_URL}/builder`)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex min-h-11 items-center justify-center text-sm underline"
-          >
-            <T yi="שיקט אויף וואטסאפ" en="Share on WhatsApp" />
-          </a>
           {notice && (
             <p role="status" className="text-sm text-p-brand">
               <T {...notice} />
@@ -310,7 +370,32 @@ export function Builder() {
         </div>
       </div>
 
-      <div className="min-w-0">
+      <div id="sheets" className="min-w-0 scroll-mt-4">
+        <div className="sticky top-0 z-10 -mx-2 mb-3 hidden items-center gap-2 bg-p-bg/95 px-2 py-2 backdrop-blur md:flex print:hidden">
+          <p className="me-auto font-p-heading text-lg font-semibold">
+            <span lang="yi" dir="rtl">
+              {titleOf(parsha)}
+            </span>{" "}
+            <span className="text-sm font-normal text-p-muted">
+              · <T yi={`${pages.length} שיטס`} en={`${pages.length} pages`} />
+            </span>
+          </p>
+          <div className="flex w-72 gap-2">{printButtons}</div>
+        </div>
+        {(pdfTip || notice) && (
+          <div className="mb-3 hidden space-y-1 md:block print:hidden">
+            {pdfTip && (
+              <p className="text-sm text-p-muted">
+                <T yi="קלייבט 'Save as PDF' ביי די פרינטער" en="Choose 'Save as PDF' as the printer" />
+              </p>
+            )}
+            {notice && (
+              <p role="status" className="text-sm text-p-brand">
+                <T {...notice} />
+              </p>
+            )}
+          </div>
+        )}
         {!parsha.melamedChecked && (
           <p className="mb-3 rounded-xl bg-p-soft px-3 py-2 text-sm print:hidden">
             <T

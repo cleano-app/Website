@@ -16,7 +16,7 @@ const POINTS = [
 export default function Home() {
   return (
     <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-10 md:grid-cols-[1fr_22rem]">
-      <section>
+      <section className="min-w-0">
         <p className="mb-4 flex items-center gap-3 font-p-heading text-2xl font-bold text-p-brand">
           <LogoMark size={48} />
           <T {...BRAND} />
@@ -48,8 +48,11 @@ export default function Home() {
         >
           <T yi="מאכט אייער שיט" en="Make your sheet" />
         </Link>
+        <Link href="/parsha/builder?demo=testy" className="mt-3 block min-h-11 py-2 text-sm underline">
+          <T yi="זעט א ביישפיל מיט א לאגא (טעסטי פלעיגרופ)" en="See an example with a real logo (Testy Playgroup)" />
+        </Link>
       </section>
-      <div aria-hidden>
+      <div aria-hidden className="min-w-0">
         <SheetStack
           parsha={getParsha("vayeishev")!}
           settings={{ ...DEFAULT_SETTINGS, institution: "פלעיגרופ", teacherName: "" }}
