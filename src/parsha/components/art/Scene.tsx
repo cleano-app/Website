@@ -292,6 +292,175 @@ function Chanukah({ ls }: { ls: number }) {
   );
 }
 
+function Waves({ ys, from = 0, to = 600 }: { ys: number[]; from?: number; to?: number }) {
+  const row = (y: number) => {
+    let d = `M${from},${y}`;
+    for (let x = from; x < to; x += 50) d += ` Q${x + 25},${y - 12} ${x + 50},${y}`;
+    return d;
+  };
+  return <path d={ys.map(row).join(" ")} fill="none" />;
+}
+
+function Vayechi({ ls }: { ls: number }) {
+  return (
+    <>
+      <Sun cx={80} cy={75} r={30} />
+      <path d="M0,380 L320,380" />
+      <Waves ys={[350, 390, 430]} from={300} />
+      <Put name="ship" x={370} y={190} size={180} ls={ls} />
+      <Put name="lion" x={20} y={239} size={160} ls={ls} />
+      <path d="M260,380 L260,250 M215,250 L305,250" />
+      <Put name="grapes" x={212} y={248} size={50} ls={ls} />
+      <Put name="grapes" x={262} y={248} size={50} ls={ls} />
+    </>
+  );
+}
+
+function Reeds({ xs }: { xs: number[] }) {
+  return (
+    <>
+      {xs.map((x, i) => (
+        <g key={x}>
+          <path d={`M${x},335 Q${x + (i % 2 ? 6 : -6)},290 ${x},${240 + (i % 3) * 12}`} fill="none" />
+          <ellipse cx={x} cy={228 + (i % 3) * 12} rx={6} ry={17} />
+        </g>
+      ))}
+    </>
+  );
+}
+
+function Shemos() {
+  return (
+    <>
+      <Sun cx={510} cy={70} r={30} />
+      <path d="M0,300 L600,300" />
+      <Palm x={60} ground={300} />
+      <Reeds xs={[140, 162, 184]} />
+      <Reeds xs={[420, 442, 464]} />
+      <Waves ys={[350, 390, 430]} />
+      <path d="M232,338 Q300,283 368,338 Z" />
+      <path d="M220,375 Q300,397 380,375 L368,336 L232,336 Z" />
+      <path d="M255,340 L258,381 M280,340 L281,385 M305,340 L305,386 M330,340 L329,385 M352,340 L349,381" fill="none" />
+      <path d="M200,392 Q215,384 230,392 M370,392 Q385,384 400,392" fill="none" />
+    </>
+  );
+}
+
+function Vaeira({ ls }: { ls: number }) {
+  return (
+    <>
+      <Sun cx={90} cy={70} r={30} />
+      <path d="M0,280 L600,280" />
+      <Waves ys={[330, 375, 420]} />
+      <Put name="frog" x={50} y={213} size={78} ls={ls} />
+      <Put name="frog" x={210} y={300} size={60} ls={ls} />
+      <Put name="frog" x={330} y={350} size={55} ls={ls} />
+      <Put name="frog" x={250} y={110} size={70} ls={ls} turn={-18} />
+      <Put name="frog" x={462} y={150} size={62} ls={ls} />
+      <Put name="pot" x={430} y={172} size={125} ls={ls} />
+    </>
+  );
+}
+
+function Bo({ ls }: { ls: number }) {
+  return (
+    <>
+      <circle cx={515} cy={75} r={40} />
+      <Star cx={400} cy={60} r={12} />
+      <Star cx={330} cy={110} r={10} />
+      <Star cx={180} cy={70} r={11} />
+      <Star cx={60} cy={110} r={9} />
+      <path d="M0,380 L600,380" />
+      <path d="M400,330 L490,195 L580,330" fill="none" />
+      <path d="M30,190 L270,190 L270,200 L30,200 Z" />
+      <path d="M40,200 L260,200 L260,380 L40,380 Z" />
+      <path d="M60,230 L95,230 L95,262 L60,262 Z" />
+      <path d="M110,268 L190,268 M113,268 L113,380 M187,268 L187,380" />
+      <path d="M122,280 L178,280 L178,380 L122,380 Z" />
+      <Put name="sheep" x={282} y={300} size={90} ls={ls} />
+      <path d="M392,330 L392,380 M508,330 L508,380" />
+      <path d="M380,320 L520,320 L520,330 L380,330 Z" />
+      <ellipse cx={450} cy={312} rx={52} ry={8} />
+      <ellipse cx={450} cy={303} rx={52} ry={8} />
+      <ellipse cx={450} cy={294} rx={52} ry={8} />
+    </>
+  );
+}
+
+function Purim({ ls }: { ls: number }) {
+  const lines = [190, 210, 230, 250, 270].map((y) => `M100,${y} L200,${y}`).join(" ");
+  return (
+    <>
+      <path d="M40,320 L40,430 M560,320 L560,430" />
+      <path d="M30,300 L570,300 L570,320 L30,320 Z" />
+      <path d="M85,170 L215,170 L215,290 L85,290 Z" />
+      <path d={lines} />
+      <rect x={66} y={160} width={22} height={140} rx={11} />
+      <rect x={212} y={160} width={22} height={140} rx={11} />
+      <Put name="basket" x={258} y={185} size={130} ls={ls} />
+      <Put name="hamantash" x={420} y={245} size={52} ls={ls} />
+      <Put name="hamantash" x={478} y={242} size={56} ls={ls} />
+      <ellipse cx={480} cy={298} rx={75} ry={10} />
+      <g transform="rotate(-18 520 160)">
+        <path d="M500,130 L545,130 L545,175 L500,175 Z" />
+        <path d="M512,175 L512,230" />
+        <path d="M500,145 L545,145 M500,160 L545,160" />
+      </g>
+    </>
+  );
+}
+
+function Pesach() {
+  const candle = (x: number) =>
+    `M${x - 10},290 L${x + 10},290 L${x + 6},280 L${x - 6},280 Z M${x},280 L${x},222 M${x - 8},222 L${x + 8},222 L${x + 6},214 L${x - 6},214 Z M${x - 5},214 L${x + 5},214 L${x + 5},170 L${x - 5},170 Z M${x},168 Q${x - 6},158 ${x},146 Q${x + 6},158 ${x},168 Z`;
+  return (
+    <>
+      <path d="M40,310 L40,430 M560,310 L560,430" />
+      <path d="M20,290 L580,290 L580,310 L20,310 Z" />
+      <path d={candle(60)} />
+      <path d={candle(105)} />
+      <ellipse cx={175} cy={282} rx={42} ry={8} />
+      <ellipse cx={175} cy={273} rx={42} ry={8} />
+      <ellipse cx={175} cy={264} rx={42} ry={8} />
+      <path d="M133,262 Q175,232 217,262" fill="none" />
+      <ellipse cx={330} cy={272} rx={100} ry={20} />
+      <ellipse cx={330} cy={270} rx={82} ry={14} />
+      {[
+        [285, 264],
+        [330, 261],
+        [375, 264],
+        [285, 278],
+        [330, 280],
+        [375, 278],
+      ].map(([cx, cy]) => (
+        <ellipse key={`${cx}-${cy}`} cx={cx} cy={cy} rx={14} ry={5} />
+      ))}
+      <path d="M478,290 Q505,268 532,290 Z M505,276 L505,232" />
+      <path d="M468,180 L542,180 Q540,224 505,232 Q470,224 468,180 Z" />
+      <path d="M472,196 L538,196" />
+    </>
+  );
+}
+
+function Shavuos({ ls }: { ls: number }) {
+  const rows = (x: number) => [318, 336, 354, 372].map((y) => `M${x + 14},${y} L${x + 66},${y}`).join(" ");
+  return (
+    <>
+      <path d="M60,390 L235,120 L300,205 L360,140 L545,390 Z" />
+      <path d="M180,60 Q160,60 165,42 Q170,24 192,30 Q202,10 230,16 Q252,2 274,22 Q300,18 302,40 Q322,46 314,62 Q308,70 292,68 Z" />
+      <path d="M420,40 L398,95 L418,95 L392,155" fill="none" />
+      <path d="M110,60 L95,100 L110,100 L92,140" fill="none" />
+      <Put name="flower" x={130} y={318} size={60} ls={ls} />
+      <Put name="flower" x={430} y={318} size={60} ls={ls} />
+      <Put name="flower" x={350} y={250} size={50} ls={ls} />
+      <path d="M0,390 L600,390" />
+      <path d="M220,395 L220,310 Q220,282 260,282 Q300,282 300,310 L300,395 Z" />
+      <path d="M300,395 L300,310 Q300,282 340,282 Q380,282 380,310 L380,395 Z" />
+      <path d={`${rows(220)} ${rows(300)}`} fill="none" />
+    </>
+  );
+}
+
 const SCENES: Record<SceneName, (p: { ls: number }) => React.ReactNode> = {
   vayeira: Vayeira,
   "chayei-sarah": ChayeiSarah,
@@ -300,7 +469,14 @@ const SCENES: Record<SceneName, (p: { ls: number }) => React.ReactNode> = {
   vayeishev: Vayeishev,
   mikeitz: Mikeitz,
   vayigash: Vayigash,
+  vayechi: Vayechi,
+  shemos: Shemos,
+  vaeira: Vaeira,
+  bo: Bo,
   chanukah: Chanukah,
+  purim: Purim,
+  pesach: Pesach,
+  shavuos: Shavuos,
 };
 
 export function Scene({

@@ -39,5 +39,7 @@ export function defaultParsha(today = new Date()): Parsha {
 /** A yom tov we have sheets for that falls in the coming 7 days. */
 export function yomTovThisWeek(today = new Date()): Parsha | null {
   const descs = weekEvents(today).map((e) => e.getDesc());
-  return YOMIM_TOVIM.find((y) => descs.some((d) => d.startsWith(y.hebcal))) ?? null;
+  // "Purim Katan" (Adar I in a leap year) and "Pesach Sheni" are not the yom tov.
+  const isIt = (d: string, key: string) => d.startsWith(key) && !/Katan|Sheni/.test(d);
+  return YOMIM_TOVIM.find((y) => descs.some((d) => isIt(d, y.hebcal))) ?? null;
 }

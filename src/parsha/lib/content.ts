@@ -5,7 +5,14 @@ import vayeitzei from "@/parsha/content/parshos/vayeitzei.json";
 import vayeishev from "@/parsha/content/parshos/vayeishev.json";
 import mikeitz from "@/parsha/content/parshos/mikeitz.json";
 import vayigash from "@/parsha/content/parshos/vayigash.json";
+import vayechi from "@/parsha/content/parshos/vayechi.json";
+import shemos from "@/parsha/content/parshos/shemos.json";
+import vaeira from "@/parsha/content/parshos/vaeira.json";
+import bo from "@/parsha/content/parshos/bo.json";
 import chanukah from "@/parsha/content/yomim-tovim/chanukah.json";
+import purim from "@/parsha/content/yomim-tovim/purim.json";
+import pesach from "@/parsha/content/yomim-tovim/pesach.json";
+import shavuos from "@/parsha/content/yomim-tovim/shavuos.json";
 
 export type IconName =
   | "bread"
@@ -24,7 +31,21 @@ export type IconName =
   | "wagon"
   | "flask"
   | "menorah"
-  | "dreidel";
+  | "dreidel"
+  | "lion"
+  | "ship"
+  | "grapes"
+  | "bush"
+  | "brick"
+  | "frog"
+  | "pyramid"
+  | "locust"
+  | "hamantash"
+  | "basket"
+  | "house"
+  | "matzah"
+  | "mountain"
+  | "flower";
 
 export type SceneName =
   | "vayeira"
@@ -34,7 +55,14 @@ export type SceneName =
   | "vayeishev"
   | "mikeitz"
   | "vayigash"
-  | "chanukah";
+  | "vayechi"
+  | "shemos"
+  | "vaeira"
+  | "bo"
+  | "chanukah"
+  | "purim"
+  | "pesach"
+  | "shavuos";
 
 export type Craft = {
   title: string;
@@ -80,10 +108,10 @@ export type Parsha = {
 const byOrder = (a: Parsha, b: Parsha) => a.order - b.order;
 
 export const PARSHOS: Parsha[] = (
-  [vayeira, chayeiSarah, toldos, vayeitzei, vayeishev, mikeitz, vayigash] as Parsha[]
+  [vayeira, chayeiSarah, toldos, vayeitzei, vayeishev, mikeitz, vayigash, vayechi, shemos, vaeira, bo] as Parsha[]
 ).sort(byOrder);
 
-export const YOMIM_TOVIM: Parsha[] = ([chanukah] as Parsha[]).sort(byOrder);
+export const YOMIM_TOVIM: Parsha[] = ([chanukah, purim, pesach, shavuos] as Parsha[]).sort(byOrder);
 
 export const ALL: Parsha[] = [...PARSHOS, ...YOMIM_TOVIM];
 
@@ -98,13 +126,12 @@ export function titleOf(p: Parsha): string {
 
 /** Shown as "coming soon" in the library. */
 export const COMING_SOON = [
-  { yi: "פרשת ויחי", en: "Vayechi" },
-  { yi: "פרשת שמות", en: "Shemos" },
-  { yi: "פרשת וארא", en: "Va'eira" },
-  { yi: "פרשת בא", en: "Bo" },
+  { yi: "פרשת בשלח", en: "Beshalach" },
+  { yi: "פרשת יתרו", en: "Yisro" },
+  { yi: "פרשת משפטים", en: "Mishpatim" },
+  { yi: "פרשת תרומה", en: "Terumah" },
 ];
 export const COMING_SOON_YOMIM_TOVIM = [
-  { yi: "פורים", en: "Purim" },
-  { yi: "פסח", en: "Pesach" },
-  { yi: "שבועות", en: "Shavuos" },
+  { yi: "ראש השנה", en: "Rosh Hashanah" },
+  { yi: "סוכות", en: "Sukkos" },
 ];
