@@ -11,7 +11,7 @@ export const SHEET = {
   dotsPrefix: "פארבינד די פינטלעך:",
   storyTitle: "דערציילט פאר די קינדער",
   questionsTitle: "פרעגט די קינדער:",
-  footer: (name: string) => `פרשת ${name} · א גוט שבת!`,
+  footer: (title: string, greeting = "א גוט שבת!") => `${title} · ${greeting}`,
   childName: "נאמען:",
   logoPlaceholder: "[לאגא]",
 };
@@ -27,9 +27,10 @@ export const ACTIVITY_LABELS: Record<Activity, string> = {
 };
 
 export const AGE_LABELS: Record<Age, string> = {
-  "2-3": "2–3",
-  "3-4": "3–4",
-  "4-6": "4–6",
+  "3": "3",
+  "4": "4",
+  "5": "5",
+  "6-7": "6–7",
 };
 
 /** Sheet subtitles under the parsha name in the header. */

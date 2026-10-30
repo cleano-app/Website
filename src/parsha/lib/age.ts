@@ -1,6 +1,6 @@
-export type Age = "2-3" | "3-4" | "4-6";
+export type Age = "3" | "4" | "5" | "6-7";
 
-export const AGES: Age[] = ["2-3", "3-4", "4-6"];
+export const AGES: Age[] = ["3", "4", "5", "6-7"];
 
 export type AgeRules = {
   /** Multiplier on the scene's line thickness. */
@@ -17,7 +17,7 @@ export type AgeRules = {
 };
 
 export const AGE_RULES: Record<Age, AgeRules> = {
-  "2-3": {
+  "3": {
     lineScale: 1.4,
     mazeSize: 4,
     dotCount: null,
@@ -27,24 +27,34 @@ export const AGE_RULES: Record<Age, AgeRules> = {
     countOptions: [2, 3, 4],
     bodyPt: 15,
   },
-  "3-4": {
-    lineScale: 1,
+  "4": {
+    lineScale: 1.2,
     mazeSize: 6,
     dotCount: 10,
     dotHelper: false,
     dotNumberPx: 18,
     countItems: 5,
     countOptions: [4, 5, 6],
+    bodyPt: 14,
+  },
+  "5": {
+    lineScale: 1,
+    mazeSize: 8,
+    dotCount: 15,
+    dotHelper: false,
+    dotNumberPx: 16,
+    countItems: 7,
+    countOptions: [6, 7, 8],
     bodyPt: 13,
   },
-  "4-6": {
+  "6-7": {
     lineScale: 1,
-    mazeSize: 9,
-    dotCount: 18,
+    mazeSize: 10,
+    dotCount: 22,
     dotHelper: false,
-    dotNumberPx: 15,
-    countItems: 8,
-    countOptions: [7, 8, 9],
+    dotNumberPx: 14,
+    countItems: 10,
+    countOptions: [9, 10, 11],
     bodyPt: 13,
   },
 };

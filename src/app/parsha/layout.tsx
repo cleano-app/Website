@@ -8,7 +8,7 @@ const varela = Varela_Round({ subsets: ["hebrew", "latin"], weight: "400", varia
 
 export const metadata: Metadata = {
   title: { default: BRAND, template: `%s · ${BRAND}` },
-  description: "Weekly parsha activity sheets in heimish Yiddish, with your logo and name.",
+  description: "וואכנדיגע פרשה און יום טוב בלעטער אויף אידיש, מיט אייער לאגא און נאמען.",
   alternates: { canonical: "/parsha" },
   openGraph: { title: BRAND, url: "/parsha", type: "website" },
 };
@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 const NAV = [
   { href: "/parsha/builder", label: "מאכט א בלאט" },
   { href: "/parsha/parshos", label: "פרשיות" },
+  { href: "/parsha/yomim-tovim", label: "יום טוב" },
   { href: "/parsha/pricing", label: "פרייזן" },
   { href: "/parsha/about", label: "וועגן אונז" },
 ];

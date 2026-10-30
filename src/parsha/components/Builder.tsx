@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { SheetStack } from "@/parsha/components/SheetStack";
 import { SITE_URL } from "@/parsha/config";
 import { AGES } from "@/parsha/lib/age";
-import { getParsha, PARSHOS } from "@/parsha/lib/content";
+import { getParsha, PARSHOS, titleOf, YOMIM_TOVIM, type Parsha } from "@/parsha/lib/content";
 import { shrinkLogo } from "@/parsha/lib/logo";
 import { planPages } from "@/parsha/lib/pages";
 import {
@@ -19,7 +19,7 @@ import {
   type TeacherTitle,
 } from "@/parsha/lib/settings";
 import { ACTIVITY_LABELS, AGE_LABELS } from "@/parsha/lib/strings";
-import { defaultParsha } from "@/parsha/lib/thisWeek";
+import { defaultParsha, yomTovThisWeek } from "@/parsha/lib/thisWeek";
 
 const ACCENT_NAMES: Record<string, string> = {
   orange: "אראנזש",
@@ -43,6 +43,7 @@ const input =
 export function Builder() {
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const [weekId, setWeekId] = useState(PARSHOS[0].id);
+  const [yomTov, setYomTov] = useState<Parsha | null>(null);
   const [ready, setReady] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [pdfTip, setPdfTip] = useState(false);
@@ -54,6 +55,7 @@ export function Builder() {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time read of browser-only state
     setSettings(fromLink && getParsha(fromLink) ? { ...saved, parshaId: fromLink } : saved);
     setWeekId(defaultParsha().id);
+    setYomTov(yomTovThisWeek());
     setReady(true);
   }, []);
 
@@ -151,27 +153,46 @@ export function Builder() {
           </div>
         </Section>
 
-        <Section title="פרשה">
+        <Section title="פרשה / יום טוב">
           <select
             className={input}
             value={parsha.id}
             onChange={(e) => update({ parshaId: e.target.value === weekId ? null : e.target.value })}
           >
-            {PARSHOS.map((p) => (
-              <option key={p.id} value={p.id}>
-                פרשת {p.name}
-                {p.id === weekId ? " (די וואך)" : ""}
-              </option>
-            ))}
+            <optgroup label="פרשיות">
+              {PARSHOS.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {titleOf(p)}
+                  {p.id === weekId ? " (די וואך)" : ""}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="יום טוב">
+              {YOMIM_TOVIM.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {titleOf(p)}
+                  {p.id === yomTov?.id ? " (די וואך)" : ""}
+                </option>
+              ))}
+            </optgroup>
           </select>
+          {yomTov && parsha.id !== yomTov.id && (
+            <button
+              type="button"
+              onClick={() => update({ parshaId: yomTov.id })}
+              className="flex min-h-11 w-full items-center justify-center rounded-xl bg-p-soft px-3 font-p-heading"
+            >
+              די וואך איז {yomTov.name}! מאכט {yomTov.name} בלעטער
+            </button>
+          )}
         </Section>
 
         <Section title="עלטער">
-          <div className="flex gap-2" role="radiogroup">
+          <div className="grid grid-cols-4 gap-2" role="radiogroup">
             {AGES.map((a) => (
               <label
                 key={a}
-                className={`flex min-h-11 flex-1 cursor-pointer items-center justify-center rounded-xl border-2 font-p-heading has-focus-visible:ring-2 ${
+                className={`flex min-h-11 cursor-pointer items-center justify-center rounded-xl border-2 font-p-heading has-focus-visible:ring-2 ${
                   settings.age === a ? "border-p-brand bg-p-brand text-p-brand-ink" : "border-p-line/30 hover:bg-p-soft"
                 }`}
               >

@@ -1,4 +1,4 @@
-import type { SceneName } from "@/parsha/lib/content";
+import type { IconName, SceneName } from "@/parsha/lib/content";
 import { Icon } from "./Icon";
 
 // The colouring pictures. Outline only, thick lines, no shading, and no
@@ -179,11 +179,128 @@ function Vayeitzei() {
   );
 }
 
+/** An icon from the set, drawn into a scene with the scene's line width. */
+function Put({
+  name,
+  x,
+  y,
+  size,
+  ls,
+  turn = 0,
+}: {
+  name: IconName;
+  x: number;
+  y: number;
+  size: number;
+  ls: number;
+  turn?: number;
+}) {
+  return (
+    <g transform={`rotate(${turn} ${x + size / 2} ${y + size})`}>
+      <Icon name={name} x={x} y={y} size={size} sw={(60 / size) * 4 * ls} />
+    </g>
+  );
+}
+
+function Moon({ x, y, r = 34 }: { x: number; y: number; r?: number }) {
+  return <path d={`M${x},${y - r} A${r},${r} 0 1 0 ${x},${y + r} A${r * 0.78},${r * 0.78} 0 1 1 ${x},${y - r} Z`} />;
+}
+
+function Vayeishev({ ls }: { ls: number }) {
+  const stars: [number, number][] = [
+    [200, 50], [250, 95], [300, 40], [350, 90], [400, 45], [170, 120],
+    [440, 110], [215, 160], [385, 150], [280, 140], [330, 175],
+  ];
+  return (
+    <>
+      <Sun cx={80} cy={80} r={30} />
+      <Moon x={530} y={80} r={32} />
+      {stars.map(([cx, cy], i) => (
+        <Star key={i} cx={cx} cy={cy} r={11} />
+      ))}
+      <path d="M0,390 L600,390" />
+      <Put name="sheaf" x={30} y={300} size={90} ls={ls} turn={22} />
+      <Put name="sheaf" x={130} y={290} size={100} ls={ls} turn={16} />
+      <Put name="sheaf" x={235} y={215} size={175} ls={ls} />
+      <Put name="sheaf" x={370} y={290} size={100} ls={ls} turn={-16} />
+      <Put name="sheaf" x={480} y={300} size={90} ls={ls} turn={-22} />
+    </>
+  );
+}
+
+/** A thin cow from Pharaoh's dream: sunken belly, ribs showing. */
+function ThinCow({ x, y }: { x: number; y: number }) {
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <path d="M16,22 L14,82 M26,24 L27,82 M74,22 L74,82 M84,20 L86,82" />
+      <path d="M8,14 Q0,22 3,34" fill="none" />
+      <path d="M8,10 Q50,0 90,8 L90,22 Q72,36 50,27 Q28,36 8,24 Z" />
+      <path d="M36,10 Q39,18 36,26 M46,9 Q49,17 46,25 M56,9 Q59,17 56,25" fill="none" />
+      <path d="M90,6 Q87,-4 93,-6 M106,6 Q109,-4 103,-6" fill="none" />
+      <path d="M88,4 Q88,-2 98,-2 Q108,-2 108,4 L106,22 Q104,28 98,28 Q92,28 90,22 Z" />
+      <circle cx={95} cy={8} r={1.5} fill="#111" />
+      <circle cx={101} cy={8} r={1.5} fill="#111" />
+    </g>
+  );
+}
+
+function Mikeitz({ ls }: { ls: number }) {
+  return (
+    <>
+      <Sun cx={520} cy={70} r={30} />
+      <path d="M40,250 L130,130 L220,250 M95,180 L165,180 M75,215 L185,215" fill="none" />
+      <path d="M0,300 L600,300" />
+      <path d="M0,370 Q50,355 100,370 T200,370 T300,370 T400,370 T500,370 T600,370" fill="none" />
+      <path d="M0,410 Q50,395 100,410 T200,410 T300,410 T400,410 T500,410 T600,410" fill="none" />
+      <Put name="cow" x={20} y={190} size={120} ls={ls} />
+      <Put name="cow" x={150} y={200} size={110} ls={ls} />
+      <ThinCow x={330} y={218} />
+      <ThinCow x={460} y={218} />
+      <Put name="sheaf" x={265} y={225} size={70} ls={ls} />
+    </>
+  );
+}
+
+function Vayigash({ ls }: { ls: number }) {
+  return (
+    <>
+      <Sun cx={80} cy={75} r={30} />
+      <path d="M430,230 L490,150 L550,230 M450,205 L530,205" fill="none" />
+      <path d="M0,230 L600,230" />
+      <path d="M0,330 L600,330" />
+      <Put name="sack" x={55} y={206} size={60} ls={ls} />
+      <Put name="sack" x={105} y={210} size={55} ls={ls} />
+      <Put name="wagon" x={20} y={185} size={170} ls={ls} />
+      <Put name="sack" x={270} y={218} size={55} ls={ls} />
+      <Put name="wagon" x={235} y={202} size={150} ls={ls} />
+      <Put name="sheep" x={420} y={259} size={80} ls={ls} />
+      <Put name="sheep" x={505} y={264} size={75} ls={ls} />
+    </>
+  );
+}
+
+function Chanukah({ ls }: { ls: number }) {
+  return (
+    <>
+      <path d="M90,30 L510,30 L510,330 L90,330 Z M300,30 L300,330 M90,180 L510,180" fill="none" />
+      <path d="M40,330 L560,330 L560,350 L40,350 Z" />
+      <Put name="menorah" x={160} y={78} size={280} ls={ls} />
+      <Put name="flask" x={60} y={250} size={80} ls={ls} />
+      <Put name="dreidel" x={460} y={260} size={70} ls={ls} turn={12} />
+      <path d="M40,350 L40,440 M560,350 L560,440" />
+    </>
+  );
+}
+
 const SCENES: Record<SceneName, (p: { ls: number }) => React.ReactNode> = {
   vayeira: Vayeira,
   "chayei-sarah": ChayeiSarah,
   toldos: Toldos,
   vayeitzei: Vayeitzei,
+  vayeishev: Vayeishev,
+  mikeitz: Mikeitz,
+  vayigash: Vayigash,
+  chanukah: Chanukah,
 };
 
 export function Scene({

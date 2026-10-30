@@ -1,19 +1,43 @@
 import { HebrewCalendar, flags, type Event } from "@hebcal/core";
-import { PARSHOS, type Parsha } from "./content";
+import { PARSHOS, YOMIM_TOVIM, type Parsha } from "./content";
 
-/** The parsha read on the coming Shabbos (today, if today is Shabbos). Diaspora reading. */
-export function hebcalParshaFor(today: Date): string | null {
-  const start = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12);
+function noon(d: Date) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12);
+}
+
+/** Diaspora calendar events in the 7 days from `day`. */
+function weekEvents(day: Date): Event[] {
+  const start = noon(day);
   const end = new Date(start);
   end.setDate(end.getDate() + 6);
-  const ev = HebrewCalendar.calendar({ start, end, il: false, sedrot: true, noHolidays: true }).find(
-    (e: Event) => e.getFlags() & flags.PARSHA_HASHAVUA,
-  ) as (Event & { parsha?: string[] }) | undefined;
+  return HebrewCalendar.calendar({ start, end, il: false, sedrot: true });
+}
+
+/** The parsha read on the coming Shabbos (today, if today is Shabbos). */
+export function hebcalParshaFor(today: Date): string | null {
+  const ev = weekEvents(today).find((e) => e.getFlags() & flags.PARSHA_HASHAVUA) as
+    | (Event & { parsha?: string[] })
+    | undefined;
   return ev?.parsha?.join("-") ?? null;
 }
 
-/** This week's parsha if we have it, else the first one we have. */
+/**
+ * This week's parsha if we have it; otherwise the next one we have, so a
+ * week without new sheets still opens on something coming up.
+ */
 export function defaultParsha(today = new Date()): Parsha {
-  const name = hebcalParshaFor(today);
-  return PARSHOS.find((p) => p.hebcal === name) ?? PARSHOS[0];
+  const day = noon(today);
+  for (let week = 0; week < 52; week++) {
+    const name = hebcalParshaFor(day);
+    const found = PARSHOS.find((p) => p.hebcal === name);
+    if (found) return found;
+    day.setDate(day.getDate() + 7);
+  }
+  return PARSHOS[0];
+}
+
+/** A yom tov we have sheets for that falls in the coming 7 days. */
+export function yomTovThisWeek(today = new Date()): Parsha | null {
+  const descs = weekEvents(today).map((e) => e.getDesc());
+  return YOMIM_TOVIM.find((y) => descs.some((d) => d.startsWith(y.hebcal))) ?? null;
 }

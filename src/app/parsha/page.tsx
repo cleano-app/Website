@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { SheetStack } from "@/parsha/components/SheetStack";
-import { PARSHOS } from "@/parsha/lib/content";
+import { getParsha } from "@/parsha/lib/content";
 import { DEFAULT_SETTINGS } from "@/parsha/lib/settings";
 
 const POINTS = [
   "אייער לאגא און נאמען אויף יעדן בלאט",
-  "פאסיג פאר 2–3, 3–4 און 4–6 יאר",
+  "פאסיג פאר 3, 4, 5 און 6–7 יאר",
+  "פרשה בלעטער יעדע וואך, און בלעטער פאר יום טוב",
   "דרוקט אדער היט אפ אלס PDF",
 ];
 
@@ -36,14 +37,10 @@ export default function Home() {
         >
           מאכט אייער בלאט
         </Link>
-        <p className="mt-6 text-sm text-p-muted" dir="ltr" lang="en">
-          Weekly parsha activity sheets in heimish Yiddish for playgroups and chadorim, with your own logo and name.
-          Print or save as PDF.
-        </p>
       </section>
       <div aria-label="א ביישפיל בלאט">
         <SheetStack
-          parsha={PARSHOS[0]}
+          parsha={getParsha("vayeishev")!}
           settings={{ ...DEFAULT_SETTINGS, institution: "פלעיגרופ", teacherName: "" }}
           pages={[{ kind: "coloring", withNote: true }]}
         />

@@ -1,4 +1,4 @@
-import type { Age } from "./age";
+import { AGES, type Age } from "./age";
 
 export type Activity = "coloring" | "maze" | "dots" | "counting" | "story" | "parents" | "craft";
 
@@ -33,7 +33,7 @@ export const DEFAULT_SETTINGS: Settings = {
   teacherName: "",
   logo: null,
   parshaId: null,
-  age: "3-4",
+  age: "4",
   activities: [...ACTIVITIES],
   accent: ACCENTS[0].value,
 };
@@ -72,7 +72,7 @@ export function sanitize(input: unknown): Settings {
     teacherName: str(s.teacherName),
     logo: typeof s.logo === "string" && s.logo.startsWith("data:image/") ? s.logo : null,
     parshaId: typeof s.parshaId === "string" ? s.parshaId : null,
-    age: s.age === "2-3" || s.age === "3-4" || s.age === "4-6" ? s.age : DEFAULT_SETTINGS.age,
+    age: AGES.includes(s.age as Age) ? (s.age as Age) : DEFAULT_SETTINGS.age,
     activities: Array.isArray(s.activities)
       ? ACTIVITIES.filter((a) => s.activities!.includes(a))
       : DEFAULT_SETTINGS.activities,

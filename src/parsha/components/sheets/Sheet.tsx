@@ -1,7 +1,7 @@
 import { Scene } from "@/parsha/components/art/Scene";
 import { BRAND } from "@/parsha/config";
 import { AGE_RULES } from "@/parsha/lib/age";
-import type { Parsha } from "@/parsha/lib/content";
+import { titleOf, type Parsha } from "@/parsha/lib/content";
 import type { SheetPage } from "@/parsha/lib/pages";
 import type { Settings } from "@/parsha/lib/settings";
 import { SHEET, SUBTITLES } from "@/parsha/lib/strings";
@@ -43,7 +43,7 @@ function Header({ parsha, settings, subtitle }: { parsha: Parsha; settings: Sett
     >
       <div>
         <h1 className="font-p-heading text-[30pt] leading-none font-bold" style={{ color: accent }}>
-          פרשת {parsha.name}
+          {titleOf(parsha)}
         </h1>
         <p className="mt-[1.5mm] text-[13pt]">{subtitle}</p>
       </div>
@@ -77,7 +77,7 @@ function Header({ parsha, settings, subtitle }: { parsha: Parsha; settings: Sett
 function Footer({ parsha, settings }: { parsha: Parsha; settings: Settings }) {
   return (
     <footer className="flex justify-between border-t-[0.5mm] border-[#222] pt-[2mm] text-[11pt]">
-      <span>{SHEET.footer(parsha.name)}</span>
+      <span>{SHEET.footer(titleOf(parsha), parsha.greeting)}</span>
       <span>{settings.institution || BRAND}</span>
     </footer>
   );
@@ -87,7 +87,7 @@ function ParentsNote({ parsha, accent, large }: { parsha: Parsha; accent: string
   return (
     <Box title={SHEET.parentsTitle} accent={accent} className={large ? "flex-1" : ""}>
       <p className="mb-[2mm]">{parsha.parents.intro}</p>
-      <p className="mb-[1.5mm] font-p-heading font-semibold">{SHEET.parentsAsk}</p>
+      <p className="mb-[1.5mm] font-p-heading font-semibold">{parsha.parentsAsk ?? SHEET.parentsAsk}</p>
       <ol className={`list-decimal ps-[7mm] ${large ? "space-y-[5mm]" : "space-y-[1mm]"}`}>
         {parsha.parents.questions.map((q) => (
           <li key={q.q}>
