@@ -14,7 +14,7 @@ const PLANS = [
   {
     name: { yi: "א יאר פאר א מורה", en: "Teacher's year bundle" },
     price: "£40–60",
-    per: { yi: "אלע יום טוב פעקלעך", en: "all Yom Tov packs" },
+    per: { yi: "אלע יום טוב פעקלאך", en: "all Yom Tov packs" },
   },
   {
     name: { yi: "קלאס לייסענס", en: "Class licence" },

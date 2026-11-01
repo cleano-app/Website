@@ -8,7 +8,7 @@ export const SHEET = {
   parentsTitle: "טייערע עלטערן,",
   parentsAsk: "פרעגט אייער קינד ביים שבת'דיגן טיש:",
   counting: (word: string) => `וויפיל ${word} זענען דא? מאכט א רינגל ארום דעם ריכטיגן נומער`,
-  dotsPrefix: "פארבינד די פינטלעך:",
+  dotsPrefix: "פארבינד די פינטלאך:",
   storyTitle: "דערציילט פאר די קינדער",
   questionsTitle: "פרעגט די קינדער:",
   footer: (title: string, greeting = "א גוט שבת!") => `${title} · ${greeting}`,
@@ -19,7 +19,7 @@ export const SHEET = {
 export const ACTIVITY_LABELS: Record<Activity, { yi: string; en: string }> = {
   coloring: { yi: "קאלירן", en: "Colouring" },
   maze: { yi: "מעיז", en: "Maze" },
-  dots: { yi: "פארבינד די פינטלעך", en: "Dot-to-dot" },
+  dots: { yi: "פארבינד די פינטלאך", en: "Dot-to-dot" },
   counting: { yi: "ציילן", en: "Counting" },
   story: { yi: "מעשה'לע פאר די מורה", en: "Story for the morah" },
   parents: { yi: "בריוו פאר עלטערן", en: "Note for parents" },

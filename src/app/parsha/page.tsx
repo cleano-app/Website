@@ -30,7 +30,7 @@ export default function Home() {
         </h1>
         <p className="mt-4 max-w-prose text-lg text-p-muted">
           <T
-            yi="קאלירן, מעיז, פארבינד די פינטלעך, ציילן, און א בריוו פאר די עלטערן. קלייבט אויס די פרשה, דעם עלטער און די עקטיוויטיס, און פרינט עס אויס אין א מינוט."
+            yi="קאלירן, מעיז, פארבינד די פינטלאך, ציילן, און א בריוו פאר די עלטערן. קלייבט אויס די פרשה, דעם עלטער און די עקטיוויטיס, און פרינט עס אויס אין א מינוט."
             en="Colouring, a maze, dot-to-dot, counting and a note for parents. Pick the parsha, the age and the activities, and print it in a minute. The sheets are in heimish Yiddish."
           />
         </p>
