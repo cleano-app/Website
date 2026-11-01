@@ -5,7 +5,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PromoDropdown from "@/components/PromoDropdown";
 import StickyMobileBar from "@/components/StickyMobileBar";
-import SiteChrome from "@/components/SiteChrome";
 import JsonLd from "@/components/JsonLd";
 import { businessSchema } from "@/lib/structuredData";
 import { siteConfig } from "@/lib/siteConfig";
@@ -75,17 +74,13 @@ export default function RootLayout({
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>
-        <SiteChrome>
-          <Header />
-          <PromoDropdown />
-        </SiteChrome>
+        <Header />
+        <PromoDropdown />
         <main id="main-content" className="flex-1">
           {children}
         </main>
-        <SiteChrome>
-          <Footer />
-          <StickyMobileBar />
-        </SiteChrome>
+        <Footer />
+        <StickyMobileBar />
       </body>
     </html>
   );

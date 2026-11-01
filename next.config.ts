@@ -56,11 +56,9 @@ const securityHeaders = [
   },
 ];
 
-// Parsha Line has its own domain. On parshaline.com its pages are served
-// from the root (parshaline.com/builder is /parsha/builder here), and the
-// /parsha addresses its own links use redirect there.
-const PARSHA_HOST = [{ type: "host" as const, value: "(www\\.)?parshaline\\.com" }];
-const PARSHA_PAGES = "builder|parshos|yomim-tovim|pricing|about|class|logo|signup";
+// Parsha Line moved to its own project and domain; its old addresses here
+// go to the same page there.
+const PARSHA_LINE = "https://www.parshaline.com";
 
 const nextConfig: NextConfig = {
   images: {
@@ -84,19 +82,9 @@ const nextConfig: NextConfig = {
         permanent: false,
       })),
       ...["/gutters", "/gutter"].map((source) => ({ source, destination: "/gutter-cleaning", permanent: true })),
-      { source: "/parsha", has: PARSHA_HOST, destination: "/", permanent: true },
-      { source: `/parsha/:page(${PARSHA_PAGES})`, has: PARSHA_HOST, destination: "/:page", permanent: true },
+      { source: "/parsha", destination: PARSHA_LINE, permanent: true },
+      { source: "/parsha/:path*", destination: `${PARSHA_LINE}/:path*`, permanent: true },
     ];
-  },
-  async rewrites() {
-    return {
-      beforeFiles: [
-        { source: "/", has: PARSHA_HOST, destination: "/parsha" },
-        { source: `/:page(${PARSHA_PAGES})`, has: PARSHA_HOST, destination: "/parsha/:page" },
-      ],
-      afterFiles: [],
-      fallback: [],
-    };
   },
   async headers() {
     return [
