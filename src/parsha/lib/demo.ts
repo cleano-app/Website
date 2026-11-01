@@ -14,5 +14,16 @@ export const DEMO_ACCOUNT = {
 export async function demoSettings(): Promise<Partial<Settings>> {
   const blob = await (await fetch(DEMO_ACCOUNT.logoUrl)).blob();
   const logo = await shrinkLogo(new File([blob], "testy-logo.png", { type: blob.type }));
-  return { ...DEMO_ACCOUNT.profile, logo, account: DEMO_ACCOUNT.id };
+  return {
+    ...DEMO_ACCOUNT.profile,
+    logo,
+    account: {
+      kind: "demo",
+      name: DEMO_ACCOUNT.name.yi,
+      email: "",
+      audience: "playgroup",
+      plan: "premium",
+      agreedAt: new Date().toISOString(),
+    },
+  };
 }

@@ -9,6 +9,11 @@ import vayechi from "@/parsha/content/parshos/vayechi.json";
 import shemos from "@/parsha/content/parshos/shemos.json";
 import vaeira from "@/parsha/content/parshos/vaeira.json";
 import bo from "@/parsha/content/parshos/bo.json";
+import roshHashanah from "@/parsha/content/yomim-tovim/rosh-hashanah.json";
+import yomKippur from "@/parsha/content/yomim-tovim/yom-kippur.json";
+import sukkos from "@/parsha/content/yomim-tovim/sukkos.json";
+import simchasTorah from "@/parsha/content/yomim-tovim/simchas-torah.json";
+import lagBaomer from "@/parsha/content/yomim-tovim/lag-baomer.json";
 import chanukah from "@/parsha/content/yomim-tovim/chanukah.json";
 import purim from "@/parsha/content/yomim-tovim/purim.json";
 import pesach from "@/parsha/content/yomim-tovim/pesach.json";
@@ -45,7 +50,18 @@ export type IconName =
   | "house"
   | "matzah"
   | "mountain"
-  | "flower";
+  | "flower"
+  | "apple"
+  | "honey"
+  | "candle"
+  | "shul"
+  | "sukkah"
+  | "esrog"
+  | "torah"
+  | "candy"
+  | "fire"
+  | "bow"
+  | "arrow";
 
 export type SceneName =
   | "vayeira"
@@ -59,6 +75,11 @@ export type SceneName =
   | "shemos"
   | "vaeira"
   | "bo"
+  | "rosh-hashanah"
+  | "yom-kippur"
+  | "sukkos"
+  | "simchas-torah"
+  | "lag-baomer"
   | "chanukah"
   | "purim"
   | "pesach"
@@ -111,7 +132,9 @@ export const PARSHOS: Parsha[] = (
   [vayeira, chayeiSarah, toldos, vayeitzei, vayeishev, mikeitz, vayigash, vayechi, shemos, vaeira, bo] as Parsha[]
 ).sort(byOrder);
 
-export const YOMIM_TOVIM: Parsha[] = ([chanukah, purim, pesach, shavuos] as Parsha[]).sort(byOrder);
+export const YOMIM_TOVIM: Parsha[] = (
+  [roshHashanah, yomKippur, sukkos, simchasTorah, chanukah, purim, pesach, lagBaomer, shavuos] as Parsha[]
+).sort(byOrder);
 
 export const ALL: Parsha[] = [...PARSHOS, ...YOMIM_TOVIM];
 
@@ -131,7 +154,4 @@ export const COMING_SOON = [
   { yi: "פרשת משפטים", en: "Mishpatim" },
   { yi: "פרשת תרומה", en: "Terumah" },
 ];
-export const COMING_SOON_YOMIM_TOVIM = [
-  { yi: "ראש השנה", en: "Rosh Hashanah" },
-  { yi: "סוכות", en: "Sukkos" },
-];
+export const COMING_SOON_YOMIM_TOVIM: { yi: string; en: string }[] = [];

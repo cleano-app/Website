@@ -5,10 +5,49 @@ import { titleOf, type Parsha } from "@/parsha/lib/content";
 import type { SheetPage } from "@/parsha/lib/pages";
 import type { Settings } from "@/parsha/lib/settings";
 import { SHEET, SUBTITLES } from "@/parsha/lib/strings";
+import { GeneratedLogo } from "@/parsha/components/GeneratedLogo";
+import { NO_FORWARDING } from "@/parsha/lib/strings";
 import { CountingArt, DotsArt, MazeArt } from "./Activities";
 import { Legend, Pieces, TentNet } from "./Craft";
+import { Crowns, MyColouring, PhotoFrame, PhotoMenorah, Trace } from "./Personal";
 
-type Props = { parsha: Parsha; settings: Settings; page: SheetPage };
+type Props = {
+  parsha: Parsha;
+  settings: Settings;
+  page: SheetPage;
+  /** Children's photos by student id (kept on this device). */
+  photos?: Record<string, string>;
+  /** The first page of a print: it carries the rabbonim's notice. */
+  first?: boolean;
+};
+
+/** The school's logo: an uploaded one, else one made on the site. */
+export function SchoolLogo({ settings, className }: { settings: Settings; className?: string }) {
+  if (settings.logo)
+    // eslint-disable-next-line @next/next/no-img-element -- a local data: URL, nothing for next/image to optimise
+    return <img src={settings.logo} alt="" className={`object-contain ${className ?? ""}`} />;
+  if (settings.logoDesign) return <GeneratedLogo design={settings.logoDesign} className={className} />;
+  return null;
+}
+
+/** The school's mark across the page, faint, so a sheet can't pass for anyone else's. */
+function Watermark({ settings }: { settings: Settings }) {
+  const hasLogo = settings.logo || settings.logoDesign;
+  if (!hasLogo && !settings.institution) return null;
+  return (
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden>
+      {hasLogo ? (
+        <div className="h-[120mm] w-[120mm] -rotate-12 opacity-[0.06]">
+          <SchoolLogo settings={settings} className="h-full w-full" />
+        </div>
+      ) : (
+        <p className="-rotate-30 font-p-heading text-[44pt] font-bold whitespace-nowrap opacity-[0.07]">
+          {settings.institution}
+        </p>
+      )}
+    </div>
+  );
+}
 
 /** A rounded box with a heading, the building block of every sheet. */
 function Box({
@@ -34,7 +73,17 @@ function Box({
   );
 }
 
-function Header({ parsha, settings, subtitle }: { parsha: Parsha; settings: Settings; subtitle: string }) {
+function Header({
+  parsha,
+  settings,
+  subtitle,
+  childName,
+}: {
+  parsha: Parsha;
+  settings: Settings;
+  subtitle: string;
+  childName?: string;
+}) {
   const { accent } = settings;
   return (
     <header
@@ -54,15 +103,14 @@ function Header({ parsha, settings, subtitle }: { parsha: Parsha; settings: Sett
             {settings.teacherTitle}: {settings.teacherName || <span className="inline-block w-[28mm] border-b border-black" />}
           </p>
           <p>
-            {SHEET.childName} <span className="inline-block w-[34mm] border-b border-black" />
+            {SHEET.childName}{" "}
+            {childName ? <b>{childName}</b> : <span className="inline-block w-[34mm] border-b border-black" />}
           </p>
         </div>
-        {settings.logo ? (
-          // eslint-disable-next-line @next/next/no-img-element -- a local data: URL, nothing for next/image to optimise
-          <img
-            src={settings.logo}
-            alt=""
-            className="h-[22mm] w-[22mm] shrink-0 rounded-full border-[0.6mm] border-[#222] bg-white object-contain p-[1.5mm]"
+        {settings.logo || settings.logoDesign ? (
+          <SchoolLogo
+            settings={settings}
+            className="h-[22mm] w-[22mm] shrink-0 rounded-full border-[0.6mm] border-[#222] bg-white p-[1mm]"
           />
         ) : (
           <div className="flex h-[22mm] w-[22mm] shrink-0 items-center justify-center rounded-full border-[0.6mm] border-dashed border-[#888] bg-white text-[10pt] text-[#777] print:invisible">
@@ -99,7 +147,7 @@ function ParentsNote({ parsha, accent, large }: { parsha: Parsha; accent: string
   );
 }
 
-function Body({ parsha, settings, page }: Props) {
+function Body({ parsha, settings, page, photos = {} }: Props) {
   const { accent, age } = settings;
   const ls = AGE_RULES[age].lineScale;
   switch (page.kind) {
@@ -170,6 +218,16 @@ function Body({ parsha, settings, page }: Props) {
           </Box>
         </>
       );
+    case "my-colouring":
+      return <MyColouring unit={parsha} student={page.student} ls={ls} />;
+    case "crown":
+      return <Crowns unit={parsha} students={page.students} />;
+    case "trace":
+      return <Trace unit={parsha} />;
+    case "photo-frame":
+      return <PhotoFrame unit={parsha} student={page.student} photo={page.student ? photos[page.student.id] : undefined} />;
+    case "photo-menorah":
+      return <PhotoMenorah students={page.students} photos={photos} />;
     case "craft-cut": {
       const craft = parsha.craft!;
       return (
@@ -242,23 +300,40 @@ function subtitleFor(parsha: Parsha, page: SheetPage): string {
       return parsha.craft!.title;
     case "craft-steps":
       return parsha.craft!.instructionsTitle;
+    case "my-colouring":
+      return "מיין קאליר-בלאט";
+    case "crown":
+      return "א קרוין מיט מיין נאמען";
+    case "trace":
+      return "שרייבט נאך די ווערטער";
+    case "photo-frame":
+      return "מיין בילד-ראם";
+    case "photo-menorah":
+      return "די קלאס מנורה";
   }
 }
 
 /** One A4 page, exactly as it prints. */
-export function Sheet({ parsha, settings, page }: Props) {
+export function Sheet({ parsha, settings, page, photos, first }: Props) {
+  const child = "student" in page ? page.student?.name : undefined;
   return (
     <article
-      className="sheet flex flex-col gap-[4mm] bg-white p-[10mm] text-[#111]"
+      className="sheet relative flex flex-col gap-[4mm] bg-white p-[10mm] text-[#111]"
       lang="yi"
       dir="rtl"
       style={{ fontSize: `${AGE_RULES[settings.age].bodyPt}pt` }}
     >
-      <Header parsha={parsha} settings={settings} subtitle={subtitleFor(parsha, page)} />
+      <Header parsha={parsha} settings={settings} subtitle={subtitleFor(parsha, page)} childName={child} />
       <div className="flex min-h-0 flex-1 flex-col gap-[4mm]">
-        <Body parsha={parsha} settings={settings} page={page} />
+        <Body parsha={parsha} settings={settings} page={page} photos={photos} />
       </div>
+      {first && (
+        <p className="rounded-[2mm] border-[0.3mm] border-[#999] px-[3mm] py-[1.5mm] text-center text-[9pt] text-[#555]">
+          {NO_FORWARDING.yi}
+        </p>
+      )}
       <Footer parsha={parsha} settings={settings} />
+      <Watermark settings={settings} />
     </article>
   );
 }

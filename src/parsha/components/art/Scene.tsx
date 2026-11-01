@@ -461,6 +461,90 @@ function Shavuos({ ls }: { ls: number }) {
   );
 }
 
+function RoshHashanah({ ls }: { ls: number }) {
+  return (
+    <>
+      <path d="M40,320 L40,430 M560,320 L560,430" />
+      <path d="M20,300 L580,300 L580,320 L20,320 Z" />
+      <path d="M40,296 Q52,250 160,262 L162,282 Q78,274 62,300 Z" />
+      <path d="M160,262 L176,258 L178,284 L162,282" />
+      <Put name="honey" x={190} y={170} size={120} ls={ls} />
+      <Put name="apple" x={320} y={232} size={72} ls={ls} />
+      <Put name="apple" x={384} y={238} size={64} ls={ls} />
+      <ellipse cx={500} cy={276} rx={62} ry={26} />
+      <path d="M500,276 m-40,0 a40,16 0 1 1 80,0 a28,11 0 1 1 -56,0 a16,6 0 1 1 32,0" fill="none" />
+    </>
+  );
+}
+
+function YomKippur({ ls }: { ls: number }) {
+  return (
+    <>
+      <path d="M0,380 L600,380" />
+      <path d="M150,160 L450,160 L450,380 L150,380 Z" />
+      <path d="M130,165 L300,85 L470,165" fill="none" />
+      <path d="M276,94 L276,56 Q288,40 300,56 Q312,40 324,56 L324,94 Z M300,56 L300,94" />
+      <path d="M270,380 L270,300 Q300,268 330,300 L330,380" fill="none" />
+      <path d="M185,300 L185,230 Q205,205 225,230 L225,300 Z M375,300 L375,230 Q395,205 415,230 L415,300 Z" />
+      <Put name="candle" x={30} y={242} size={140} ls={ls} />
+      <Put name="candle" x={460} y={242} size={140} ls={ls} />
+    </>
+  );
+}
+
+function Sukkos({ ls }: { ls: number }) {
+  const lulav = "M530,380 L530,190 L540,140 L550,190 L550,380 Z M540,150 L540,380";
+  const hadassim = [200, 225, 250, 275].map((y) => `M534,${y} q-14,-4 -16,-14 q12,0 16,14 Z`).join(" ");
+  const aravos = [215, 260].map((y) => `M546,${y} q10,-30 22,-40 q-4,24 -22,40 Z`).join(" ");
+  return (
+    <>
+      <path d="M0,380 L600,380" />
+      <path d="M110,170 L470,170 L470,380 L110,380 Z" />
+      <path d="M100,172 Q120,140 140,170 Q160,138 180,168 Q200,140 220,170 Q240,136 260,168 Q280,140 300,170 Q320,138 340,168 Q360,140 380,170 Q400,138 420,168 Q440,140 460,170 Q475,148 485,172" fill="none" />
+      <path d="M130,190 Q150,212 170,190 Q190,212 210,190 M370,190 Q390,212 410,190 Q430,212 450,190" fill="none" />
+      <path d="M290,170 L290,200" />
+      <circle cx={290} cy={212} r={12} />
+      <path d="M180,320 L180,380 M400,320 L400,380" />
+      <path d="M160,310 L420,310 L420,322 L160,322 Z" />
+      <path d={`${lulav} ${hadassim} ${aravos}`} />
+      <Put name="esrog" x={20} y={302} size={84} ls={ls} />
+    </>
+  );
+}
+
+function SimchasTorah({ ls }: { ls: number }) {
+  const crown = (x: number) =>
+    `M${x},128 L${x},100 L${x + 18},114 L${x + 36},92 L${x + 54},114 L${x + 72},100 L${x + 72},128 Z`;
+  return (
+    <>
+      <path d="M0,390 L600,390" />
+      <path d={`${crown(184)} ${crown(394)}`} />
+      <Put name="torah" x={100} y={118} size={240} ls={ls} />
+      <Put name="torah" x={310} y={118} size={240} ls={ls} />
+      <Put name="candy" x={60} y={340} size={48} ls={ls} turn={-15} />
+      <Put name="candy" x={280} y={350} size={44} ls={ls} turn={10} />
+      <Put name="candy" x={500} y={340} size={48} ls={ls} turn={20} />
+      <Star cx={60} cy={70} r={14} />
+      <Star cx={300} cy={60} r={12} />
+      <Star cx={540} cy={70} r={14} />
+    </>
+  );
+}
+
+function LagBaomer({ ls }: { ls: number }) {
+  return (
+    <>
+      <Sun cx={510} cy={70} r={30} />
+      <path d="M0,300 Q120,240 250,295 Q390,230 600,290" fill="none" />
+      <path d="M0,375 L600,375" />
+      <Put name="fire" x={210} y={190} size={190} ls={ls} />
+      <Put name="bow" x={40} y={250} size={110} ls={ls} turn={-12} />
+      <Put name="arrow" x={440} y={290} size={80} ls={ls} />
+      <Put name="arrow" x={500} y={300} size={70} ls={ls} turn={15} />
+    </>
+  );
+}
+
 const SCENES: Record<SceneName, (p: { ls: number }) => React.ReactNode> = {
   vayeira: Vayeira,
   "chayei-sarah": ChayeiSarah,
@@ -473,6 +557,11 @@ const SCENES: Record<SceneName, (p: { ls: number }) => React.ReactNode> = {
   shemos: Shemos,
   vaeira: Vaeira,
   bo: Bo,
+  "rosh-hashanah": RoshHashanah,
+  "yom-kippur": YomKippur,
+  sukkos: Sukkos,
+  "simchas-torah": SimchasTorah,
+  "lag-baomer": LagBaomer,
   chanukah: Chanukah,
   purim: Purim,
   pesach: Pesach,

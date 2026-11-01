@@ -18,10 +18,12 @@ export function SheetStack({
   parsha,
   settings,
   pages,
+  photos,
 }: {
   parsha: Parsha;
   settings: Settings;
   pages: SheetPage[];
+  photos?: Record<string, string>;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.5);
@@ -45,7 +47,7 @@ export function SheetStack({
           style={{ width: A4_W * scale, height: A4_H * scale }}
         >
           <div className="sheet-wrap absolute top-0 left-0 origin-top-left" style={{ transform: `scale(${scale})` }}>
-            <Sheet parsha={parsha} settings={settings} page={page} />
+            <Sheet parsha={parsha} settings={settings} page={page} photos={photos} first={i === 0} />
           </div>
         </div>
       ))}

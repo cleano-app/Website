@@ -1,78 +1,61 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { PlanBadge, PLAN_NAMES } from "@/parsha/components/PlanBadge";
+import { PLAN_FEATURES } from "@/parsha/components/SignUp";
 import { CONTACT_EMAIL } from "@/parsha/config";
 import { T } from "@/parsha/i18n";
+import type { Plan } from "@/parsha/lib/settings";
 
 export const metadata: Metadata = { title: "פרייזן · Pricing" };
 
-// Planned prices from the brief; the owner still has to confirm them.
-const PLANS = [
-  {
-    name: { yi: "פלעיגרופ סובסקריפשן", en: "Playgroup subscription" },
-    price: "£15–25",
-    per: { yi: "א מאנאט, אדער ביליגער פאר א גאנץ יאר", en: "a month, or less by the year" },
-  },
-  {
-    name: { yi: "א יאר פאר א מורה", en: "Teacher's year bundle" },
-    price: "£40–60",
-    per: { yi: "אלע יום טוב פעקלאך", en: "all Yom Tov packs" },
-  },
-  {
-    name: { yi: "קלאס לייסענס", en: "Class licence" },
-    price: "£10–15",
-    per: { yi: "איין יום טוב פעקל", en: "one Yom Tov pack" },
-  },
-  {
-    name: { yi: "פאמיליע פעקל", en: "Family pack" },
-    price: "£4–5",
-    per: { yi: "איין יום טוב פעקל", en: "one Yom Tov pack" },
-  },
-  {
-    name: { yi: "פליי סקים פעקל", en: "Play scheme pack" },
-    price: "£30–60",
-    per: { yi: "פאר א סקים", en: "per scheme" },
-  },
+// Rough prices; the owner still has to set the real ones (and payment isn't
+// connected yet).
+const PLANS: { plan: Plan; price: string; per: { yi: string; en: string }; edge: string }[] = [
+  { plan: "free", price: "£0", per: { yi: "פאר אייביג", en: "forever" }, edge: "border-t-p-green" },
+  { plan: "basic", price: "£4–6", per: { yi: "א מאנאט", en: "a month" }, edge: "border-t-p-sky" },
+  { plan: "premium", price: "£15–25", per: { yi: "א מאנאט, ביליגער פאר א גאנץ יאר", en: "a month, less by the year" }, edge: "border-t-p-purple" },
 ];
 
 export default function Pricing() {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
+    <div className="mx-auto max-w-5xl px-4 py-8">
       <h1 className="text-3xl font-bold">
         <T yi="פרייזן" en="Pricing" />
       </h1>
-      <p className="mt-1 inline-block rounded-full bg-p-soft px-3 py-1 font-p-heading">
-        <T yi="קומט באלד" en="Coming soon" />
-      </p>
-      <p className="mt-4 text-p-muted">
+      <p className="mt-2 text-p-muted">
         <T
-          yi="יעצט איז עס אומזיסט. די פרייזן אונטן זענען בערך, נאך נישט פיינאל."
-          en="It's free for now. The prices below are rough and not final."
+          yi="די פרייזן זענען בערך און נאך נישט פיינאל. באצאלן קומט באלד; דערווייל איז אלעס אפן צום פרובירן."
+          en="Prices are rough and not final. Payment is coming soon; for now everything is open to try."
         />
       </p>
-      <ul className="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-        {PLANS.map((p) => (
-          <li key={p.name.en} className="rounded-2xl border-2 border-p-line/25 bg-p-surface p-4">
-            <p className="font-p-heading text-lg font-semibold">
-              <T {...p.name} />
+      <ul className="mt-6 grid gap-4 md:grid-cols-3">
+        {PLANS.map(({ plan, price, per, edge }) => (
+          <li key={plan} className={`rounded-2xl border-2 border-t-8 border-[#e6e8f5] bg-white p-5 ${edge}`}>
+            <p className="flex items-center gap-2 font-p-heading text-xl font-semibold">
+              <T {...PLAN_NAMES[plan]} /> <PlanBadge plan={plan} />
             </p>
-            <p className="mt-2 font-p-heading text-2xl text-p-brand">
-              <T yi="בערך" en="about" /> <span dir="ltr">{p.price}</span>
+            <p className="mt-3 font-p-heading text-3xl text-p-brand">
+              <span dir="ltr">{price}</span>
             </p>
             <p className="text-sm text-p-muted">
-              <T {...p.per} />
+              <T {...per} />
+            </p>
+            <p className="mt-3">
+              <T {...PLAN_FEATURES[plan]} />
             </p>
           </li>
         ))}
       </ul>
-      <section className="mt-8 rounded-2xl border-2 border-dashed border-p-line/30 p-4">
+      <Link
+        href="/parsha/signup"
+        className="mt-6 flex min-h-12 items-center justify-center rounded-xl bg-p-pink font-p-heading text-lg text-white"
+      >
+        <T yi="מאכט אן אקאונט" en="Sign up" />
+      </Link>
+      <section className="mt-8 rounded-2xl border-2 border-dashed border-[#dfe2f2] p-4">
         <h2 className="text-xl font-semibold">
-          <T yi="אינטערעסירט?" en="Interested?" />
+          <T yi="פראגעס?" en="Questions?" />
         </h2>
-        <p>
-          <T
-            yi="שרייבט אונז און מיר וועלן אייך לאזן וויסן ווען עס עפנט זיך:"
-            en="Email us and we'll let you know when it opens:"
-          />
-        </p>
         <p dir="ltr" className="mt-1 text-start font-semibold">
           {CONTACT_EMAIL}
         </p>

@@ -12,44 +12,34 @@
   --color-p-soft: var(--p-soft);
   --color-p-brand: var(--p-brand);
   --color-p-brand-ink: var(--p-brand-ink);
+  --color-p-pink: var(--p-pink);
+  --color-p-yellow: var(--p-yellow);
+  --color-p-green: var(--p-green);
+  --color-p-sky: var(--p-sky);
+  --color-p-purple: var(--p-purple);
   --font-p-heading: var(--font-fredoka), var(--font-varela), sans-serif;
 }
 
 .parsha {
-  --p-bg: #fffaf3;
+  /* Light and colourful, like a playgroup wall. No dark mode: the sheets
+     are white paper and the site matches them. */
+  --p-bg: #ffffff;
   --p-surface: #ffffff;
-  --p-ink: #1d1a17;
-  --p-muted: #5c554d;
-  --p-line: #2a2520;
-  --p-soft: #f1e7da;
-  --p-brand: #c2491c;
+  --p-ink: #1f2340;
+  --p-muted: #5b6078;
+  --p-line: #1f2340;
+  --p-soft: #f1f3ff;
+  --p-brand: #4757e6;
   --p-brand-ink: #ffffff;
+  --p-pink: #f0508f;
+  --p-yellow: #ffc83d;
+  --p-green: #2bb673;
+  --p-sky: #2fa8f0;
+  --p-purple: #8a5cf6;
+  color-scheme: light;
   background: var(--p-bg);
   color: var(--p-ink);
   font-family: var(--font-varela), var(--font-fredoka), sans-serif;
-}
-
-@media (prefers-color-scheme: dark) {
-  .parsha:not([data-theme="light"]) {
-    --p-bg: #1a1714;
-    --p-surface: #24201c;
-    --p-ink: #f4ede4;
-    --p-muted: #b9afa3;
-    --p-line: #8a7f72;
-    --p-soft: #2f2924;
-    --p-brand: #f08a5d;
-    --p-brand-ink: #1a1714;
-  }
-}
-.parsha[data-theme="dark"] {
-  --p-bg: #1a1714;
-  --p-surface: #24201c;
-  --p-ink: #f4ede4;
-  --p-muted: #b9afa3;
-  --p-line: #8a7f72;
-  --p-soft: #2f2924;
-  --p-brand: #f08a5d;
-  --p-brand-ink: #1a1714;
 }
 
 /* The cleaning site's header and footer stay off Parsha Line pages. */
@@ -57,14 +47,9 @@ body:has(.parsha) .site-chrome {
   display: none;
 }
 
-/* The page behind the section, so nothing white shows past the footer. */
+/* The page behind the section, so nothing else shows past the footer. */
 body:has(.parsha) {
-  background: #fffaf3;
-}
-@media (prefers-color-scheme: dark) {
-  body:has(.parsha:not([data-theme="light"])) {
-    background: #1a1714;
-  }
+  background: #ffffff;
 }
 
 /* The site sets every heading in Sora; the parsha pages use Fredoka. */

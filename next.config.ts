@@ -60,7 +60,7 @@ const securityHeaders = [
 // from the root (parshaline.com/builder is /parsha/builder here), and the
 // /parsha addresses its own links use redirect there.
 const PARSHA_HOST = [{ type: "host" as const, value: "(www\\.)?parshaline\\.com" }];
-const PARSHA_PAGES = "builder|parshos|yomim-tovim|pricing|about";
+const PARSHA_PAGES = "builder|parshos|yomim-tovim|pricing|about|class|logo|signup";
 
 const nextConfig: NextConfig = {
   images: {
