@@ -52,6 +52,11 @@
   --p-brand-ink: #1a1714;
 }
 
+/* The cleaning site's header and footer stay off Parsha Line pages. */
+body:has(.parsha) .site-chrome {
+  display: none;
+}
+
 /* The page behind the section, so nothing white shows past the footer. */
 body:has(.parsha) {
   background: #fffaf3;

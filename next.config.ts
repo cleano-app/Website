@@ -56,6 +56,12 @@ const securityHeaders = [
   },
 ];
 
+// Parsha Line has its own domain. On parshaline.com its pages are served
+// from the root (parshaline.com/builder is /parsha/builder here), and the
+// /parsha addresses its own links use redirect there.
+const PARSHA_HOST = [{ type: "host" as const, value: "(www\\.)?parshaline\\.com" }];
+const PARSHA_PAGES = "builder|parshos|yomim-tovim|pricing|about";
+
 const nextConfig: NextConfig = {
   images: {
     // Placeholder photography lives locally under /public/images for now.
@@ -78,7 +84,19 @@ const nextConfig: NextConfig = {
         permanent: false,
       })),
       ...["/gutters", "/gutter"].map((source) => ({ source, destination: "/gutter-cleaning", permanent: true })),
+      { source: "/parsha", has: PARSHA_HOST, destination: "/", permanent: true },
+      { source: `/parsha/:page(${PARSHA_PAGES})`, has: PARSHA_HOST, destination: "/:page", permanent: true },
     ];
+  },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        { source: "/", has: PARSHA_HOST, destination: "/parsha" },
+        { source: `/:page(${PARSHA_PAGES})`, has: PARSHA_HOST, destination: "/parsha/:page" },
+      ],
+      afterFiles: [],
+      fallback: [],
+    };
   },
   async headers() {
     return [

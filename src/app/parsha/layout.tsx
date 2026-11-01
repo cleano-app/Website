@@ -2,17 +2,18 @@ import type { Metadata } from "next";
 import { Fredoka, Varela_Round } from "next/font/google";
 import Link from "next/link";
 import { LogoMark } from "@/parsha/components/Logo";
-import { BRAND } from "@/parsha/config";
+import { BRAND, SITE_URL } from "@/parsha/config";
 import { LANG_SCRIPT, LangToggle, T } from "@/parsha/i18n";
 
 const fredoka = Fredoka({ subsets: ["hebrew", "latin"], variable: "--font-fredoka" });
 const varela = Varela_Round({ subsets: ["hebrew", "latin"], weight: "400", variable: "--font-varela" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: { default: `${BRAND.en} · ${BRAND.yi}`, template: `%s · ${BRAND.en}` },
   description: "Weekly parsha and Yom Tov sheets in heimish Yiddish, with your own logo and name. וואכנדיגע פרשה שיטס אויף אידיש.",
-  alternates: { canonical: "/parsha" },
-  openGraph: { title: BRAND.en, url: "/parsha", type: "website" },
+  alternates: { canonical: "/" },
+  openGraph: { title: BRAND.en, url: "/", type: "website" },
 };
 
 // The last two only show from tablet width up; on a phone they're in the footer,
@@ -69,7 +70,7 @@ export default function ParshaLayout({ children }: { children: React.ReactNode }
         </p>
         <p className="flex flex-wrap items-center gap-2">
           <LogoMark size={20} />
-          {BRAND.en} · {BRAND.yi} · <span dir="ltr">cleano.services/parsha</span>
+          {BRAND.en} · {BRAND.yi} · <span dir="ltr">parshaline.com</span>
         </p>
       </footer>
     </div>
