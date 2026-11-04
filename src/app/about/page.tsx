@@ -26,7 +26,7 @@ const facts = [
   },
   {
     title: "Checked before we arrive",
-    body: "CHAS accredited for health and safety, CAA-certified drone pilots, fully insured and VAT registered.",
+    body: "CHAS accredited for health and safety, a CAA-registered drone operator, fully insured and VAT registered.",
   },
 ];
 

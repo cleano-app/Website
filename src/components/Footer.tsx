@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { accreditations, companyDetails, legalNav, siteConfig, telHref, mailtoHref } from "@/lib/siteConfig";
 import { services } from "@/lib/content/services";
+import { DroneBadge } from "./site/ui";
 
 const companyNav = [
   { label: "About Cleano", href: "/about" },
@@ -69,12 +70,15 @@ export default function Footer() {
         </div>
 
         <div className="col-span-2 md:col-span-1">
-          <h2 className="mb-2.5 text-sm font-bold text-foreground">Accredited</h2>
-          {chas.logo && (
-            <Image src={chas.logo.src} alt="CHAS accredited contractor" width={chas.logo.width} height={chas.logo.height} className="h-[46px] w-auto" />
-          )}
+          <h2 className="mb-2.5 text-sm font-bold text-foreground">Credentials</h2>
+          <div className="flex items-center gap-2.5">
+            {chas.logo && (
+              <Image src={chas.logo.src} alt="CHAS accredited contractor" width={chas.logo.width} height={chas.logo.height} className="h-[46px] w-auto" />
+            )}
+            <DroneBadge size={46} />
+          </div>
           <p className="mt-2 leading-relaxed">
-            CAA-certified drone pilots
+            CHAS accredited · CAA-registered drone operator
             <br />
             Fully insured · VAT registered
           </p>

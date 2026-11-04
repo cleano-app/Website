@@ -62,6 +62,30 @@ export function TickList({ items, columns = 1, className = "" }: { items: ReactN
   );
 }
 
+/**
+ * Cleano's own badge for the drone registration: a white drone on dark
+ * green. Deliberately not the CAA's logo or anything like it (its colours,
+ * crescent or lettering): the CAA only allows its logo with an approval
+ * number, and Cleano holds an Operator ID (open category), not an approval.
+ */
+export function DroneBadge({ size = 34 }: { size?: number }) {
+  return (
+    <span
+      className="flex shrink-0 items-center justify-center rounded-[8px] bg-brand-dark text-white"
+      style={{ width: size, height: size }}
+      aria-hidden="true"
+    >
+      <svg width={size * 0.66} height={size * 0.66} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 9h16" />
+        <path d="M2 6h5M17 6h5M4.5 6v3M19.5 6v3" />
+        <rect x="8.5" y="8" width="7" height="5" rx="2" />
+        <circle cx="12" cy="16.5" r="1.8" />
+        <path d="M12 13v1.7" />
+      </svg>
+    </span>
+  );
+}
+
 /** CHAS, CAA, insured, VAT - straight under every page header. */
 export function TrustRow() {
   const { chas } = accreditations;
@@ -77,8 +101,8 @@ export function TrustRow() {
           CHAS accredited
         </li>
         <li className="flex items-center gap-2">
-          <Tick />
-          CAA-certified drone pilots
+          <DroneBadge />
+          CAA-registered drone operator
         </li>
         <li className="flex items-center gap-2">
           <Tick />
