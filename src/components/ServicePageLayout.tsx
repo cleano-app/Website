@@ -6,15 +6,25 @@ import BeforeAfter from "./BeforeAfterSlider";
 import FAQAccordion from "./FAQAccordion";
 import QuoteForm from "./QuoteForm";
 import FinalCTA from "./FinalCTA";
+import ServiceScene, { type ServiceSceneType } from "./scenes/ServiceScenes";
 import { jobPhotosConfirmed, siteConfig, telHref } from "@/lib/siteConfig";
 import JsonLd from "./JsonLd";
 import { faqSchema, serviceSchema } from "@/lib/structuredData";
-import { btn, PageHero, PhoneIcon, SectionHeading, TickList, TrustRow } from "./site/ui";
+import { btn, Framed, PageHero, PhoneIcon, SectionHeading, TickList, TrustRow } from "./site/ui";
 
 // Every service page, in one layout: a photo header saying what and where,
-// the trust row, an optional feature (the gutter story), what's included
-// next to the quote form, the FAQs, then an optional offer (the Portfolio
-// scheme) and the closing band.
+// the trust row, how we do it (the gutter story, or the service's own
+// animation), what's included next to the quote form, the FAQs, then an
+// optional offer (the Portfolio scheme) and the closing band.
+
+const sceneBySlug: Record<string, ServiceSceneType> = {
+  "gutter-cleaning": "gutter",
+  "bin-cleaning": "bin",
+  "window-cleaning": "window",
+  "pressure-washing": "pressure",
+  "graffiti-removal": "graffiti",
+  "rooftop-cleaning": "rooftop",
+};
 
 export default function ServicePageLayout({
   service,
@@ -77,6 +87,32 @@ export default function ServicePageLayout({
             sub="Watch how the job works, from the first drone photo to the report in your inbox."
           />
           <div className="mt-6">{feature}</div>
+        </section>
+      )}
+
+      {/* Every other service: its own animation of the job, beside the steps */}
+      {!feature && (
+        <section className="py-10 sm:py-14">
+          <div className="mx-auto grid max-w-6xl items-center gap-7 px-4 sm:px-6 lg:grid-cols-2 lg:gap-14">
+            <div>
+              <SectionHeading
+                eyebrow="How we do it"
+                title="Found, cleaned, photographed"
+                sub="Every job follows the same steps, so you know exactly what you're getting."
+              />
+              <TickList
+                className="mt-5"
+                items={[
+                  "We check the job first and choose the right method for it",
+                  "We clean it properly, with professional equipment",
+                  "We photograph it before and after, and email you the report",
+                ]}
+              />
+            </div>
+            <Framed>
+              <ServiceScene type={sceneBySlug[service.slug]} tone="soft" plain className="block w-full" />
+            </Framed>
+          </div>
         </section>
       )}
 
