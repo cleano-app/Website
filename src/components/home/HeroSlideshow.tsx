@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import { heroSlides } from "@/lib/content/photos";
-import { siteConfig, telHref } from "@/lib/siteConfig";
-import { btn, PhoneIcon } from "../site/ui";
+import { siteConfig, telHref, whatsappHref } from "@/lib/siteConfig";
+import { btn, PhoneIcon, WhatsAppIcon } from "../site/ui";
 
 // The homepage hero: real photographs of the work - gutters, pressure
 // washing, roofs, windows - changing slowly behind the headline, on a dark
@@ -76,6 +76,18 @@ export default function HeroSlideshow() {
             or call{" "}
             <a href={telHref()} className="font-bold text-white">
               {siteConfig.phoneDisplay}
+            </a>
+            {" · "}
+            <a
+              href={whatsappHref("Hi Cleano, I'd like a quote for...", "/")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 align-middle font-bold text-white"
+            >
+              <span className="text-[#25D366]">
+                <WhatsAppIcon size={16} />
+              </span>
+              WhatsApp
             </a>
           </p>
         </div>

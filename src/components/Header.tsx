@@ -2,22 +2,28 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { mainNav, siteConfig, telHref } from "@/lib/siteConfig";
-import { PhoneIcon } from "./site/ui";
+import { mainNav, siteConfig, telHref, whatsappHref } from "@/lib/siteConfig";
+import { PhoneIcon, WhatsAppIcon } from "./site/ui";
 
 // A thin dark green bar with who we are and what we're accredited for,
 // then a white bar with the menu, the phone number and the quote button -
 // the things a customer checks before trusting a contractor, visible
-// before they scroll. Phones get the logo, a call button and the menu;
-// the sticky bottom bar carries Call / WhatsApp / Get Quote.
+// before they scroll. Phones get the logo, WhatsApp and call buttons and
+// the menu; the sticky bottom bar carries Call / WhatsApp / Get Quote.
 
 // Contact is reached from the phone number and the quote button here, so
-// the desktop menu leaves it out; the phone menu keeps it.
+// the desktop menu leaves it out; the phone menu keeps it. The full desktop
+// bar needs 1280px - below that (small laptops, tablets) it's the compact
+// bar with the menu button, rather than a bar that runs off the edge.
 const desktopNav = mainNav.filter((item) => item.href !== "/contact");
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  // Tags the WhatsApp message with the page it was sent from.
+  const pathname = usePathname();
+  const whatsapp = whatsappHref("Hi Cleano, I'd like a quote for...", pathname);
 
   return (
     <header className="sticky top-0 z-40 bg-white shadow-[0_1px_0_var(--border-subtle)]">
@@ -45,7 +51,7 @@ export default function Header() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-5 lg:flex xl:gap-6" aria-label="Primary">
+        <nav className="hidden items-center gap-5 xl:flex" aria-label="Primary">
           {desktopNav.map((item) => (
             <Link key={item.href} href={item.href} className="text-sm font-medium text-foreground/65 transition-colors hover:text-foreground">
               {item.label}
@@ -53,7 +59,16 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-4 lg:flex">
+        <div className="hidden items-center gap-4 xl:flex">
+          <a
+            href={whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-[#25D366] transition-colors hover:bg-[#25D366]/10"
+            aria-label="Message us on WhatsApp"
+          >
+            <WhatsAppIcon size={20} />
+          </a>
           <a href={telHref()} className="flex items-center gap-1.5 text-sm font-bold whitespace-nowrap text-foreground hover:text-brand-dark">
             <PhoneIcon />
             {siteConfig.phoneDisplay}
@@ -63,7 +78,16 @@ export default function Header() {
           </Link>
         </div>
 
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex items-center gap-2 xl:hidden">
+          <a
+            href={whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-10 w-10 items-center justify-center rounded-[10px] border border-border-subtle text-[#25D366]"
+            aria-label="Message us on WhatsApp"
+          >
+            <WhatsAppIcon size={20} />
+          </a>
           <a
             href={telHref()}
             className="flex h-10 w-10 items-center justify-center rounded-[10px] border border-border-subtle text-foreground"
@@ -87,7 +111,7 @@ export default function Header() {
       </div>
 
       {menuOpen && (
-        <nav id="mobile-nav" aria-label="Primary" className="border-t border-border-subtle bg-white px-4 py-4 lg:hidden">
+        <nav id="mobile-nav" aria-label="Primary" className="border-t border-border-subtle bg-white px-4 py-4 xl:hidden">
           <ul className="flex flex-col gap-0.5">
             {mainNav.map((item) => (
               <li key={item.href}>
