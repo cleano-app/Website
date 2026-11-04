@@ -100,9 +100,14 @@ export function TrustRow() {
           )}
           CHAS accredited
         </li>
+        {/* Set like a logo next to the badge: CAA big and bold, the rest
+            on the line under it - read together, still exactly what's held. */}
         <li className="flex items-center gap-2">
           <DroneBadge />
-          CAA-registered drone operator
+          <span className="flex flex-col leading-none">
+            <span className="font-display text-[19px] font-extrabold tracking-[0.02em] text-brand-dark sm:text-[21px]">CAA</span>
+            <span className="mt-0.5 text-[11.5px] font-semibold text-foreground/75 sm:text-xs">Registered drone operator</span>
+          </span>
         </li>
         <li className="flex items-center gap-2">
           <Tick />
