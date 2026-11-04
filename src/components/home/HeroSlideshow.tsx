@@ -51,7 +51,11 @@ export default function HeroSlideshow() {
       <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6">
         <p className="text-[15px] font-bold text-brand-light">{siteConfig.tagline}</p>
         <h1 className="hero-title mt-2.5 max-w-[640px] text-[29px] leading-[1.1] font-bold sm:text-[50px] sm:leading-[1.06]">
-          Exterior cleaning for homes and businesses, done properly.
+          Exterior cleaning for homes and businesses,{" "}
+          <span className="relative inline-block text-brand-light">
+            done properly.
+            <span className="absolute inset-x-0 bottom-[0.04em] -z-0 h-[0.12em] rounded-full bg-brand-light/45" aria-hidden="true" />
+          </span>
         </h1>
         <p className="hero-lead mt-3 max-w-[520px] text-[15px] leading-relaxed text-[#e2efe9] sm:mt-4 sm:text-lg">
           <span className="sm:hidden">Gutters, roofs, windows, driveways, bins and graffiti across London. A photo report after every job.</span>
