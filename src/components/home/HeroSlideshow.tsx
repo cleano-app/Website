@@ -13,7 +13,9 @@ import { btn, PhoneIcon } from "../site/ui";
 //
 // The big line says what we do (for visitors and for Google); the slogan
 // sits above it. Phones get a shorter line and one button - Call is already
-// in the header and the bottom bar.
+// in the header and the bottom bar - and the hero is never taller than the
+// screen left between the header and the bottom bar (8rem), so the headline
+// and the quote button are always on the first screen.
 
 const STEP = 7; // seconds per photo - must match the keyframes in globals.css
 const FADE = 1.6;
@@ -24,7 +26,7 @@ const delay = (i: number) => `${i * STEP - FADE}s`;
 
 export default function HeroSlideshow() {
   return (
-    <section className="relative flex min-h-[600px] items-end overflow-hidden bg-[#0b2a20] pb-10 text-white sm:min-h-0 sm:h-[600px] sm:items-center sm:pb-0">
+    <section className="relative flex min-h-[min(600px,calc(100svh-8rem))] items-end overflow-hidden bg-[#0b2a20] pt-20 pb-10 text-white sm:min-h-0 sm:h-[600px] sm:items-center sm:pt-0 sm:pb-0">
       {heroSlides.map((slide, i) => (
         <div
           key={slide.src}
