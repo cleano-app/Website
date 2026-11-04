@@ -26,7 +26,7 @@ const delay = (i: number) => `${i * STEP - FADE}s`;
 
 export default function HeroSlideshow() {
   return (
-    <section className="relative flex min-h-[min(600px,calc(100svh-8rem))] items-end overflow-hidden bg-[#0b2a20] pt-20 pb-10 text-white sm:min-h-0 sm:h-[600px] sm:items-center sm:pt-0 sm:pb-0">
+    <section className="hero-home relative flex min-h-[min(600px,calc(100svh-8rem))] items-end overflow-hidden bg-[#0b2a20] pt-20 pb-10 text-white sm:min-h-0 sm:h-[600px] sm:items-center sm:pt-0 sm:pb-0">
       {heroSlides.map((slide, i) => (
         <div
           key={slide.src}
@@ -50,17 +50,17 @@ export default function HeroSlideshow() {
 
       <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6">
         <p className="text-[15px] font-bold text-brand-light">{siteConfig.tagline}</p>
-        <h1 className="mt-2.5 max-w-[640px] text-[29px] leading-[1.1] font-bold sm:text-[50px] sm:leading-[1.06]">
+        <h1 className="hero-title mt-2.5 max-w-[640px] text-[29px] leading-[1.1] font-bold sm:text-[50px] sm:leading-[1.06]">
           Exterior cleaning for homes and businesses, done properly.
         </h1>
-        <p className="mt-3 max-w-[520px] text-[15px] leading-relaxed text-[#e2efe9] sm:mt-4 sm:text-lg">
+        <p className="hero-lead mt-3 max-w-[520px] text-[15px] leading-relaxed text-[#e2efe9] sm:mt-4 sm:text-lg">
           <span className="sm:hidden">Gutters, roofs, windows, driveways, bins and graffiti across London. A photo report after every job.</span>
           <span className="hidden sm:inline">
             Gutters, roofs, windows, driveways, bins and graffiti across London and the surrounding areas. Fully insured, CHAS
             accredited, and a photo report after every job.
           </span>
         </p>
-        <div className="mt-5 flex flex-col gap-3 sm:mt-7 sm:flex-row">
+        <div className="hero-ctas mt-5 flex flex-col gap-3 sm:mt-7 sm:flex-row">
           <Link href="/quote" className={btn.solidOnDark}>
             Get a Free Quote
           </Link>
