@@ -179,6 +179,11 @@ export const socialLinks: string[] = [
   "https://find-and-update.company-information.service.gov.uk/company/17237218",
 ];
 
+// The before/after job photos in public/photos are shown as "real results"
+// only once the owner confirms they're from Cleano's own jobs - turn this on
+// then. Until it is, the homepage and service pages leave the sliders out.
+export const jobPhotosConfirmed = false;
+
 // Named areas Cleano covers, as used in the LocalBusiness structured data
 // and on /contact. "London and the surrounding areas" is the umbrella; these
 // are the places worth naming for local search.

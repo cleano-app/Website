@@ -25,8 +25,7 @@ export default function GutterCleaningPage() {
   return (
     <ServicePageLayout
       service={service}
-      beforeFaqs={<PortfolioOffer />}
-      secondaryCta={{ label: "Managing a Portfolio?", href: "/gutter-cleaning/portfolio" }}
+      afterFaqs={<PortfolioOffer />}
       feature={<GutterStory />}
       realPhotos={[
         { before: "/photos/gutter-before.jpg", after: "/photos/gutter-after.jpg" },

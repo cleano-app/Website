@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { ReportStoryScene } from "@/components/scenes/MoreScenes";
-import FadeIn from "@/components/motion/FadeIn";
-import { StaggerGrid, StaggerItem } from "@/components/motion/StaggerGrid";
-import FloatingButterflies from "@/components/motion/FloatingButterflies";
+import FinalCTA from "@/components/FinalCTA";
+import PortfolioScene from "@/components/scenes/PortfolioScene";
+import { btn, Framed, PageHero, SectionHeading, TickList, TrustRow } from "@/components/site/ui";
+import { portfolioHero, reportScreenshot } from "@/lib/content/photos";
 import { telHref, siteConfig } from "@/lib/siteConfig";
 import { portfolioMailto, portfolioWhatsapp } from "@/lib/portfolio";
-import PortfolioScene from "@/components/scenes/PortfolioScene";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -15,14 +15,6 @@ export const metadata: Metadata = pageMetadata({
     "Drone-inspect every gutter across your portfolio, clean only where it's needed, and get a free photographic report where it isn't. For landlords, property managers and commercial portfolios.",
   path: "/gutter-cleaning/portfolio",
 });
-
-// Butterflies are confined to the corners - never beside the copy.
-const heroButterflies = [
-  { top: "1%", left: "4%", size: 20, duration: 9, delay: 0, xDrift: [0, 10, -4, 0], yDrift: [0, -6, 4, 0], rotate: [-8, 10, -4, -8] },
-  { top: "2%", left: "88%", size: 16, duration: 10, delay: 0.8, xDrift: [0, -8, 4, 0], yDrift: [0, 6, -4, 0], rotate: [10, -6, 8, 10] },
-  { top: "93%", left: "8%", size: 16, duration: 11, delay: 1.4, xDrift: [0, 8, -4, 0], yDrift: [0, -6, 4, 0], rotate: [6, -10, 12, 6], opacity: 0.55 },
-  { top: "94%", left: "86%", size: 18, duration: 8, delay: 2, xDrift: [0, -8, 6, 0], yDrift: [0, -6, 4, 0], rotate: [-6, 12, -10, -6], opacity: 0.5 },
-];
 
 const steps = [
   {
@@ -89,260 +81,147 @@ const benefits = [
 export default function PortfolioGutterCarePage() {
   return (
     <>
-      {/* Hero */}
-      <section className="bg-grain relative overflow-hidden border-b border-border-subtle bg-gradient-to-br from-muted-bg via-muted-bg to-brand-light/15">
-        <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-brand-light/30 blur-3xl" />
-        <FloatingButterflies flock={heroButterflies} />
-        {/* Headline, the animation, then the buttons. */}
-        <div className="relative mx-auto grid max-w-6xl items-center gap-x-10 gap-y-6 px-4 pt-6 pb-8 sm:px-6 lg:grid-cols-2 lg:pt-10 lg:pb-12">
-          <FadeIn className="lg:row-span-2">
-            <p className="inline-flex items-center gap-2 rounded-full bg-brand/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-brand-dark uppercase">
-              For Landlords, Property Managers &amp; Portfolios
-            </p>
-            <h1 className="mt-4 text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
-              Portfolio Gutter Care Scheme
-            </h1>
-            <p className="mt-3 text-base text-foreground/70 sm:text-lg">
-              We drone-inspect every gutter across your portfolio, report on every property with
-              photographic evidence, and only clean where the inspection shows it&apos;s required.
-            </p>
-            <a
-              href="#the-problem"
-              className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-dark hover:underline"
-            >
-              See how it works
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
-                <path d="M12 5v14M5 12l7 7 7-7" />
-              </svg>
-            </a>
-          </FadeIn>
-          <FadeIn delay={0.15}>
-            <div className="relative mx-auto max-w-xl">
-              <div className="absolute -inset-4 rounded-[2.4rem] bg-gradient-to-br from-brand-light/40 to-sky-200/40 blur-2xl" aria-hidden="true" />
-              <div className="relative overflow-hidden rounded-[1.6rem] shadow-2xl shadow-brand/25 ring-1 ring-white">
-                <PortfolioScene className="block w-full" />
-              </div>
-            </div>
-          </FadeIn>
-          <FadeIn delay={0.2} className="flex flex-wrap gap-3 lg:col-start-2 lg:justify-center">
-            <a
-              href={portfolioMailto}
-              className="rounded-full bg-brand px-6 py-3 text-center text-sm font-bold text-white shadow-md shadow-brand/25 transition-all hover:-translate-y-0.5 hover:bg-brand-dark hover:shadow-lg"
-            >
-              Email Us Your Portfolio
-            </a>
-            <a
-              href={portfolioWhatsapp()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full border border-brand/40 bg-white px-6 py-3 text-center text-sm font-bold text-brand-dark transition-all hover:-translate-y-0.5 hover:border-brand hover:shadow-sm"
-            >
-              WhatsApp Us
-            </a>
-          </FadeIn>
+      <PageHero
+        image={portfolioHero.src}
+        imageAlt={portfolioHero.alt}
+        position={portfolioHero.position}
+        crumb="Landlords & portfolios"
+        title="Portfolio Gutter Care Scheme"
+        lead="For landlords, managing agents and housing providers. We drone-inspect every gutter across your portfolio, report on every property, and only clean where it's needed."
+      >
+        <a href={portfolioMailto} className={btn.solidOnDark}>
+          Email us your portfolio
+        </a>
+        <a href={portfolioWhatsapp()} target="_blank" rel="noopener noreferrer" className={btn.lineOnDark}>
+          WhatsApp us
+        </a>
+      </PageHero>
+      <TrustRow />
+
+      {/* The problem, the approach and the animation that shows it */}
+      <section className="py-10 sm:py-16">
+        <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 sm:px-6 lg:grid-cols-2 lg:gap-14">
+          <div>
+            <SectionHeading
+              eyebrow="The problem"
+              title="Cleaned because they're due, not because they need it"
+              sub="Across a portfolio, some gutters are cleaned while still clear, and others block up unnoticed until there's water damage. Either way you pay, with no record of what was actually there."
+            />
+            <ul className="mt-6 grid gap-4">
+              {[
+                ["Inspect first", "High-resolution drone photos of gutters, outlets and downpipes at every property."],
+                ["Clean only where needed", "At a fixed price agreed in advance."],
+                ["Document everything", "A report for every property - free where no cleaning was needed."],
+              ].map(([title, body]) => (
+                <li key={title} className="border-l-[3px] border-brand py-0.5 pl-3.5">
+                  <p className="font-display text-[17px] font-bold text-foreground">{title}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-foreground/65">{body}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <Framed>
+            <PortfolioScene className="block w-full" plain />
+          </Framed>
         </div>
       </section>
 
-      {/* The problem */}
-      <section id="the-problem" className="mx-auto max-w-3xl px-4 py-10 sm:py-16 sm:px-6">
-        <FadeIn>
-          <p className="text-sm font-semibold uppercase tracking-wide text-brand">The Problem</p>
-          <p className="mt-3 text-lg text-foreground/80">
-            Gutters across a portfolio are usually cleaned because they&apos;re <em>due</em> — not
-            because they need it. Meanwhile other properties block up unnoticed until there&apos;s
-            water damage. Either way, you pay and have no record of what was actually there.
-          </p>
-        </FadeIn>
-      </section>
-
-      {/* Our approach */}
-      <section className="bg-muted-bg py-10 sm:py-16">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <FadeIn className="rounded-2xl border border-brand/25 bg-white p-8 text-center shadow-sm">
-            <p className="text-sm font-semibold uppercase tracking-wide text-brand">Our Approach</p>
-            <p className="mt-3 text-2xl font-bold text-foreground sm:text-3xl">
-              Inspect first. Clean only where needed. Document everything.
-            </p>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section className="mx-auto max-w-6xl px-4 py-10 sm:py-16 sm:px-6">
-        <FadeIn className="text-center">
-          <p className="text-sm font-semibold uppercase tracking-wide text-brand">How It Works</p>
-          <h2 className="mt-2 text-3xl font-bold text-foreground sm:text-4xl">The Programme</h2>
-        </FadeIn>
-        <StaggerGrid className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {steps.map((step, i) => (
-            <StaggerItem key={step.title}>
-              <div className="flex h-full gap-4 rounded-2xl border border-border-subtle bg-white p-6 shadow-sm">
-                <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-light/30 to-brand/20 text-brand-dark">
+      {/* The programme */}
+      <section className="border-y border-border-subtle bg-muted-bg py-10 sm:py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <SectionHeading eyebrow="How it works" title="The programme" />
+          <ol className="mt-7 grid gap-4 sm:grid-cols-2">
+            {steps.map((step, i) => (
+              <li key={step.title} className="flex gap-4 rounded-[12px] border border-border-subtle bg-white p-5">
+                <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[#e9f5ef] text-brand-dark">
                   <StepIcon type={step.icon} />
-                  <span className="absolute -bottom-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-dark text-[11px] font-bold text-white ring-2 ring-white">
+                  <span className="absolute -right-1.5 -bottom-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-dark text-[11px] font-bold text-white ring-2 ring-white">
                     {i + 1}
                   </span>
                 </span>
                 <div>
-                  <h3 className="font-semibold text-foreground">{step.title}</h3>
-                  <p className="mt-1.5 text-sm text-foreground/70">{step.body}</p>
+                  <h3 className="font-bold text-foreground">{step.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-foreground/65">{step.body}</p>
                 </div>
-              </div>
-            </StaggerItem>
-          ))}
-        </StaggerGrid>
+              </li>
+            ))}
+          </ol>
+        </div>
       </section>
 
       {/* What you receive */}
-      <section className="bg-muted-bg py-10 sm:py-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            <FadeIn>
-              <p className="text-sm font-semibold uppercase tracking-wide text-brand">
-                Per Property
-              </p>
-              <h2 className="mt-2 text-2xl font-bold text-foreground sm:text-3xl">
-                What You Receive
-              </h2>
-              <ul className="mt-6 space-y-3">
-                {receive.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-foreground/80">
-                    <CheckIcon />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-6 text-sm font-medium text-foreground/60">
-                A documented maintenance history for every property — not an invoice saying
-                &quot;gutters cleaned.&quot;
-              </p>
-            </FadeIn>
-            <FadeIn delay={0.15}>
-              <div className="mx-auto w-full max-w-sm overflow-hidden rounded-[1.4rem] shadow-xl shadow-brand/20 ring-1 ring-white">
-            <ReportStoryScene className="block w-full" />
+      <section className="py-10 sm:py-16">
+        <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 sm:px-6 lg:grid-cols-2 lg:gap-14">
+          <div>
+            <SectionHeading eyebrow="Per property" title="What you receive" />
+            <TickList className="mt-5" items={receive} />
+            <p className="mt-5 text-sm font-medium text-foreground/60">
+              A documented maintenance history for every property - not an invoice saying &quot;gutters cleaned.&quot;
+            </p>
           </div>
-            </FadeIn>
-          </div>
+          <Framed>
+            <Image
+              src={reportScreenshot.src}
+              alt={reportScreenshot.alt}
+              width={reportScreenshot.width}
+              height={reportScreenshot.height}
+              sizes="(min-width: 1024px) 540px, 100vw"
+              className="block h-auto w-full"
+            />
+          </Framed>
         </div>
       </section>
 
       {/* Roof-level observations */}
-      <section className="mx-auto max-w-3xl px-4 py-10 sm:py-16 sm:px-6">
-        <FadeIn>
-          <p className="text-sm font-semibold uppercase tracking-wide text-brand">Included</p>
-          <h2 className="mt-2 text-2xl font-bold text-foreground sm:text-3xl">
-            Roof-Level Observations
-          </h2>
-          <p className="mt-4 text-foreground/70">
-            While the drone is up, we photograph and flag anything visible:
-          </p>
-          <ul className="mt-4 flex flex-wrap gap-3">
+      <section className="border-y border-border-subtle bg-muted-bg py-10 sm:py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <SectionHeading eyebrow="Included" title="Roof-level observations" sub="While the drone is up, we photograph and flag anything visible:" />
+          <ul className="mt-5 flex flex-wrap gap-2.5">
             {flagged.map((item) => (
-              <li
-                key={item}
-                className="flex items-center gap-2 rounded-full border border-border-subtle bg-white px-4 py-2 text-sm font-medium text-foreground/80"
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-brand" aria-hidden="true">
-                  <path d="M12 9v4M12 17h.01" />
-                  <path d="M10.3 3.9 2.5 18a1.8 1.8 0 0 0 1.6 2.6h15.8a1.8 1.8 0 0 0 1.6-2.6L13.7 3.9a1.8 1.8 0 0 0-3.4 0Z" />
-                </svg>
+              <li key={item} className="rounded-[9px] border border-border-subtle bg-white px-3.5 py-2 text-sm font-semibold text-foreground/80">
                 {item}
               </li>
             ))}
           </ul>
-          <div className="mt-6 rounded-xl border border-border-subtle bg-muted-bg p-5 text-sm text-foreground/70">
-            <em>Cleano are not roofers and this is not a roofing survey.</em> We simply photograph
-            what we see so you can decide whether a specialist is worth instructing — instead of
-            paying a contractor to attend just to find out whether there&apos;s a problem.
-          </div>
-        </FadeIn>
-      </section>
-
-      {/* Why it works */}
-      <section className="bg-muted-bg py-10 sm:py-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <FadeIn className="text-center">
-            <p className="text-sm font-semibold uppercase tracking-wide text-brand">
-              Why It Works
-            </p>
-            <h2 className="mt-2 text-3xl font-bold text-foreground sm:text-4xl">For Portfolios</h2>
-          </FadeIn>
-          <StaggerGrid className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {benefits.map((b) => (
-              <StaggerItem key={b.title}>
-                <div className="h-full rounded-2xl border border-border-subtle bg-white p-6 shadow-sm">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-light/30 to-brand/20 text-brand-dark">
-                    <BenefitIcon type={b.icon} />
-                  </span>
-                  <h3 className="mt-4 font-semibold text-brand-dark">{b.title}</h3>
-                  <p className="mt-1.5 text-sm text-foreground/70">{b.body}</p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerGrid>
+          <p className="mt-5 rounded-[12px] border border-border-subtle bg-white p-5 text-sm leading-relaxed text-foreground/65">
+            <em>Cleano are not roofers and this is not a roofing survey.</em> We simply photograph what we see so you can decide
+            whether a specialist is worth instructing - instead of paying a contractor to attend just to find out whether
+            there&apos;s a problem.
+          </p>
         </div>
       </section>
 
-      {/* Next step */}
-      <section className="mx-auto max-w-6xl px-4 py-12 sm:py-20 sm:px-6">
-        <FadeIn>
-          <div className="bg-grain relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand to-brand-dark px-6 py-16 text-center text-white sm:px-12">
-            <div className="pointer-events-none absolute -top-20 -left-16 h-56 w-56 rounded-full bg-white/10" />
-            <div className="pointer-events-none absolute -bottom-24 -right-10 h-64 w-64 rounded-full bg-white/5" />
-            <div className="relative">
-              <h2 className="text-3xl font-bold sm:text-4xl">Next Step</h2>
-              <p className="mx-auto mt-3 max-w-md text-white/90">
-                Send us your property list and we&apos;ll come back with a proposed inspection
-                schedule and pricing.
-              </p>
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-                <a
-                  href={portfolioMailto}
-                  className="rounded-full bg-white px-4 py-2 text-xs font-semibold text-brand-dark shadow-sm transition-all hover:-translate-y-0.5 hover:bg-white/90 sm:text-sm"
-                >
-                  Email Us Your Portfolio
-                </a>
-                <a
-                  href={portfolioWhatsapp()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-full border border-white/60 px-4 py-2 text-xs font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-white/10 sm:text-sm"
-                >
-                  WhatsApp Us
-                </a>
-              </div>
-              <p className="mt-6 text-sm text-white/70">
-                Prefer to call? <a href={telHref()} className="underline hover:text-white">{siteConfig.phoneDisplay}</a>. Single property instead?{" "}
-                <Link href="/gutter-cleaning" className="underline hover:text-white">
-                  See our standard gutter cleaning
-                </Link>
-                .
-              </p>
-            </div>
-          </div>
-        </FadeIn>
+      {/* Why it works */}
+      <section className="py-10 sm:py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <SectionHeading eyebrow="Why it works" title="For portfolios" />
+          <ul className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {benefits.map((b) => (
+              <li key={b.title} className="rounded-[12px] border border-border-subtle bg-white p-5">
+                <span className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-[#e9f5ef] text-brand-dark">
+                  <BenefitIcon type={b.icon} />
+                </span>
+                <h3 className="mt-3.5 font-bold text-foreground">{b.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-foreground/65">{b.body}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-8 text-sm text-foreground/65">
+            Prefer to call?{" "}
+            <a href={telHref()} className="font-semibold text-brand-dark hover:underline">
+              {siteConfig.phoneDisplay}
+            </a>
+            . Single property instead?{" "}
+            <Link href="/gutter-cleaning" className="font-semibold text-brand-dark hover:underline">
+              See our standard gutter cleaning
+            </Link>
+            .
+          </p>
+        </div>
       </section>
-    </>
-  );
-}
 
-function CheckIcon() {
-  return (
-    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand-dark">
-      <svg
-        width="12"
-        height="12"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-      >
-        <path d="M5 13l4 4L19 7" />
-      </svg>
-    </span>
+      <FinalCTA />
+    </>
   );
 }
 

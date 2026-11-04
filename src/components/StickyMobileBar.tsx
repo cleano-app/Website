@@ -57,7 +57,7 @@ export default function StickyMobileBar() {
       ) : (
         <Link
           href="/quote"
-          className="flex flex-1 flex-col items-center justify-center gap-0.5 bg-brand py-2.5 text-white"
+          className="flex flex-1 flex-col items-center justify-center gap-0.5 bg-brand-dark py-2.5 text-white"
         >
           <QuoteIcon />
           <span className="text-[11px] font-semibold">Get Quote</span>

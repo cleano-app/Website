@@ -106,6 +106,7 @@ export function Scene({
   labels = true,
   play = true,
   stillAt = STILL_T,
+  plain = false,
 }: {
   label: string;
   children: ReactNode;
@@ -120,6 +121,9 @@ export function Scene({
   /** false holds the still frame until the parent says go. */
   play?: boolean;
   stillAt?: number;
+  /** A neutral light grey sky without the soft colour circles - for a
+   * scene framed on a white page. */
+  plain?: boolean;
 }) {
   // Read after mount, not during render: the server can't know the
   // visitor's setting, so the first client render must match its HTML.
@@ -155,14 +159,18 @@ export function Scene({
             <rect width="600" height="400" rx="28" />
           </clipPath>
           <linearGradient id={sky} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#ecfdf5" />
-            <stop offset="100%" stopColor="#d1fae5" />
+            <stop offset="0%" stopColor={plain ? "#fafbfa" : "#ecfdf5"} />
+            <stop offset="100%" stopColor={plain ? "#eef2f0" : "#d1fae5"} />
           </linearGradient>
         </defs>
         <g clipPath={`url(#${clip})`}>
           <rect width="600" height="400" fill={`url(#${sky})`} />
-          <circle cx="520" cy="60" r="70" fill="var(--color-brand-light)" opacity="0.25" />
-          <circle cx="70" cy="330" r="90" fill="var(--color-brand)" opacity="0.08" />
+          {!plain && (
+            <>
+              <circle cx="520" cy="60" r="70" fill="var(--color-brand-light)" opacity="0.25" />
+              <circle cx="70" cy="330" r="90" fill="var(--color-brand)" opacity="0.08" />
+            </>
+          )}
           <rect y="370" width="600" height="30" fill="var(--color-brand)" opacity="0.18" />
           {children}
         </g>

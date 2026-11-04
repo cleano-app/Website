@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import QuoteForm from "@/components/QuoteForm";
+import { PlainHero, TrustRow } from "@/components/site/ui";
 import { pageMetadata } from "@/lib/seo";
-import FloatingButterflies from "@/components/motion/FloatingButterflies";
+import { siteConfig, telHref } from "@/lib/siteConfig";
 
 export const metadata: Metadata = pageMetadata({
   title: "Get a Free Quote",
@@ -11,22 +12,24 @@ export const metadata: Metadata = pageMetadata({
 
 export default function QuotePage() {
   return (
-    <section className="relative mx-auto max-w-2xl px-4 pt-8 pb-14 sm:px-6 lg:pt-12 lg:pb-20">
-      <FloatingButterflies
-        flock={[
-          { top: "0%", left: "4%", size: 18, duration: 9, delay: 0.2, xDrift: [0, 10, -6, 0], yDrift: [0, -10, 6, 0], rotate: [-8, 10, -4, -8], opacity: 0.4 },
-          { top: "2%", left: "90%", size: 16, duration: 10, delay: 1, xDrift: [0, -8, 6, 0], yDrift: [0, 8, -6, 0], rotate: [8, -10, 6, 8], opacity: 0.35 },
-        ]}
+    <>
+      <PlainHero
+        crumb="Get a free quote"
+        title="Get a free quote"
+        lead="Takes under a minute. Add a photo or two and we can often quote without a site visit."
       />
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-foreground sm:text-4xl">Get a Free Quote</h1>
-        <p className="mt-3 text-foreground/70">
-          Takes under a minute. Add a photo or two and we can often quote without a site visit.
-        </p>
-      </div>
-      <div className="mt-6">
-        <QuoteForm sourcePage="/quote" />
-      </div>
-    </section>
+      <TrustRow />
+      <section className="border-t border-border-subtle bg-muted-bg py-8 sm:py-12">
+        <div className="mx-auto max-w-2xl px-4 sm:px-6">
+          <QuoteForm sourcePage="/quote" />
+          <p className="mt-5 text-center text-sm text-foreground/60">
+            Rather talk?{" "}
+            <a href={telHref()} className="font-semibold text-brand-dark hover:underline">
+              Call {siteConfig.phoneDisplay}
+            </a>
+          </p>
+        </div>
+      </section>
+    </>
   );
 }

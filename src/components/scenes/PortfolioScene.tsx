@@ -54,7 +54,7 @@ function Drone() {
   );
 }
 
-export default function PortfolioScene({ className = "", tone = "soft" }: { className?: string; tone?: "bold" | "soft" }) {
+export default function PortfolioScene({ className = "", tone = "soft", plain = false }: { className?: string; tone?: "bold" | "soft"; plain?: boolean }) {
   // Into the frame, a stop over each property, then away to the right.
   const points: [number, number, number][] = [[0.02, -60, DRONE_Y]];
   homes.forEach((home, i) => {
@@ -66,6 +66,7 @@ export default function PortfolioScene({ className = "", tone = "soft" }: { clas
     <Scene
       className={className}
       tone={tone}
+      plain={plain}
       loop={PORTFOLIO_LOOP}
       label="Animation: a drone inspects four properties in turn. Two have clear gutters and get a free report; two are blocked and are cleaned. Every property gets a report."
     >

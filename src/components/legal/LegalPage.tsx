@@ -22,9 +22,9 @@ export function LegalPage({
 }) {
   return (
     <>
-      <section className="border-b border-border-subtle bg-muted-bg">
-        <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
-          <h1 className="text-3xl font-bold text-foreground sm:text-4xl">{title}</h1>
+      <section className="border-b border-border-subtle bg-white">
+        <div className="mx-auto max-w-3xl px-4 py-7 sm:px-6 sm:py-10">
+          <h1 className="text-[30px] font-bold text-foreground sm:text-[42px]">{title}</h1>
           {intro && <p className="mt-3 max-w-2xl text-foreground/70">{intro}</p>}
           <p className="mt-4 text-sm text-foreground/50">
             {siteConfig.name} is the trading name of Cleano Ltd. Questions about this page:{" "}
@@ -39,7 +39,7 @@ export function LegalPage({
           </p>
         </div>
       </section>
-      <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">{children}</article>
+      <article className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-14">{children}</article>
     </>
   );
 }

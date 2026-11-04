@@ -140,14 +140,14 @@ export default function QuoteForm({
           directly.
         </p>
         <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-          <a href={telHref()} className="rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white">
+          <a href={telHref()} className="rounded-[10px] bg-brand-dark px-6 py-3 text-sm font-bold text-white">
             Call {siteConfig.phoneDisplay}
           </a>
           <a
             href={whatsappHref("Hi Cleano, I'd like a quote.", sourcePage)}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full border border-brand px-6 py-3 text-sm font-semibold text-brand-dark"
+            className="rounded-[10px] border-[1.5px] border-[#cdd6d1] px-6 py-3 text-sm font-bold text-brand-dark"
           >
             WhatsApp Us
           </a>
@@ -157,7 +157,7 @@ export default function QuoteForm({
   }
 
   return (
-    <div className="rounded-2xl border border-border-subtle p-6 sm:p-8">
+    <div className="rounded-[14px] border border-border-subtle bg-white p-5 shadow-[0_18px_40px_-30px_rgba(15,40,30,.4)] sm:p-7">
       {/* Honeypot - invisible to real visitors (off-screen, not display:none,
           since some bots skip that), tempting to anything auto-filling every
           field on the page. See /api/leads route.ts for how this is used. */}
@@ -185,10 +185,10 @@ export default function QuoteForm({
                 key={choice.value}
                 type="button"
                 onClick={() => setService(choice.value)}
-                className={`rounded-xl border px-4 py-3 text-sm font-semibold transition-colors ${
+                className={`rounded-[9px] border-[1.5px] px-4 py-3 text-sm font-semibold transition-colors ${
                   service === choice.value
-                    ? "border-brand bg-brand text-white"
-                    : "border-border-subtle text-foreground/80 hover:border-brand"
+                    ? "border-brand-dark bg-[#e9f5ef] text-brand-dark"
+                    : "border-[#cfd8d3] text-foreground/80 hover:border-brand-dark"
                 }`}
               >
                 {choice.label}
@@ -199,7 +199,7 @@ export default function QuoteForm({
           <button
             type="button"
             onClick={goToStep2}
-            className="mt-6 w-full rounded-full bg-brand py-3.5 text-sm font-semibold text-white sm:w-auto sm:px-8"
+            className="mt-6 w-full rounded-[10px] bg-brand-dark py-3.5 text-sm font-bold text-white sm:w-auto sm:px-8"
           >
             Continue
           </button>
@@ -231,14 +231,14 @@ export default function QuoteForm({
             <button
               type="button"
               onClick={() => setStep(1)}
-              className="rounded-full border border-border-subtle px-6 py-3.5 text-sm font-semibold text-foreground/70"
+              className="rounded-[10px] border-[1.5px] border-[#cdd6d1] px-6 py-3.5 text-sm font-bold text-foreground/75"
             >
               Back
             </button>
             <button
               type="button"
               onClick={goToStep3}
-              className="flex-1 rounded-full bg-brand py-3.5 text-sm font-semibold text-white sm:flex-none sm:px-8"
+              className="flex-1 rounded-[10px] bg-brand-dark py-3.5 text-sm font-bold text-white sm:flex-none sm:px-8"
             >
               Continue
             </button>
@@ -283,7 +283,7 @@ export default function QuoteForm({
               type="button"
               onClick={() => setStep(2)}
               disabled={submitting}
-              className="rounded-full border border-border-subtle px-6 py-3.5 text-sm font-semibold text-foreground/70 disabled:opacity-50"
+              className="rounded-[10px] border-[1.5px] border-[#cdd6d1] px-6 py-3.5 text-sm font-bold text-foreground/75 disabled:opacity-50"
             >
               Back
             </button>
@@ -291,7 +291,7 @@ export default function QuoteForm({
               type="button"
               onClick={handleSubmit}
               disabled={submitting}
-              className="flex-1 rounded-full bg-brand py-3.5 text-sm font-semibold text-white disabled:opacity-60 sm:flex-none sm:px-8"
+              className="flex-1 rounded-[10px] bg-brand-dark py-3.5 text-sm font-bold text-white disabled:opacity-60 sm:flex-none sm:px-8"
             >
               {submitting ? "Sending..." : "Get My Free Quote"}
             </button>
@@ -349,7 +349,7 @@ function StepIndicator({ step }: { step: Step }) {
           <li key={label} className="flex items-center gap-2">
             <span
               className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold ${
-                isActive || isDone ? "bg-brand text-white" : "bg-muted-bg text-foreground/40"
+                isActive || isDone ? "bg-brand-dark text-white" : "bg-muted-bg text-foreground/40"
               }`}
             >
               {n}

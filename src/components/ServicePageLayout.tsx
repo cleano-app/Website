@@ -1,50 +1,38 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Service } from "@/lib/content/services";
-import ServiceScene from "./scenes/ServiceScenes";
+import { servicePhotos } from "@/lib/content/photos";
 import BeforeAfter from "./BeforeAfterSlider";
 import FAQAccordion from "./FAQAccordion";
 import QuoteForm from "./QuoteForm";
-import FadeIn from "./motion/FadeIn";
-import { StaggerGrid, StaggerItem } from "./motion/StaggerGrid";
-import FloatingButterflies from "./motion/FloatingButterflies";
-import { whatsappHref } from "@/lib/siteConfig";
+import FinalCTA from "./FinalCTA";
+import { jobPhotosConfirmed, siteConfig, telHref } from "@/lib/siteConfig";
 import JsonLd from "./JsonLd";
 import { faqSchema, serviceSchema } from "@/lib/structuredData";
+import { btn, PageHero, PhoneIcon, SectionHeading, TickList, TrustRow } from "./site/ui";
 
-type IconType = "gutter" | "bin" | "window" | "pressure" | "graffiti" | "rooftop";
-
-const iconBySlug: Record<string, IconType> = {
-  "gutter-cleaning": "gutter",
-  "bin-cleaning": "bin",
-  "window-cleaning": "window",
-  "pressure-washing": "pressure",
-  "graffiti-removal": "graffiti",
-  "rooftop-cleaning": "rooftop",
-};
+// Every service page, in one layout: a photo header saying what and where,
+// the trust row, an optional feature (the gutter story), what's included
+// next to the quote form, the FAQs, then an optional offer (the Portfolio
+// scheme) and the closing band.
 
 export default function ServicePageLayout({
   service,
-  afterHero,
   feature,
-  beforeFaqs,
+  afterFaqs,
   secondaryCta,
   realPhotos,
 }: {
   service: Service;
-  /** A full-width feature shown at the top, straight under the headline,
-   * in place of the hero's small scene - e.g. the gutter story. */
+  /** A full-width feature under the trust row - e.g. the gutter story. */
   feature?: ReactNode;
-  /** A full-width section before the FAQs - e.g. the Portfolio scheme offer. */
-  beforeFaqs?: ReactNode;
-  /** Optional extra content rendered right after the hero, before "What's Included". */
-  afterHero?: ReactNode;
-  /** Overrides the hero's second button (defaults to WhatsApp) - e.g. a
-   * separate path for portfolio/commercial customers vs. regular ones. */
+  /** A full-width section after the FAQs - e.g. the Portfolio scheme offer. */
+  afterFaqs?: ReactNode;
+  /** Replaces the header's Call button - e.g. a separate path for
+   * portfolio customers. */
   secondaryCta?: { label: string; href: string };
-  /** Real before/after job photos, shown in the Before & After slots (in
-   * order - first entry fills "job 1", second fills "job 2", etc.) instead
-   * of the illustrated scene, as real photography becomes available. */
+  /** Before/after job photos - shown only once they're confirmed as
+   * Cleano's own (jobPhotosConfirmed in siteConfig). */
   realPhotos?: { before: string; after: string }[];
 }) {
   const leadService = service.slug.replace(/-/g, "_") as
@@ -54,7 +42,7 @@ export default function ServicePageLayout({
     | "pressure_washing"
     | "graffiti_removal"
     | "rooftop_cleaning";
-  const icon = iconBySlug[service.slug];
+  const photo = servicePhotos[service.slug].hero;
 
   return (
     <>
@@ -63,192 +51,107 @@ export default function ServicePageLayout({
       <JsonLd data={serviceSchema(service)} />
       {service.faqs.length > 0 && <JsonLd data={faqSchema(service.faqs)} />}
 
-      {/* Hero */}
-      <section className="bg-grain relative overflow-hidden border-b border-border-subtle bg-gradient-to-br from-muted-bg via-muted-bg to-brand-light/15">
-        <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-brand-light/30 blur-3xl" />
-        <FloatingButterflies
-          flock={[
-            // Kept to the corners, clear of the headline and the buttons.
-            { top: "1%", left: "90%", size: 18, duration: 9, delay: 0, xDrift: [0, -8, 4, 0], yDrift: [0, 6, -4, 0], rotate: [-8, 10, -4, -8], opacity: 0.55 },
-            { top: "96%", left: "2%", size: 16, duration: 11, delay: 1.4, xDrift: [0, 8, -4, 0], yDrift: [0, -6, 4, 0], rotate: [8, -10, 6, 8], opacity: 0.4 },
-          ]}
-        />
-        {/* Headline, then the animation, then the buttons - on every
-            screen size the call to action comes after the animation. */}
-        <div className={`relative mx-auto max-w-6xl px-4 sm:px-6 ${feature ? "pt-6 lg:pt-8" : "grid items-center gap-x-10 gap-y-6 pt-6 pb-8 lg:grid-cols-2 lg:pt-10 lg:pb-12"}`}>
-          <FadeIn className="relative lg:row-span-2">
-            <h1 className="text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">{service.heroHeadline}</h1>
-            <p className="mt-3 text-base text-foreground/70 sm:text-lg">{service.heroSubhead}</p>
-          </FadeIn>
-          {!feature && (
-            <FadeIn delay={0.15} className="relative">
-              <div className="relative mx-auto max-w-xl">
-                <div className="absolute -inset-4 rounded-[2.4rem] bg-gradient-to-br from-brand-light/40 to-sky-200/40 blur-2xl" aria-hidden="true" />
-                <div className="relative overflow-hidden rounded-[1.6rem] shadow-2xl shadow-brand/25 ring-1 ring-white">
-                  <ServiceScene type={icon} className="block w-full" />
-                </div>
-              </div>
-            </FadeIn>
-          )}
-          {!feature && <HeroButtons service={service} secondaryCta={secondaryCta} className="lg:col-start-2 lg:justify-center" />}
-        </div>
-        {feature && (
-          <div className="relative pt-4 pb-8">
-            {feature}
-            <HeroButtons service={service} secondaryCta={secondaryCta} className="mt-1 justify-center px-4" />
-          </div>
+      <PageHero image={photo.src} imageAlt={photo.alt} position={photo.position} crumb={service.name} title={`${service.name} in London`} lead={service.heroSubhead}>
+        <Link href="#quote" className={btn.solidOnDark}>
+          Get a Free Quote
+        </Link>
+        {secondaryCta ? (
+          <Link href={secondaryCta.href} className={btn.lineOnDark}>
+            {secondaryCta.label}
+          </Link>
+        ) : (
+          <a href={telHref()} className={btn.lineOnDark}>
+            <PhoneIcon />
+            {siteConfig.phoneDisplay}
+          </a>
         )}
-      </section>
+      </PageHero>
+      <TrustRow />
 
-      {afterHero}
-
-      {/* Service options (bin cleaning: one-off vs regular) */}
-      {service.serviceOptions && (
-        <section className="mx-auto max-w-6xl px-4 py-10 sm:py-16 sm:px-6">
-          <StaggerGrid className="grid gap-6 sm:grid-cols-2">
-            {service.serviceOptions.map((option) => (
-              <StaggerItem key={option.title}>
-                <div className="h-full rounded-2xl border border-border-subtle bg-white p-6 shadow-sm">
-                  <h2 className="text-lg font-bold text-foreground">{option.title}</h2>
-                  <p className="mt-2 text-sm text-foreground/70">{option.description}</p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerGrid>
+      {feature && (
+        <section className="pt-10 pb-5 sm:pt-14 sm:pb-9">
+          <SectionHeading
+            className="mx-auto max-w-5xl px-4 sm:px-6"
+            eyebrow="How we do it"
+            title="From drone check to photo report"
+            sub="Watch how the job works, from the first drone photo to the report in your inbox."
+          />
+          <div className="mt-6">{feature}</div>
         </section>
       )}
 
-      {/* What's included */}
-      <section className="mx-auto max-w-6xl px-4 py-10 sm:py-16 sm:px-6">
-        <FadeIn>
-          <p className="text-sm font-semibold uppercase tracking-wide text-brand">Included</p>
-          <h2 className="mt-2 text-2xl font-bold text-foreground sm:text-3xl">What&apos;s Included</h2>
-          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-            {service.included.map((item) => (
-              <li key={item} className="flex items-start gap-3 text-foreground/80">
-                <CheckIcon />
-                <span>{item}</span>
+      {/* Bin cleaning: one-off vs regular */}
+      {service.serviceOptions && (
+        <section className="py-10 sm:py-14">
+          <ul className="mx-auto grid max-w-6xl gap-4 px-4 sm:grid-cols-2 sm:px-6">
+            {service.serviceOptions.map((option) => (
+              <li key={option.title} className="rounded-[12px] border border-border-subtle bg-white p-5 sm:p-6">
+                <h2 className="text-lg font-bold text-foreground">{option.title}</h2>
+                <p className="mt-1.5 text-sm leading-relaxed text-foreground/65">{option.description}</p>
               </li>
             ))}
           </ul>
-        </FadeIn>
-      </section>
-
-      {/* Before & after */}
-      <section className="bg-muted-bg py-10 sm:py-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <FadeIn>
-            <p className="text-sm font-semibold uppercase tracking-wide text-brand">Real Results</p>
-            <h2 className="mt-2 text-2xl font-bold text-foreground sm:text-3xl">Before &amp; After</h2>
-            <p className="mt-2 text-sm text-foreground/60">Real {service.name.toLowerCase()} jobs.</p>
-          </FadeIn>
-          {realPhotos && realPhotos.length > 0 && (
-            <div className="mt-6">
-              <BeforeAfter jobs={realPhotos.map((photos, i) => ({ label: `Job ${i + 1}`, ...photos }))} />
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Why this matters */}
-      <section className="mx-auto max-w-6xl px-4 py-10 sm:py-16 sm:px-6">
-        <FadeIn>
-          <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
-            Why {service.name}?
-          </h2>
-        </FadeIn>
-        <StaggerGrid className="mt-6 grid gap-6 sm:grid-cols-3">
-          {service.why.map((point) => (
-            <StaggerItem key={point.title}>
-              <div className="h-full rounded-2xl border border-border-subtle bg-white p-5">
-                <h3 className="text-base font-semibold text-brand-dark">{point.title}</h3>
-                <p className="mt-1.5 text-sm text-foreground/70">{point.body}</p>
-              </div>
-            </StaggerItem>
-          ))}
-        </StaggerGrid>
-      </section>
-
-      {/* Pricing - only shown where we have real, confirmed pricing */}
-      {!service.hidePricing && (
-        <section className="bg-muted-bg py-10 sm:py-16">
-          <FadeIn className="mx-auto max-w-6xl px-4 text-center sm:px-6">
-            <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Pricing</h2>
-            <p className="mt-3 text-3xl font-bold text-brand-dark">
-              {service.pricingFrom !== "Custom" ? `Prices from ${service.pricingFrom}` : "Custom pricing"}
-            </p>
-            <p className="mt-2 text-sm text-foreground/60">{service.pricingNote}</p>
-          </FadeIn>
         </section>
       )}
 
-      {beforeFaqs}
+      {/* What's included, why it matters and the price - next to the form */}
+      <section id="quote" className="scroll-mt-24 border-y border-border-subtle bg-muted-bg py-10 sm:py-16">
+        <div className="mx-auto grid max-w-6xl items-start gap-8 px-4 sm:px-6 lg:grid-cols-2 lg:gap-14">
+          <div>
+            <SectionHeading eyebrow="What's included" title={`Every ${service.name.toLowerCase()} job includes`} />
+            <TickList className="mt-5" columns={2} items={service.included} />
 
-      {/* FAQs */}
-      <section className="mx-auto max-w-3xl px-4 py-10 sm:py-16 sm:px-6">
-        <FadeIn>
-          <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
-            Frequently Asked Questions
-          </h2>
-          <div className="mt-6">
-            <FAQAccordion faqs={service.faqs} />
+            {!service.hidePricing && (
+              <div className="mt-7 rounded-[12px] border border-border-subtle bg-white p-5">
+                <p className="text-sm font-semibold text-foreground/65">Pricing</p>
+                <p className="mt-1 font-display text-2xl font-bold text-brand-dark">
+                  {service.pricingFrom !== "Custom" ? `From ${service.pricingFrom}` : "Custom pricing"}
+                </p>
+                <p className="mt-1 text-sm text-foreground/65">{service.pricingNote}</p>
+              </div>
+            )}
+
+            <h3 className="mt-8 text-lg font-bold text-foreground">Why it matters</h3>
+            <ul className="mt-3 grid gap-3">
+              {service.why.map((point) => (
+                <li key={point.title} className="rounded-[12px] border border-border-subtle bg-white p-4">
+                  <p className="font-bold text-foreground">{point.title}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-foreground/65">{point.body}</p>
+                </li>
+              ))}
+            </ul>
           </div>
-        </FadeIn>
-      </section>
 
-      {/* Quote form */}
-      <section id="quote" className="bg-muted-bg py-10 sm:py-16">
-        <div className="mx-auto max-w-2xl px-4 sm:px-6">
-          <h2 className="text-center text-2xl font-bold text-foreground sm:text-3xl">
-            Get a Free Quote
-          </h2>
-          <div className="mt-6">
+          <div>
+            <h2 className="text-[25px] font-bold text-foreground sm:text-[28px]">Get a free quote</h2>
+            <p className="mt-1.5 mb-4 text-sm text-foreground/65">Takes under a minute. Add a photo and we can often quote without a visit.</p>
             <QuoteForm sourcePage={`/${service.slug}`} defaultService={leadService} />
           </div>
         </div>
       </section>
-    </>
-  );
-}
 
-function CheckIcon() {
-  return (
-    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand-dark">
-      <svg
-        width="12"
-        height="12"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-      >
-        <path d="M5 13l4 4L19 7" />
-      </svg>
-    </span>
-  );
-}
-
-/** "Get a Free Quote" and a second way to get in touch, under the hero's animation. */
-function HeroButtons({ service, secondaryCta, className = "" }: { service: Service; secondaryCta?: { href: string; label: string }; className?: string }) {
-  const solid = "rounded-full bg-brand px-6 py-3 text-center text-sm font-bold text-white shadow-md shadow-brand/25 transition-all hover:-translate-y-0.5 hover:bg-brand-dark hover:shadow-lg";
-  const outline = "rounded-full border border-brand/40 bg-white px-6 py-3 text-center text-sm font-bold text-brand-dark transition-all hover:-translate-y-0.5 hover:border-brand hover:shadow-sm";
-  return (
-    <div className={`relative flex flex-wrap gap-3 ${className}`}>
-      <Link href="#quote" className={solid}>
-        Get a Free Quote
-      </Link>
-      {secondaryCta ? (
-        <Link href={secondaryCta.href} className={outline}>
-          {secondaryCta.label}
-        </Link>
-      ) : (
-        <a href={whatsappHref(`Hi Cleano, I'd like a quote for ${service.name}`, `/${service.slug}`)} target="_blank" rel="noopener noreferrer" className={outline}>
-          WhatsApp Us
-        </a>
+      {jobPhotosConfirmed && realPhotos && realPhotos.length > 0 && (
+        <section className="py-10 sm:py-16">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <SectionHeading eyebrow="Real results" title="Before & after" sub={`Cleano ${service.name.toLowerCase()} jobs.`} />
+            <div className="mt-7">
+              <BeforeAfter jobs={realPhotos.map((photos, i) => ({ label: `Job ${i + 1}`, ...photos }))} />
+            </div>
+          </div>
+        </section>
       )}
-    </div>
+
+      <section className="py-10 sm:py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <SectionHeading eyebrow="Questions" title={`${service.name} FAQs`} />
+          <div className="mt-6">
+            <FAQAccordion faqs={service.faqs} />
+          </div>
+        </div>
+      </section>
+
+      {afterFaqs}
+      <FinalCTA />
+    </>
   );
 }

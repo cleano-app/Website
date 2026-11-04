@@ -16,7 +16,7 @@ export default function RooftopCleaningPage() {
   return (
     <ServicePageLayout
       service={service}
-      beforeFaqs={<PortfolioOffer />}
+      afterFaqs={<PortfolioOffer />}
       realPhotos={[
         { before: "/photos/rooftop-before.jpg", after: "/photos/rooftop-after.jpg" },
         { before: "/photos/rooftop2-before.jpg", after: "/photos/rooftop2-after.jpg" },

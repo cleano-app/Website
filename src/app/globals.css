@@ -145,3 +145,54 @@ textarea:focus-visible,
 @media (prefers-reduced-motion: reduce) {
   .animate-shine-loop { animation: none; opacity: 0; }
 }
+
+/* The homepage hero slideshow: five photos on a 35s loop. Each shows for
+   7s - fading in over 1.6s and zooming in very slowly - then fades into the
+   next. Every slide runs the same keyframes, started 7s apart (see
+   HeroSlideshow), and the bars under the photos fill in step with it. The
+   percentages are for 5 slides: 1.6s/35s = 4.57%, (7s + 1.6s)/35s = 24.57%. */
+@keyframes hero-fade {
+  0% { opacity: 0; }
+  4.57% { opacity: 1; }
+  20% { opacity: 1; }
+  24.57% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes hero-zoom {
+  0% { transform: scale(1); }
+  24.57% { transform: scale(1.09); }
+  100% { transform: scale(1.09); }
+}
+@keyframes hero-bar {
+  0% { transform: scaleX(0); }
+  20% { transform: scaleX(1); }
+  20.01%, 100% { transform: scaleX(0); }
+}
+.hero-slide {
+  opacity: 0;
+  animation: hero-fade 35s linear infinite;
+}
+.hero-slide img {
+  animation: hero-zoom 35s linear infinite;
+  animation-delay: inherit;
+}
+.hero-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: white;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: hero-bar 35s linear infinite;
+  animation-delay: inherit;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide,
+  .hero-slide img,
+  .hero-bar::after {
+    animation: none;
+  }
+  .hero-slide:first-child {
+    opacity: 1;
+  }
+}

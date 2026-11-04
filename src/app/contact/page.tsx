@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import FloatingButterflies from "@/components/motion/FloatingButterflies";
+import QuoteForm from "@/components/QuoteForm";
+import FinalCTA from "@/components/FinalCTA";
+import { btn, PlainHero } from "@/components/site/ui";
 import { pageMetadata } from "@/lib/seo";
 import { portfolioPath } from "@/lib/portfolio";
 import { mailtoHref, siteConfig, telHref, whatsappHref } from "@/lib/siteConfig";
@@ -13,8 +15,8 @@ export const metadata: Metadata = pageMetadata({
 
 // One place with every way to reach Cleano. Everything here comes from
 // siteConfig / companyDetails so it can never disagree with the header,
-// footer or the policy pages. No form: the quote form at /quote is the
-// form, and it's linked prominently instead of duplicated.
+// footer or the policy pages. The quote form sits here too, so someone who
+// came to get in touch can ask for a price without another click.
 const ways = [
   {
     label: "Call us",
@@ -45,99 +47,68 @@ const ways = [
 export default function ContactPage() {
   return (
     <>
-      <section className="bg-grain relative overflow-hidden border-b border-border-subtle bg-gradient-to-br from-muted-bg via-muted-bg to-brand-light/15">
-        <div className="pointer-events-none absolute -top-20 -right-20 h-64 w-64 rounded-full bg-brand-light/25 blur-3xl" />
-        <FloatingButterflies
-          flock={[
-            { top: "16%", left: "10%", size: 20, duration: 9, delay: 0.2, xDrift: [0, 12, -6, 0], yDrift: [0, -12, 6, 0], rotate: [-8, 10, -4, -8], opacity: 0.5 },
-            { top: "70%", left: "88%", size: 16, duration: 10, delay: 1, xDrift: [0, -8, 6, 0], yDrift: [0, 8, -6, 0], rotate: [8, -10, 6, 8], opacity: 0.4 },
-          ]}
-        />
-        <div className="relative mx-auto max-w-4xl px-4 py-8 text-center sm:px-6 lg:py-12">
-          <h1 className="text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">Contact Us</h1>
-          <p className="mx-auto mt-3 max-w-xl text-foreground/70">
-            Call, message or email — whichever suits you. For a price, the quote form takes under a
-            minute.
-          </p>
-        </div>
-      </section>
+      <PlainHero
+        crumb="Contact"
+        title="Contact us"
+        lead="Call, message or email - whichever suits you. For a price, the quote form takes under a minute."
+      />
 
-      <section className="mx-auto max-w-4xl px-4 py-10 sm:py-14 sm:px-6">
-        <div className="grid gap-4 sm:grid-cols-3">
-          {ways.map((way) => (
-            <a
-              key={way.label}
-              href={way.href}
-              {...(way.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-              className="group rounded-2xl border border-border-subtle p-5 transition-colors hover:border-brand"
-            >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand/15 text-brand-dark">
-                {way.icon}
-              </span>
-              <p className="mt-4 text-sm font-semibold uppercase tracking-wide text-brand">{way.label}</p>
-              <p className="mt-1 text-lg font-bold text-foreground group-hover:text-brand-dark">{way.value}</p>
-              <p className="mt-1 text-sm text-foreground/60">{way.note}</p>
-            </a>
-          ))}
-        </div>
+      <section className="py-8 sm:py-12">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <ul className="grid gap-4 sm:grid-cols-3">
+            {ways.map((way) => (
+              <li key={way.label}>
+                <a
+                  href={way.href}
+                  {...(way.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  className="group block h-full rounded-[12px] border border-border-subtle bg-white p-5 transition-colors hover:border-brand-dark"
+                >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-[9px] bg-[#e9f5ef] text-brand-dark">{way.icon}</span>
+                  <p className="mt-3.5 text-[13px] font-bold tracking-[0.06em] text-brand-dark uppercase">{way.label}</p>
+                  <p className="mt-1 font-display text-lg font-bold text-foreground">{way.value}</p>
+                  <p className="mt-1 text-sm text-foreground/60">{way.note}</p>
+                </a>
+              </li>
+            ))}
+          </ul>
 
-        <div className="mt-6 flex flex-col gap-3 rounded-2xl bg-brand px-6 py-6 text-white sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-lg font-bold">Want a price?</p>
-            <p className="text-sm text-white/85">
-              Tell us what needs cleaning and add a photo or two — we can often quote without a visit.
-            </p>
+          <div className="mt-10 grid items-start gap-8 lg:grid-cols-2 lg:gap-14">
+            <div>
+              <h2 className="text-[25px] font-bold text-foreground sm:text-[32px]">Where we work</h2>
+              <p className="mt-2 leading-relaxed text-foreground/65">
+                We cover London and the surrounding areas. Tell us your postcode when you get in touch and we&apos;ll let you
+                know straight away.
+              </p>
+              <div className="mt-6 grid gap-4">
+                <div className="rounded-[12px] border border-border-subtle bg-white p-5">
+                  <p className="font-display text-[17px] font-bold text-foreground">Landlord or property manager?</p>
+                  <p className="mt-1 text-sm leading-relaxed text-foreground/65">
+                    Our Portfolio Gutter Care Scheme inspects every property by drone and cleans only where it&apos;s needed.
+                    Where the gutters are clear, the report is free.
+                  </p>
+                  <Link href={portfolioPath} className={`${btn.solid} mt-4`}>
+                    See the Portfolio Scheme
+                  </Link>
+                </div>
+                <div className="rounded-[12px] border border-border-subtle bg-white p-5">
+                  <p className="font-display text-[17px] font-bold text-foreground">Already a customer?</p>
+                  <p className="mt-1 text-sm text-foreground/65">Sign in to the Cleano app to see your bookings, reports and invoices.</p>
+                  <a href={`${siteConfig.opsAppUrl}/login`} className={`${btn.line} mt-4`}>
+                    Customer sign in
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h2 className="text-[25px] font-bold text-foreground sm:text-[28px]">Get a free quote</h2>
+              <p className="mt-1.5 mb-4 text-sm text-foreground/65">Add a photo or two and we can often quote without a visit.</p>
+              <QuoteForm sourcePage="/contact" />
+            </div>
           </div>
-          <Link
-            href="/quote"
-            className="inline-flex shrink-0 items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-brand-dark shadow-sm"
-          >
-            Get a Free Quote
-          </Link>
         </div>
       </section>
 
-      <section className="bg-muted-bg py-10 sm:py-14">
-        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
-          <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Where we work</h2>
-          <p className="mx-auto mt-3 max-w-xl text-foreground/75">
-            We cover London and the surrounding areas. Tell us your postcode when you get in touch
-            and we&apos;ll let you know straight away.
-          </p>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-4xl space-y-4 px-4 py-10 sm:py-14 sm:px-6">
-        <div className="rounded-2xl border-2 border-brand/30 bg-gradient-to-br from-[#effdf7] to-white p-6 sm:flex sm:items-center sm:justify-between sm:gap-6">
-          <div>
-            <h2 className="text-lg font-bold text-foreground">Landlord or property manager?</h2>
-            <p className="mt-1 text-sm text-foreground/70">
-              Our Portfolio Gutter Care Scheme inspects every property by drone and cleans only where
-              it&apos;s needed. Where the gutters are clear, the report is free.
-            </p>
-          </div>
-          <Link
-            href={portfolioPath}
-            className="mt-4 inline-flex shrink-0 items-center justify-center rounded-full bg-brand px-6 py-3 text-sm font-bold text-white shadow-md shadow-brand/25 transition-all hover:-translate-y-0.5 hover:bg-brand-dark sm:mt-0"
-          >
-            See the Scheme
-          </Link>
-        </div>
-        <div className="rounded-2xl border border-border-subtle p-6 sm:flex sm:items-center sm:justify-between sm:gap-6">
-          <div>
-            <h2 className="text-lg font-bold text-foreground">Already a customer?</h2>
-            <p className="mt-1 text-sm text-foreground/60">
-              Sign in to the Cleano app to see your bookings, reports and invoices.
-            </p>
-          </div>
-          <a
-            href={`${siteConfig.opsAppUrl}/login`}
-            className="mt-4 inline-flex items-center justify-center rounded-full border border-border-subtle px-6 py-3 text-sm font-semibold text-foreground/80 transition-colors hover:border-brand hover:text-brand-dark sm:mt-0"
-          >
-            Sign In
-          </a>
-        </div>
-      </section>
+      <FinalCTA />
     </>
   );
 }
