@@ -1,6 +1,7 @@
 import HeroSlideshow from "@/components/home/HeroSlideshow";
 import ServiceCards from "@/components/home/ServiceCards";
 import PhotoReport from "@/components/home/PhotoReport";
+import OfferBand from "@/components/home/OfferBand";
 import HowItWorks from "@/components/HowItWorks";
 import PortfolioOffer from "@/components/PortfolioOffer";
 import FinalCTA from "@/components/FinalCTA";
@@ -21,6 +22,7 @@ export default function HomePage() {
     <>
       <HeroSlideshow />
       <TrustRow />
+      <OfferBand />
       <ServiceCards />
       <HowItWorks />
       {jobPhotosConfirmed && (
