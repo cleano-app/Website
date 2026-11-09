@@ -77,8 +77,8 @@ export function sniffImageType(bytes: Uint8Array): "image/jpeg" | "image/png" | 
 // numbers use. Postcode: letters, digits and spaces. Deliberately loose
 // (this is a lead form, not a strict validator) - the point is to reject
 // garbage/script-like input, not to be a phone-format authority.
-const PHONE_RE = /^[0-9+()\-\s]{7,20}$/;
-const POSTCODE_RE = /^[A-Za-z0-9\s]{2,10}$/;
+export const PHONE_RE = /^[0-9+()\-\s]{7,20}$/;
+export const POSTCODE_RE = /^[A-Za-z0-9\s]{2,10}$/;
 
 export type NewLeadInput = {
   name: string;

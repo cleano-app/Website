@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Turnstile from "../Turnstile";
 import { WhatsAppIcon } from "../site/ui";
-import { validateNewLead, type NewLeadInput } from "@/lib/leads";
+import { LEAD_LIMITS, PHONE_RE, POSTCODE_RE, validateNewLead, type NewLeadInput } from "@/lib/leads";
 import { portfolioPath } from "@/lib/portfolio";
 import {
   inspectionBookingUrl,
@@ -20,15 +20,30 @@ import {
 
 /**
  * The website chat - the public counterpart of the chat in the Cleano app
- * (the owner, 9 Nov 2026: "add the chat like inside the app"). Three ways
- * in, as in the app: quick buttons answered straight away (no AI), a typed
- * question answered by AI from the website's own content (/api/chat), and
- * "Message the office", which arrives as a lead in Ops with the usual
- * email. A person is always one tap away: the office, or WhatsApp.
+ * (the owner, 9 Nov 2026: "add the chat like inside the app"). It finds
+ * answers; it never does anything on anyone's behalf. Quick buttons are
+ * answered straight away (no AI), typed questions by AI from the website's
+ * own content (/api/chat). A message for the office is written in the same
+ * chat box, as in the app - no form: the chat asks for a name, number and
+ * postcode one at a time (once per visit) and sends it as a lead, so it
+ * lands in Ops with the usual office email.
  */
 
 type ChatLink = { label: string; href: string };
-type Msg = { id: string; from: "visitor" | "chat"; text: string; links?: ChatLink[]; offerOffice?: string };
+type Msg = {
+  id: string;
+  from: "visitor" | "chat";
+  text: string;
+  links?: ChatLink[];
+  /** A question it couldn't answer - offer to send it to the office. */
+  offerOffice?: string;
+  /** A message for the office that didn't send - offer to try again. */
+  retry?: string;
+  /** Part of a message to the office (name, number, postcode): never sent to the AI. */
+  private?: boolean;
+};
+type Contact = { name?: string; phone?: string; postcode?: string };
+type Step = "message" | "name" | "phone" | "postcode" | "check";
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 const newId = () => Math.random().toString(36).slice(2);
@@ -45,6 +60,15 @@ const QUICK = [
   { key: "office", label: "Message the office" },
 ] as const;
 
+// What the chat box is for at each step of a message to the office.
+const STEP_INPUT: Record<Step, { placeholder: string; label: string; autoComplete?: string; inputMode?: "tel" }> = {
+  message: { placeholder: "Your message to the office", label: "Your message to the office" },
+  name: { placeholder: "Your name", label: "Your name", autoComplete: "name" },
+  phone: { placeholder: "Mobile number", label: "Mobile number", autoComplete: "tel", inputMode: "tel" },
+  postcode: { placeholder: "Postcode", label: "Postcode", autoComplete: "postal-code" },
+  check: { placeholder: "", label: "" },
+};
+
 export default function SiteChat() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -53,8 +77,12 @@ export default function SiteChat() {
   ]);
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
-  const [office, setOffice] = useState<{ message: string } | null>(null);
+  // A message on its way to the office, and the step it's at.
+  const [office, setOffice] = useState<{ step: Step; message: string } | null>(null);
+  // Asked once per visit, then reused for any further message.
+  const [contact, setContact] = useState<Contact>({});
   const listRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
@@ -70,6 +98,7 @@ export default function SiteChat() {
 
   const say = (m: Omit<Msg, "id">) => setMsgs((prev) => [...prev, { ...m, id: newId() }]);
   const offerRunning = inspectionPromoRunning();
+  const sourcePage = `/chat${pathname === "/" ? "" : pathname}`;
 
   function quick(key: (typeof QUICK)[number]["key"], label: string) {
     say({ from: "visitor", text: label });
@@ -101,22 +130,99 @@ export default function SiteChat() {
         ],
       });
     } else {
-      startOffice("");
+      say({ private: true, from: "chat", text: "Sure - type your message below and I'll pass it to the office." });
+      setOffice({ step: "message", message: "" });
+      inputRef.current?.focus();
     }
   }
 
-  function startOffice(message: string) {
-    setOffice({ message });
-    say({ from: "chat", text: "Leave your details and message, and the office will get back to you." });
+  /** Send `message` to the office, first asking for whatever's missing. */
+  function toOffice(message: string, c: Contact = contact) {
+    const first = c.name?.split(/\s+/)[0];
+    if (!c.name) {
+      say({ private: true, from: "chat", text: "I'll send that to the office. What's your name?" });
+      setOffice({ step: "name", message });
+    } else if (!c.phone) {
+      say({ private: true, from: "chat", text: `Thanks${first ? `, ${first}` : ""}. What's the best number for the office to reach you on?` });
+      setOffice({ step: "phone", message });
+    } else if (!c.postcode) {
+      say({ private: true, from: "chat", text: "And your postcode?" });
+      setOffice({ step: "postcode", message });
+    } else if (TURNSTILE_SITE_KEY) {
+      // The site's bot check, as on the quote form - deliver() runs once it passes.
+      say({ private: true, from: "chat", text: "One quick check, then it's sent." });
+      setOffice({ step: "check", message });
+    } else {
+      void deliver(message, c);
+    }
+    inputRef.current?.focus();
+  }
+
+  async function deliver(message: string, c: Contact, turnstileToken?: string) {
+    setOffice(null);
+    setBusy(true);
+    const payload: NewLeadInput = {
+      name: c.name ?? "",
+      phone: c.phone ?? "",
+      postcode: c.postcode ?? "",
+      service: "other",
+      serviceOtherNote: `From the website chat: ${message}`.slice(0, LEAD_LIMITS.serviceOtherNote),
+      sourcePage,
+      website: "",
+      turnstileToken,
+    };
+    try {
+      const invalid = validateNewLead(payload);
+      if (invalid) throw new Error(invalid);
+      const res = await fetch("/api/leads", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || "That didn't send.");
+      }
+      say({ private: true, from: "chat", text: `Sent - thank you. The office will get back to you on ${c.phone}. Anything else I can help with?` });
+    } catch (e) {
+      const why = e instanceof Error ? e.message : "That didn't send.";
+      say({ private: true, from: "chat", text: `${why} You can try again, or call or WhatsApp us on ${siteConfig.phoneDisplay}.`, retry: message });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  /** The chat box while a message to the office is under way. */
+  function officeReply(value: string) {
+    if (!office) return;
+    const step = office.step;
+    say({ private: true, from: "visitor", text: value });
+    if (step === "message") return toOffice(value.slice(0, 470));
+    const next: Contact = { ...contact };
+    if (step === "name") {
+      if (value.length < 2) return say({ private: true, from: "chat", text: "Please type your name." });
+      next.name = value.slice(0, LEAD_LIMITS.name);
+    } else if (step === "phone") {
+      if (!PHONE_RE.test(value)) return say({ private: true, from: "chat", text: "That doesn't look like a phone number - could you check it?" });
+      next.phone = value;
+    } else if (step === "postcode") {
+      if (!POSTCODE_RE.test(value)) return say({ private: true, from: "chat", text: "Please type your postcode, like N16 6TL." });
+      next.postcode = value.toUpperCase();
+    }
+    setContact(next);
+    toOffice(office.message, next);
+  }
+
+  function cancelOffice() {
+    setOffice(null);
+    say({ private: true, from: "chat", text: "No problem - nothing was sent. Ask me anything else." });
   }
 
   async function send() {
     const q = text.trim();
     if (!q || busy) return;
     setText("");
+    if (office) return officeReply(q);
     say({ from: "visitor", text: q });
     setBusy(true);
-    const history = msgs.filter((m) => m.id !== "hello").map((m) => ({ from: m.from, text: m.text }));
+    // The conversation so far, without anyone's contact details.
+    const history = msgs.filter((m) => m.id !== "hello" && !m.private).map((m) => ({ from: m.from, text: m.text }));
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
@@ -124,15 +230,18 @@ export default function SiteChat() {
         body: JSON.stringify({ question: q, history }),
       });
       const r = await res.json().catch(() => ({ error: "No signal - try again." }));
-      if (r.offline) say({ from: "chat", text: "I can't answer typed questions right now - the office can.", offerOffice: q });
+      if (r.offline) say({ from: "chat", text: "I can't answer typed questions right now, but the office can.", offerOffice: q });
       else if (r.error) say({ from: "chat", text: r.error, offerOffice: q });
       else say({ from: "chat", text: r.reply, links: r.links, offerOffice: r.handoff ? q : undefined });
     } catch {
-      say({ from: "chat", text: "No signal - try again, or message the office.", offerOffice: q });
+      say({ from: "chat", text: "No signal - try again, or send your question to the office.", offerOffice: q });
     } finally {
       setBusy(false);
     }
   }
+
+  const input = office ? STEP_INPUT[office.step] : { placeholder: "Ask a question", label: "Your question" };
+  const chip = "rounded-full bg-[#e9f5ef] px-3 py-1 text-[13px] font-semibold text-brand-dark";
 
   return (
     <>
@@ -184,20 +293,25 @@ export default function SiteChat() {
                     <div className="flex flex-wrap gap-1.5">
                       {m.links.map((l) =>
                         l.href.startsWith("http") ? (
-                          <a key={l.href} href={l.href} className="rounded-full bg-[#e9f5ef] px-3 py-1 text-[13px] font-semibold text-brand-dark">
+                          <a key={l.href} href={l.href} className={chip}>
                             {l.label}
                           </a>
                         ) : (
-                          <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className="rounded-full bg-[#e9f5ef] px-3 py-1 text-[13px] font-semibold text-brand-dark">
+                          <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className={chip}>
                             {l.label}
                           </Link>
                         ),
                       )}
                     </div>
                   )}
-                  {m.offerOffice && !office && (
-                    <button type="button" onClick={() => startOffice(m.offerOffice!)} className="rounded-full bg-[#e9f5ef] px-3 py-1 text-[13px] font-semibold text-brand-dark">
-                      Send to the office
+                  {m.offerOffice && !office && !busy && (
+                    <button type="button" onClick={() => toOffice(m.offerOffice!)} className={chip}>
+                      Send this to the office
+                    </button>
+                  )}
+                  {m.retry && !office && !busy && (
+                    <button type="button" onClick={() => toOffice(m.retry!)} className={chip}>
+                      Try again
                     </button>
                   )}
                 </div>
@@ -212,63 +326,67 @@ export default function SiteChat() {
                 </span>
               </div>
             )}
-            {office && (
-              <OfficeForm
-                initialMessage={office.message}
-                sourcePage={`/chat${pathname === "/" ? "" : pathname}`}
-                onCancel={() => setOffice(null)}
-                onSent={() => {
-                  setOffice(null);
-                  say({ from: "chat", text: "Sent - thank you. The office will get back to you soon." });
-                }}
-              />
+            {office?.step === "check" && TURNSTILE_SITE_KEY && (
+              <div className="flex justify-start">
+                <Turnstile siteKey={TURNSTILE_SITE_KEY} onVerify={(token) => token && void deliver(office.message, contact, token)} />
+              </div>
             )}
           </div>
 
-          {!office && (
-            <>
-              <div className="flex gap-1.5 overflow-x-auto border-t border-border-subtle bg-white px-3 py-2 [scrollbar-width:none]">
-                {QUICK.filter((q) => q.key !== "offer" || offerRunning).map((q) => (
-                  <button
-                    key={q.key}
-                    type="button"
-                    disabled={busy}
-                    onClick={() => quick(q.key, q.label)}
-                    className="shrink-0 rounded-full border border-[#cfd8d3] bg-white px-3 py-1.5 text-[13px] font-semibold text-foreground disabled:opacity-50"
-                  >
-                    {q.label}
-                  </button>
-                ))}
-              </div>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  void send();
-                }}
-                className="flex items-end gap-2 bg-white px-3 pt-1"
-              >
-                <textarea
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      void send();
-                    }
-                  }}
-                  rows={1}
-                  maxLength={1000}
-                  placeholder="Ask a question"
-                  aria-label="Your question"
-                  className="max-h-28 min-h-11 flex-1 resize-none rounded-[22px] border border-[#cfd8d3] bg-muted-bg px-4 py-2.5 text-[16px] text-foreground placeholder:text-foreground/45 focus:border-brand-dark focus:outline-none"
-                />
-                <button type="submit" disabled={busy || !text.trim()} aria-label="Send" className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand-dark text-white disabled:opacity-40">
-                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
-                    <path d="M3.4 20.4l17.45-7.48a1 1 0 000-1.84L3.4 3.6a.99.99 0 00-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z" />
-                  </svg>
+          <div className="flex gap-1.5 overflow-x-auto border-t border-border-subtle bg-white px-3 py-2 [scrollbar-width:none]">
+            {office ? (
+              <>
+                <span className="shrink-0 self-center text-[13px] font-semibold text-foreground/60">Message to the office</span>
+                <button type="button" onClick={cancelOffice} className="ml-auto shrink-0 rounded-full border border-[#cfd8d3] bg-white px-3 py-1.5 text-[13px] font-semibold text-foreground">
+                  Cancel
                 </button>
-              </form>
-            </>
+              </>
+            ) : (
+              QUICK.filter((q) => q.key !== "offer" || offerRunning).map((q) => (
+                <button
+                  key={q.key}
+                  type="button"
+                  disabled={busy}
+                  onClick={() => quick(q.key, q.label)}
+                  className="shrink-0 rounded-full border border-[#cfd8d3] bg-white px-3 py-1.5 text-[13px] font-semibold text-foreground disabled:opacity-50"
+                >
+                  {q.label}
+                </button>
+              ))
+            )}
+          </div>
+          {office?.step !== "check" && (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                void send();
+              }}
+              className="flex items-end gap-2 bg-white px-3 pt-1"
+            >
+              <textarea
+                ref={inputRef}
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    void send();
+                  }
+                }}
+                rows={1}
+                maxLength={office?.step === "message" ? 470 : 1000}
+                placeholder={input.placeholder}
+                aria-label={input.label}
+                autoComplete={input.autoComplete ?? "off"}
+                inputMode={input.inputMode}
+                className="max-h-28 min-h-11 flex-1 resize-none rounded-[22px] border border-[#cfd8d3] bg-muted-bg px-4 py-2.5 text-[16px] text-foreground placeholder:text-foreground/45 focus:border-brand-dark focus:outline-none"
+              />
+              <button type="submit" disabled={busy || !text.trim()} aria-label="Send" className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand-dark text-white disabled:opacity-40">
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
+                  <path d="M3.4 20.4l17.45-7.48a1 1 0 000-1.84L3.4 3.6a.99.99 0 00-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z" />
+                </svg>
+              </button>
+            </form>
           )}
 
           <p className="bg-white px-4 pt-2 text-center text-[11.5px] leading-snug text-foreground/50" style={{ paddingBottom: "max(10px, env(safe-area-inset-bottom))" }}>
@@ -281,83 +399,6 @@ export default function SiteChat() {
         </div>
       )}
     </>
-  );
-}
-
-/** "Message the office" - sent as a lead (service "other", the message as
- * its note), so it lands in Ops with the page it came from and the usual
- * office email. */
-function OfficeForm({ initialMessage, sourcePage, onCancel, onSent }: { initialMessage: string; sourcePage: string; onCancel: () => void; onSent: () => void }) {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [postcode, setPostcode] = useState("");
-  const [message, setMessage] = useState(initialMessage);
-  const [website, setWebsite] = useState(""); // honeypot, as on the quote form
-  const [token, setToken] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [sending, setSending] = useState(false);
-
-  async function submit() {
-    const payload: NewLeadInput = {
-      name: name.trim(),
-      phone: phone.trim(),
-      postcode: postcode.trim(),
-      service: "other",
-      serviceOtherNote: `From the website chat: ${message.trim()}`.slice(0, 500),
-      sourcePage,
-      website,
-      turnstileToken: token || undefined,
-    };
-    const invalid = validateNewLead(payload) ?? (message.trim() ? null : "Please write your message.");
-    if (invalid) return setError(invalid);
-    if (TURNSTILE_SITE_KEY && !token) return setError("Please complete the check above.");
-    setSending(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/leads", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || "That didn't send - please call or WhatsApp us instead.");
-      }
-      onSent();
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "That didn't send - please call or WhatsApp us instead.");
-    } finally {
-      setSending(false);
-    }
-  }
-
-  const field = "w-full rounded-[10px] border border-[#cfd8d3] bg-white px-3 py-2 text-[16px] text-foreground focus:border-brand-dark focus:outline-none";
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        void submit();
-      }}
-      className="space-y-2 rounded-[14px] border border-border-subtle bg-white p-3"
-    >
-      <input className={field} placeholder="Your name" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} maxLength={100} aria-label="Your name" />
-      <input className={field} placeholder="Mobile number" autoComplete="tel" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={20} aria-label="Mobile number" />
-      <input className={field} placeholder="Postcode" autoComplete="postal-code" value={postcode} onChange={(e) => setPostcode(e.target.value)} maxLength={10} aria-label="Postcode" />
-      <textarea className={`${field} min-h-20 resize-none`} placeholder="Your message" value={message} onChange={(e) => setMessage(e.target.value)} maxLength={470} aria-label="Your message" />
-      <div aria-hidden="true" className="relative h-0 w-0 overflow-hidden">
-        <label htmlFor="chat-website">Website</label>
-        <input id="chat-website" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
-      </div>
-      {TURNSTILE_SITE_KEY && <Turnstile siteKey={TURNSTILE_SITE_KEY} onVerify={setToken} />}
-      {error && <p className="text-[13px] text-red-600">{error}</p>}
-      <div className="flex gap-2">
-        <button type="button" onClick={onCancel} className="rounded-[10px] border-[1.5px] border-[#cdd6d1] px-4 py-2 text-sm font-bold text-foreground/75">
-          Back
-        </button>
-        <button type="submit" disabled={sending} className="flex-1 rounded-[10px] bg-brand-dark px-4 py-2 text-sm font-bold text-white disabled:opacity-60">
-          {sending ? "Sending…" : "Send to the office"}
-        </button>
-      </div>
-      <p className="text-[11.5px] text-foreground/50">
-        Landlord with several properties? See the <Link href={portfolioPath} className="font-semibold text-brand-dark">Portfolio Scheme</Link>.
-      </p>
-    </form>
   );
 }
 
