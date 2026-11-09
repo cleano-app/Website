@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PromoDropdown from "@/components/PromoDropdown";
 import StickyMobileBar from "@/components/StickyMobileBar";
+import SiteChat from "@/components/chat/SiteChat";
 import JsonLd from "@/components/JsonLd";
 import { businessSchema } from "@/lib/structuredData";
 import { siteConfig } from "@/lib/siteConfig";
@@ -81,6 +82,7 @@ export default function RootLayout({
         </main>
         <Footer />
         <StickyMobileBar />
+        <SiteChat />
       </body>
     </html>
   );
